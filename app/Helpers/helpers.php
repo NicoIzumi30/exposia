@@ -10,6 +10,7 @@
 
 use App\Helpers\ActivityHelper;
 use App\Helpers\GeneralHelper;
+use App\Helpers\BranchHelper;
 
 // =============================================================================
 // ACTIVITY LOGGING HELPERS

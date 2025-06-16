@@ -50,9 +50,9 @@
         </a>
 
         <!-- Cabang -->
-        <a href="{{ route('user.branches') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.branches') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-map-marker-alt mr-3 {{ request()->routeIs('user.branches') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.branches.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.branches.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-map-marker-alt mr-3 {{ request()->routeIs('user.branches.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>Cabang</span>
         </a>
 

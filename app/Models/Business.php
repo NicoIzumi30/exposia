@@ -51,6 +51,10 @@ class Business extends Model
         ];
     }
 
+    // ========================================
+    // RELATIONSHIPS
+    // ========================================
+
     /**
      * Get the user that owns the business.
      */
@@ -64,7 +68,7 @@ class Business extends Model
      */
     public function branches(): HasMany
     {
-        return $this->hasMany(Branch::class);
+        return $this->hasMany(Branch::class, 'business_id');
     }
 
     /**
@@ -124,11 +128,55 @@ class Business extends Model
     }
 
     // ========================================
+    // ACCESSORS & ATTRIBUTES
+    // ========================================
+
+    /**
+     * Get total branches count
+     */
+    public function getBranchesCountAttribute(): int
+    {
+        return $this->branches()->count();
+    }
+
+    /**
+     * Get branches with contact information
+     */
+    public function getBranchesWithContactAttribute()
+    {
+        return $this->branches()->withPhone()->get();
+    }
+
+    /**
+     * Get branches with Google Maps links
+     */
+    public function getBranchesWithMapsAttribute()
+    {
+        return $this->branches()->withMapsLink()->get();
+    }
+
+    /**
+     * Get main branch (first created branch)
+     */
+    public function getMainBranchAttribute(): ?Branch
+    {
+        return $this->branches()->oldest()->first();
+    }
+
+    /**
+     * Get branch statistics
+     */
+    public function getBranchStatsAttribute(): array
+    {
+        return get_branch_stats($this);
+    }
+
+    // ========================================
     // BUSINESS HELPER METHODS
     // ========================================
 
     /**
-     * Get business logo URL with fallback (Fixed - no infinite loop)
+     * Get business logo URL with fallback
      * 
      * @return string
      */
@@ -197,8 +245,23 @@ class Business extends Model
     {
         $completion = business_completion($this);
         $this->update(['progress_completion' => $completion]);
-        
+
         return $completion;
+    }
+
+    /**
+     * Calculate business completion including branches
+     */
+    public function calculateCompletionWithBranches(): int
+    {
+        $baseCompletion = business_completion($this);
+
+        // Add 5% bonus if business has at least one branch
+        if ($this->branches_count > 0) {
+            $baseCompletion = min(100, $baseCompletion + 5);
+        }
+
+        return $baseCompletion;
     }
 
     /**
@@ -211,12 +274,12 @@ class Business extends Model
         if (empty($this->business_name)) {
             return null;
         }
-        
+
         $slug = generate_business_url($this->business_name, $this->id);
         $fullUrl = url('/' . $slug);
-        
+
         $this->update(['public_url' => $fullUrl]);
-        
+
         return $fullUrl;
     }
 
@@ -231,10 +294,10 @@ class Business extends Model
         if (!$this->public_url) {
             return null;
         }
-        
+
         $qrCodeUrl = generate_qr_code_url($this->public_url, $size);
         $this->update(['qr_code' => $qrCodeUrl]);
-        
+
         return $qrCodeUrl;
     }
 
@@ -292,6 +355,20 @@ class Business extends Model
         return $this->progress_completion >= 80;
     }
 
+    /**
+     * Check if business has complete branch information
+     */
+    public function hasCompleteBranchInfo(): bool
+    {
+        if ($this->branches_count === 0) {
+            return false;
+        }
+
+        return $this->branches->every(function ($branch) {
+            return $branch->isComplete();
+        });
+    }
+
     // ========================================
     // COMPLETION & ANALYTICS METHODS
     // ========================================
@@ -330,12 +407,12 @@ class Business extends Model
                 'fields' => ['products', 'galleries']
             ]
         ];
-        
+
         $totalFields = count($fields);
         $completedFields = collect($fields)->filter(function ($field) {
             return $field['completed'];
         })->count();
-        
+
         return [
             'fields' => $fields,
             'total' => $totalFields,
@@ -345,7 +422,7 @@ class Business extends Model
     }
 
     /**
-     * Get business analytics data (Fixed relationship name)
+     * Get business analytics data
      * 
      * @param int $days
      * @return array
@@ -353,18 +430,17 @@ class Business extends Model
     public function getAnalyticsData($days = 30)
     {
         $startDate = now()->subDays($days);
-        
-        // Fixed: Use correct relationship name
+
         $visitors = $this->visitors()
             ->where('created_at', '>=', $startDate)
             ->get();
-        
+
         $dailyVisitors = $visitors->groupBy(function ($visitor) {
             return $visitor->created_at->format('Y-m-d');
         })->map(function ($dayVisitors) {
             return $dayVisitors->count();
         });
-        
+
         return [
             'total_visitors' => $visitors->count(),
             'unique_visitors' => $visitors->unique('ip_address')->count(),
@@ -376,27 +452,26 @@ class Business extends Model
     }
 
     /**
-     * Calculate visitor growth rate (Fixed relationship name)
+     * Calculate visitor growth rate
      * 
      * @param int $days
      * @return float
      */
     private function calculateGrowthRate($days = 30)
     {
-        // Fixed: Use correct relationship name
         $currentPeriod = $this->visitors()
             ->where('created_at', '>=', now()->subDays($days))
             ->count();
-        
+
         $previousPeriod = $this->visitors()
             ->where('created_at', '>=', now()->subDays($days * 2))
             ->where('created_at', '<', now()->subDays($days))
             ->count();
-        
+
         if ($previousPeriod == 0) {
             return $currentPeriod > 0 ? 100 : 0;
         }
-        
+
         return round((($currentPeriod - $previousPeriod) / $previousPeriod) * 100, 2);
     }
 
@@ -452,12 +527,12 @@ class Business extends Model
         if (!$this->public_url) {
             return null;
         }
-        
+
         // If it's already a full URL, return as is
         if (filter_var($this->public_url, FILTER_VALIDATE_URL)) {
             return $this->public_url;
         }
-        
+
         // Otherwise, prepend the app URL
         return url($this->public_url);
     }
@@ -472,7 +547,7 @@ class Business extends Model
         if (!$this->public_url) {
             return null;
         }
-        
+
         return basename(parse_url($this->public_url, PHP_URL_PATH));
     }
 
@@ -493,7 +568,7 @@ class Business extends Model
             'usaha',
             // Add category or other relevant keywords
         ]);
-        
+
         // Update if you have SEO meta fields in your business table
         // $this->update([
         //     'seo_title' => $seoTitle,
@@ -516,23 +591,23 @@ class Business extends Model
             'description' => $this->short_description,
             'url' => $this->getFullPublicUrl(),
         ];
-        
+
         if ($this->main_address) {
             $schema['address'] = [
                 '@type' => 'PostalAddress',
                 'streetAddress' => $this->main_address
             ];
         }
-        
+
         if ($this->main_operational_hours) {
             $schema['openingHours'] = $this->main_operational_hours;
         }
-        
+
         if ($this->logo_url) {
             $schema['logo'] = $this->getLogoUrl();
             $schema['image'] = $this->getLogoUrl();
         }
-        
+
         return $schema;
     }
-}
+}   

@@ -59,19 +59,19 @@ class DashboardController extends Controller
         $yesterday = Carbon::yesterday();
         $today = Carbon::today();
 
-        $visitorsLast7Days = $business->businessVisitors()
+        $visitorsLast7Days = $business->visitors()
             ->where('created_at', '>=', $last7Days)
             ->count();
 
-        $visitorsToday = $business->businessVisitors()
+        $visitorsToday = $business->visitors()
             ->whereDate('created_at', $today)
             ->count();
 
-        $visitorsYesterday = $business->businessVisitors()
+        $visitorsYesterday = $business->visitors()
             ->whereDate('created_at', $yesterday)
             ->count();
 
-        $visitorsTotal = $business->businessVisitors()->count();
+        $visitorsTotal = $business->visitors()->count();
 
         // Calculate growth percentage
         $growthPercentage = $visitorsYesterday > 0 
