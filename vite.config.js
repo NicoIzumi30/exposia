@@ -1,13 +1,30 @@
+// vite.config.js - Simplified for CDN Tailwind
+
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                // Hanya JS, CSS pakai CDN
+                'resources/js/app.js'
+            ],
             refresh: true,
         }),
-        tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
+    server: {
+        // Optional: Custom port kalau 5173 bentrok
+        // port: 5174,
+        
+        // Hot reload untuk blade templates
+        watch: {
+            include: ['resources/views/**/*.blade.php']
+        }
+    }
 });

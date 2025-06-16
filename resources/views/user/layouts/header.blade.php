@@ -85,7 +85,7 @@
                         </a>
                         
                         @if(auth()->user()->business)
-                        <a href="{{ route('user.business') }}" 
+                        <a href="{{ route('user.business.index') }}" 
                            class="dropdown-item flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
                             <i class="fas fa-building mr-3 text-gray-400 dark:text-gray-500"></i>
                             Pengaturan Bisnis

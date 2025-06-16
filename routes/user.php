@@ -2,6 +2,7 @@
 
 // routes/user.php
 
+use App\Http\Controllers\User\BusinessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\DashboardController;
 
@@ -12,12 +13,15 @@ use App\Http\Controllers\User\DashboardController;
 */
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+Route::controller(BusinessController::class)->prefix('business')->name('user.business.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::put('/update', 'update')->name('update');
+    Route::post('/generate-url', 'generateUrl')->name('generate-url');
+    Route::post('/check-url', 'checkUrl')->name('check-url');
+    Route::post('/update-url', 'updateUrl')->name('update-url');
+    Route::post('/generate-qr', 'generateQrCode')->name('generate-qr');
+});
 Route::middleware(['auth'])->prefix('dashboard')->name('user.')->group(function () {
-    
-    // Dashboard Beranda
-    
-    // Data Usaha
-    Route::get('/business', [DashboardController::class, 'business'])->name('business');
     
     // Cabang
     Route::get('/branches', [DashboardController::class, 'branches'])->name('branches');

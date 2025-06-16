@@ -28,7 +28,7 @@
                     Lihat Website Saya
                 </a>
                 @else
-                <a href="{{ route('user.business') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <a href="{{ route('user.business.index') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
                     <i class="fas fa-plus mr-2"></i>
                     Lengkapi Data Bisnis
                 </a>
@@ -216,7 +216,7 @@
 
             <div class="space-y-3">
                 @if(!$business)
-                <a href="{{ route('user.business') }}" class="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200">
+                <a href="{{ route('user.business.index') }}" class="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200">
                     <i class="fas fa-building mr-3"></i>
                     <span class="font-medium">Setup Data Bisnis</span>
                 </a>
@@ -258,7 +258,7 @@
             @if($stats['progress_completion'] < 50) <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">
                 Lengkapi profil bisnis Anda untuk meningkatkan kepercayaan pengunjung dan visibilitas online.
                 </p>
-                <a href="{{ route('user.business') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
+                <a href="{{ route('user.business.index') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
                     Lengkapi Sekarang
                 </a>
                 @elseif($stats['products_count'] < 3) <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">

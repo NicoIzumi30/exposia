@@ -41,10 +41,15 @@ class Business extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'publish_status' => 'boolean',
-        'progress_completion' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'publish_status' => 'boolean',
+            'progress_completion' => 'integer',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * Get the user that owns the business.
@@ -116,5 +121,418 @@ class Business extends Model
     public function visitors(): HasMany
     {
         return $this->hasMany(BusinessVisitor::class);
+    }
+
+    // ========================================
+    // BUSINESS HELPER METHODS
+    // ========================================
+
+    /**
+     * Get business logo URL with fallback (Fixed - no infinite loop)
+     * 
+     * @return string
+     */
+    public function getLogoUrl()
+    {
+        return business_logo_url($this);
+    }
+
+    /**
+     * Get formatted business address
+     * 
+     * @param int $maxLength
+     * @return string
+     */
+    public function getFormattedAddress($maxLength = 100)
+    {
+        return format_business_address($this->main_address, $maxLength);
+    }
+
+    /**
+     * Get business status badge HTML
+     * 
+     * @return string
+     */
+    public function getStatusBadge()
+    {
+        return business_status_badge($this);
+    }
+
+    /**
+     * Get business status as text
+     * 
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return get_business_status_text($this);
+    }
+
+    /**
+     * Get business status color
+     * 
+     * @return string
+     */
+    public function getStatusColor()
+    {
+        return get_business_status_color($this);
+    }
+
+    /**
+     * Get operational hours as array
+     * 
+     * @return array
+     */
+    public function getOperationalHoursArray()
+    {
+        return business_operational_hours_array($this->main_operational_hours);
+    }
+
+    /**
+     * Calculate and update progress completion
+     * 
+     * @return int
+     */
+    public function updateProgressCompletion()
+    {
+        $completion = business_completion($this);
+        $this->update(['progress_completion' => $completion]);
+        
+        return $completion;
+    }
+
+    /**
+     * Generate and set business URL
+     * 
+     * @return string|null
+     */
+    public function generateBusinessUrl()
+    {
+        if (empty($this->business_name)) {
+            return null;
+        }
+        
+        $slug = generate_business_url($this->business_name, $this->id);
+        $fullUrl = url('/' . $slug);
+        
+        $this->update(['public_url' => $fullUrl]);
+        
+        return $fullUrl;
+    }
+
+    /**
+     * Generate QR code for business URL
+     * 
+     * @param int $size
+     * @return string|null
+     */
+    public function generateQrCode($size = 200)
+    {
+        if (!$this->public_url) {
+            return null;
+        }
+        
+        $qrCodeUrl = generate_qr_code_url($this->public_url, $size);
+        $this->update(['qr_code' => $qrCodeUrl]);
+        
+        return $qrCodeUrl;
+    }
+
+    // ========================================
+    // STATUS MANAGEMENT METHODS
+    // ========================================
+
+    /**
+     * Check if business is published
+     * 
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return $this->publish_status === true;
+    }
+
+    /**
+     * Check if business is draft
+     * 
+     * @return bool
+     */
+    public function isDraft()
+    {
+        return $this->publish_status === false;
+    }
+
+    /**
+     * Publish the business
+     * 
+     * @return bool
+     */
+    public function publish()
+    {
+        return $this->update(['publish_status' => true]);
+    }
+
+    /**
+     * Unpublish the business (set to draft)
+     * 
+     * @return bool
+     */
+    public function unpublish()
+    {
+        return $this->update(['publish_status' => false]);
+    }
+
+    /**
+     * Check if business is ready to publish
+     * 
+     * @return bool
+     */
+    public function isReadyToPublish()
+    {
+        return $this->progress_completion >= 80;
+    }
+
+    // ========================================
+    // COMPLETION & ANALYTICS METHODS
+    // ========================================
+
+    /**
+     * Get business completion status
+     * 
+     * @return array
+     */
+    public function getCompletionStatus()
+    {
+        $fields = [
+            'basic_info' => [
+                'label' => 'Informasi Dasar',
+                'completed' => !empty($this->business_name) && !empty($this->main_address) && !empty($this->main_operational_hours),
+                'fields' => ['business_name', 'main_address', 'main_operational_hours']
+            ],
+            'descriptions' => [
+                'label' => 'Deskripsi',
+                'completed' => !empty($this->short_description) && !empty($this->full_description),
+                'fields' => ['short_description', 'full_description']
+            ],
+            'logo' => [
+                'label' => 'Logo',
+                'completed' => !empty($this->logo_url),
+                'fields' => ['logo_url']
+            ],
+            'location' => [
+                'label' => 'Lokasi',
+                'completed' => !empty($this->google_maps_link),
+                'fields' => ['google_maps_link']
+            ],
+            'content' => [
+                'label' => 'Konten',
+                'completed' => $this->products()->count() > 0 || $this->galleries()->count() > 0,
+                'fields' => ['products', 'galleries']
+            ]
+        ];
+        
+        $totalFields = count($fields);
+        $completedFields = collect($fields)->filter(function ($field) {
+            return $field['completed'];
+        })->count();
+        
+        return [
+            'fields' => $fields,
+            'total' => $totalFields,
+            'completed' => $completedFields,
+            'percentage' => $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0
+        ];
+    }
+
+    /**
+     * Get business analytics data (Fixed relationship name)
+     * 
+     * @param int $days
+     * @return array
+     */
+    public function getAnalyticsData($days = 30)
+    {
+        $startDate = now()->subDays($days);
+        
+        // Fixed: Use correct relationship name
+        $visitors = $this->visitors()
+            ->where('created_at', '>=', $startDate)
+            ->get();
+        
+        $dailyVisitors = $visitors->groupBy(function ($visitor) {
+            return $visitor->created_at->format('Y-m-d');
+        })->map(function ($dayVisitors) {
+            return $dayVisitors->count();
+        });
+        
+        return [
+            'total_visitors' => $visitors->count(),
+            'unique_visitors' => $visitors->unique('ip_address')->count(),
+            'daily_visitors' => $dailyVisitors,
+            'average_daily' => $dailyVisitors->avg() ?: 0,
+            'peak_day' => $dailyVisitors->isNotEmpty() ? $dailyVisitors->keys()->first() : null,
+            'growth_rate' => $this->calculateGrowthRate($days)
+        ];
+    }
+
+    /**
+     * Calculate visitor growth rate (Fixed relationship name)
+     * 
+     * @param int $days
+     * @return float
+     */
+    private function calculateGrowthRate($days = 30)
+    {
+        // Fixed: Use correct relationship name
+        $currentPeriod = $this->visitors()
+            ->where('created_at', '>=', now()->subDays($days))
+            ->count();
+        
+        $previousPeriod = $this->visitors()
+            ->where('created_at', '>=', now()->subDays($days * 2))
+            ->where('created_at', '<', now()->subDays($days))
+            ->count();
+        
+        if ($previousPeriod == 0) {
+            return $currentPeriod > 0 ? 100 : 0;
+        }
+        
+        return round((($currentPeriod - $previousPeriod) / $previousPeriod) * 100, 2);
+    }
+
+    // ========================================
+    // QUERY SCOPES
+    // ========================================
+
+    /**
+     * Scope for published businesses
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('publish_status', true);
+    }
+
+    /**
+     * Scope for draft businesses
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('publish_status', false);
+    }
+
+    /**
+     * Scope for businesses with minimum completion percentage
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $percentage
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithMinCompletion($query, $percentage = 50)
+    {
+        return $query->where('progress_completion', '>=', $percentage);
+    }
+
+    // ========================================
+    // URL & SEO METHODS
+    // ========================================
+
+    /**
+     * Get full public URL for the business
+     * 
+     * @return string|null
+     */
+    public function getFullPublicUrl()
+    {
+        if (!$this->public_url) {
+            return null;
+        }
+        
+        // If it's already a full URL, return as is
+        if (filter_var($this->public_url, FILTER_VALIDATE_URL)) {
+            return $this->public_url;
+        }
+        
+        // Otherwise, prepend the app URL
+        return url($this->public_url);
+    }
+
+    /**
+     * Get business slug from public URL
+     * 
+     * @return string|null
+     */
+    public function getSlug()
+    {
+        if (!$this->public_url) {
+            return null;
+        }
+        
+        return basename(parse_url($this->public_url, PHP_URL_PATH));
+    }
+
+    /**
+     * Update business SEO meta data
+     * 
+     * @return void
+     */
+    public function updateSeoMeta()
+    {
+        // This could be used to update SEO-related fields
+        // when business information changes
+        $seoTitle = $this->business_name;
+        $seoDescription = $this->short_description;
+        $seoKeywords = implode(', ', [
+            $this->business_name,
+            'bisnis',
+            'usaha',
+            // Add category or other relevant keywords
+        ]);
+        
+        // Update if you have SEO meta fields in your business table
+        // $this->update([
+        //     'seo_title' => $seoTitle,
+        //     'seo_description' => $seoDescription,
+        //     'seo_keywords' => $seoKeywords
+        // ]);
+    }
+
+    /**
+     * Generate business schema.org JSON-LD data
+     * 
+     * @return array
+     */
+    public function getSchemaOrgData()
+    {
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'LocalBusiness',
+            'name' => $this->business_name,
+            'description' => $this->short_description,
+            'url' => $this->getFullPublicUrl(),
+        ];
+        
+        if ($this->main_address) {
+            $schema['address'] = [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $this->main_address
+            ];
+        }
+        
+        if ($this->main_operational_hours) {
+            $schema['openingHours'] = $this->main_operational_hours;
+        }
+        
+        if ($this->logo_url) {
+            $schema['logo'] = $this->getLogoUrl();
+            $schema['image'] = $this->getLogoUrl();
+        }
+        
+        return $schema;
     }
 }
