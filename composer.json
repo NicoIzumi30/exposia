@@ -29,7 +29,8 @@
         },
         "files": [
             "app/Helpers/helpers.php",
-            "app/Helpers/BranchHelper.php"
+            "app/Helpers/BranchHelper.php",
+            "app/Helpers/ProductHelper.php"
         ]
     },
     "autoload-dev": {

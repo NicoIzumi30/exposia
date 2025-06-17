@@ -72,14 +72,6 @@ class Business extends Model
     }
 
     /**
-     * Get the products for the business.
-     */
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    /**
      * Get the galleries for the business.
      */
     public function galleries(): HasMany
@@ -610,4 +602,257 @@ class Business extends Model
 
         return $schema;
     }
-}   
+    // Add these methods to your existing Business model
+
+    /**
+     * Relationship: Business has many Products
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'business_id');
+    }
+
+    /**
+     * Get total products count
+     */
+    public function getProductsCountAttribute(): int
+    {
+        return $this->products()->count();
+    }
+
+    /**
+     * Get pinned products
+     */
+    public function getPinnedProductsAttribute()
+    {
+        return $this->products()->pinned()->defaultOrder()->get();
+    }
+
+    /**
+     * Get products with images
+     */
+    public function getProductsWithImagesAttribute()
+    {
+        return $this->products()->withImages()->get();
+    }
+
+    /**
+     * Get featured products (pinned + with images)
+     */
+    public function getFeaturedProductsAttribute()
+    {
+        return $this->products()
+            ->pinned()
+            ->withImages()
+            ->defaultOrder()
+            ->limit(6)
+            ->get();
+    }
+
+    /**
+     * Get latest products
+     */
+    public function getLatestProductsAttribute($limit = 6)
+    {
+        return $this->products()
+            ->defaultOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Get product statistics
+     */
+    public function getProductStatsAttribute(): array
+    {
+        return get_product_stats($this);
+    }
+
+    /**
+     * Get average product price
+     */
+    public function getAverageProductPriceAttribute(): float
+    {
+        return $this->products()->avg('product_price') ?: 0;
+    }
+
+    /**
+     * Get price range of products
+     */
+    public function getProductPriceRangeAttribute(): array
+    {
+        $products = $this->products();
+
+        return [
+            'min' => $products->min('product_price') ?: 0,
+            'max' => $products->max('product_price') ?: 0
+        ];
+    }
+
+    /**
+     * Check if business has products
+     */
+    public function hasProducts(): bool
+    {
+        return $this->products_count > 0;
+    }
+
+    /**
+     * Check if business has complete product information
+     */
+    public function hasCompleteProductInfo(): bool
+    {
+        if ($this->products_count === 0) {
+            return false;
+        }
+
+        return $this->products->every(function ($product) {
+            return $product->isComplete();
+        });
+    }
+
+    /**
+     * Get product completion rate
+     */
+    public function getProductCompletionRate(): int
+    {
+        if ($this->products_count === 0) {
+            return 0;
+        }
+
+        $completeProducts = $this->products->filter(function ($product) {
+            return $product->isComplete();
+        })->count();
+
+        return round(($completeProducts / $this->products_count) * 100);
+    }
+
+    /**
+     * Calculate business completion including products
+     */
+    public function calculateCompletionWithProducts(): int
+    {
+        $baseCompletion = business_completion($this);
+
+        // Add bonus points for having products
+        if ($this->products_count > 0) {
+            $baseCompletion = min(100, $baseCompletion + 5);
+
+            // Add bonus for product completion
+            $productCompletionRate = $this->getProductCompletionRate();
+            $productBonus = round($productCompletionRate * 0.1); // Max 10 points
+            $baseCompletion = min(100, $baseCompletion + $productBonus);
+        }
+
+        return $baseCompletion;
+    }
+
+    /**
+     * Get most expensive product
+     */
+    public function getMostExpensiveProductAttribute(): ?Product
+    {
+        return $this->products()->orderBy('product_price', 'desc')->first();
+    }
+
+    /**
+     * Get cheapest product
+     */
+    public function getCheapestProductAttribute(): ?Product
+    {
+        return $this->products()->orderBy('product_price', 'asc')->first();
+    }
+
+    /**
+     * Search products in this business
+     */
+    public function searchProducts(string $query, int $limit = 10)
+    {
+        return $this->products()
+            ->search($query)
+            ->defaultOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Get products by price range
+     */
+    public function getProductsByPriceRange($minPrice = null, $maxPrice = null, $limit = 20)
+    {
+        return $this->products()
+            ->priceRange($minPrice, $maxPrice)
+            ->defaultOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Get random products for showcase
+     */
+    public function getRandomProducts(int $count = 4)
+    {
+        return $this->products()
+            ->withImages()
+            ->inRandomOrder()
+            ->limit($count)
+            ->get();
+    }
+
+    /**
+     * Get product categories (if you have categories in the future)
+     */
+    public function getProductCategoriesAttribute(): array
+    {
+        // This would be useful if you add categories later
+        // For now, return empty array
+        return [];
+    }
+
+    /**
+     * Check if business can add more products (if you want to set limits)
+     */
+    public function canAddMoreProducts(): bool
+    {
+        // You can set a limit here if needed
+        $maxProducts = 100; // or get from config
+        return $this->products_count < $maxProducts;
+    }
+
+    /**
+     * Get products for sitemap generation
+     */
+    public function getProductsForSitemap()
+    {
+        return $this->products()
+            ->whereNotNull('product_image')
+            ->defaultOrder()
+            ->get(['id', 'product_name', 'updated_at']);
+    }
+
+    /**
+     * Generate business showcase data including products
+     */
+    public function getShowcaseData(): array
+    {
+        return [
+            'business' => [
+                'name' => $this->business_name,
+                'description' => $this->short_description,
+                'logo' => $this->logo_url,
+                'url' => $this->public_url
+            ],
+            'stats' => [
+                'products_count' => $this->products_count,
+                'branches_count' => $this->branches_count ?? 0,
+                'completion_rate' => $this->calculateCompletionWithProducts()
+            ],
+            'featured_products' => $this->featured_products->map(function ($product) {
+                return $product->getCardData();
+            }),
+            'price_range' => $this->product_price_range
+        ];
+    }
+
+    // Don't forget to add the import at the top of the Business model:
+}

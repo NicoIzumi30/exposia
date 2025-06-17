@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_image')->nullable();
             $table->text('product_description')->nullable();
-            $table->decimal('product_price', 15, 2)->nullable();
+            $table->decimal('product_price', 15)->nullable();
             $table->string('product_wa_link')->nullable();
             $table->boolean('is_pinned')->default(false);
             $table->timestamps();
