@@ -16,7 +16,7 @@ class ProductController extends Controller
     /**
      * Display products management page.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $business = $user->business;
@@ -37,6 +37,21 @@ class ProductController extends Controller
             'with_images' => $business->products()->whereNotNull('product_image')->count(),
             'with_wa_links' => $business->products()->whereNotNull('product_wa_link')->count(),
         ];
+
+        // If AJAX request, return JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'products' => $products->items(),
+                'stats' => $productStats,
+                'pagination' => [
+                    'current_page' => $products->currentPage(),
+                    'total_pages' => $products->lastPage(),
+                    'total_items' => $products->total(),
+                    'per_page' => $products->perPage()
+                ]
+            ]);
+        }
         
         return view('user.products.index', compact('user', 'business', 'products', 'productStats'));
     }
