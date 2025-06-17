@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\User\BranchController;
 use App\Http\Controllers\User\BusinessController;
+use App\Http\Controllers\User\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\DashboardController;
 
@@ -33,13 +34,25 @@ Route::controller(BranchController::class)->prefix('user/branches')->name('user.
     Route::post('/validate-maps-url', 'validateMapsUrl')->name('validate-maps-url');
     Route::post('/generate-whatsapp-link', 'generateWhatsAppLink')->name('generate-whatsapp-link');
 });
+Route::controller(ProductController::class)->prefix('user/products')->name('user.products.')->group(function () {
+    Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/search', 'search')->name('search'); // Move search before {product} route
+        Route::get('/{product}', 'show')->name('show');
+        Route::put('/{product}', 'update')->name('update');
+        Route::delete('/{product}', 'destroy')->name('destroy');
+        
+        // Additional product routes
+        Route::patch('/{product}/toggle-pin', 'togglePin')->name('toggle-pin');
+        Route::post('/bulk-action', 'bulkAction')->name('bulk-action');
+        Route::post('/{product}/generate-whatsapp-order', 'generateWhatsAppOrder')->name('generate-whatsapp-order');
+});
 Route::middleware(['auth'])->prefix('dashboard')->name('user.')->group(function () {
     
     // Cabang
     Route::get('/branches', [DashboardController::class, 'branches'])->name('branches');
     
     // Produk
-    Route::get('/products', [DashboardController::class, 'products'])->name('products');
     
     // Galeri
     Route::get('/gallery', [DashboardController::class, 'gallery'])->name('gallery');

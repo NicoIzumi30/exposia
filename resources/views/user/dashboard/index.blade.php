@@ -92,7 +92,7 @@
         <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Total Produk
         </h3>
-        <a href="{{ route('user.products') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+        <a href="{{ route('user.products.index') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
             Kelola produk →
         </a>
     </div>
@@ -222,7 +222,7 @@
                 </a>
                 @endif
 
-                <a href="{{ route('user.products') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <a href="{{ route('user.products.index') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
                     <i class="fas fa-plus mr-3"></i>
                     <span class="font-medium">Tambah Produk</span>
                 </a>
@@ -264,7 +264,7 @@
                 @elseif($stats['products_count'] < 3) <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">
                     Tambahkan lebih banyak produk untuk memberikan pilihan yang lebih beragam kepada pelanggan.
                     </p>
-                    <a href="{{ route('user.products') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
+                    <a href="{{ route('user.products.index') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
                         Tambah Produk
                     </a>
                     @elseif(!$websiteStatus['is_published'])

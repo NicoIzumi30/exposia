@@ -235,13 +235,6 @@ class DashboardController extends Controller
         return view('user.dashboard.branches');
     }
 
-    /**
-     * Products management page
-     */
-    public function products()
-    {
-        return view('user.dashboard.products');
-    }
 
     /**
      * Gallery management page
