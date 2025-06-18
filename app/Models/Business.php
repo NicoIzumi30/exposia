@@ -71,13 +71,6 @@ class Business extends Model
         return $this->hasMany(Branch::class, 'business_id');
     }
 
-    /**
-     * Get the testimonials for the business.
-     */
-    public function testimonials(): HasMany
-    {
-        return $this->hasMany(Testimonial::class);
-    }
 
     /**
      * Get the highlights for the business.
@@ -1172,37 +1165,7 @@ class Business extends Model
     /**
      * Get next steps for completion (simplified)
      */
-    private function getSimpleNextSteps(array $fields): array
-    {
-        $nextSteps = [];
-        
-        foreach ($fields as $key => $field) {
-            if (!$field['completed']) {
-                switch ($key) {
-                    case 'basic_info':
-                        $nextSteps[] = 'Lengkapi informasi dasar bisnis';
-                        break;
-                    case 'descriptions':
-                        $nextSteps[] = 'Tambahkan deskripsi bisnis';
-                        break;
-                    case 'logo':
-                        $nextSteps[] = 'Upload logo bisnis';
-                        break;
-                    case 'location':
-                        $nextSteps[] = 'Tambahkan link Google Maps';
-                        break;
-                    case 'products':
-                        $nextSteps[] = 'Upload minimal 3 produk';
-                        break;
-                    case 'galleries':
-                        $nextSteps[] = 'Upload minimal 3 foto galeri';
-                        break;
-                }
-            }
-        }
-    
-        return array_slice($nextSteps, 0, 3); // Return top 3 next steps
-    }
+
     
     // ========================================
     // SIMPLE QUERY SCOPES
@@ -1228,4 +1191,191 @@ class Business extends Model
             ->orWhereHas('galleries', null, '>=', 3);
         });
     }
+
+// Add these methods to your existing Business.php model
+// (Add them in the RELATIONSHIPS section)
+
+/**
+ * Get the testimonials for the business.
+ */
+public function testimonials(): HasMany
+{
+    return $this->hasMany(Testimonial::class, 'business_id');
+}
+
+// Add these in the ACCESSORS & ATTRIBUTES section
+
+/**
+ * Get total testimonials count
+ */
+public function getTestimonialsCountAttribute(): int
+{
+    return $this->testimonials()->count();
+}
+
+/**
+ * Get latest testimonials
+ */
+public function getLatestTestimonialsAttribute($limit = 5)
+{
+    return $this->testimonials()
+                ->latest()
+                ->limit($limit)
+                ->get();
+}
+
+/**
+ * Get random testimonials for showcase
+ */
+public function getRandomTestimonialsAttribute($limit = 3)
+{
+    return $this->testimonials()
+                ->inRandomOrder()
+                ->limit($limit)
+                ->get();
+}
+
+/**
+ * Get testimonial statistics
+ */
+public function getTestimonialStatsAttribute(): array
+{
+    $count = $this->testimonials_count;
+    $thisMonth = $this->testimonials()
+                      ->whereMonth('created_at', now()->month)
+                      ->whereYear('created_at', now()->year)
+                      ->count();
+    
+    return [
+        'total' => $count,
+        'this_month' => $thisMonth,
+        'has_testimonials' => $count > 0,
+    ];
+}
+
+// Add these in the BUSINESS HELPER METHODS section
+
+/**
+ * Check if business has testimonials
+ */
+public function hasTestimonials(): bool
+{
+    return $this->testimonials_count > 0;
+}
+
+/**
+ * Check if business has complete testimonial information
+ */
+public function hasCompleteTestimonialInfo(): bool
+{
+    if ($this->testimonials_count === 0) {
+        return false;
+    }
+
+    return $this->testimonials->every(function ($testimonial) {
+        return $testimonial->isComplete();
+    });
+}
+
+/**
+ * Get testimonials for public website display
+ */
+public function getPublicTestimonials(int $limit = 6)
+{
+    return $this->testimonials()
+                ->latest()
+                ->limit($limit)
+                ->get()
+                ->map(function ($testimonial) {
+                    return $testimonial->getDisplayData();
+                });
+}
+
+// Update the completion calculation method to include testimonials
+
+/**
+ * Calculate business completion including testimonials
+ */
+public function calculateCompletionWithTestimonials(): int
+{
+    $completion = $this->calculateCompletionWithGalleries(); // Use existing method
+    
+    // Add bonus points for having testimonials
+    if ($this->testimonials_count > 0) {
+        $completion = min(100, $completion + 5); // 5 point bonus
+        
+        // Additional bonus for having multiple testimonials
+        if ($this->testimonials_count >= 3) {
+            $completion = min(100, $completion + 5); // Additional 5 points
+        }
+    }
+    
+    return $completion;
+}
+
+// Add this to the SIMPLE COMPLETION CALCULATION section
+// Update the getSimpleCompletionStatusAttribute method to include testimonials:
+
+/**
+ * Simple completion status including testimonials (updated)
+ */
+
+
+// Update the getSimpleNextSteps method to include testimonials:
+
+/**
+ * Get next steps for completion (updated with testimonials)
+ */
+private function getSimpleNextSteps(array $fields): array
+{
+    $nextSteps = [];
+    
+    foreach ($fields as $key => $field) {
+        if (!$field['completed']) {
+            switch ($key) {
+                case 'basic_info':
+                    $nextSteps[] = 'Lengkapi informasi dasar bisnis';
+                    break;
+                case 'descriptions':
+                    $nextSteps[] = 'Tambahkan deskripsi bisnis';
+                    break;
+                case 'logo':
+                    $nextSteps[] = 'Upload logo bisnis';
+                    break;
+                case 'location':
+                    $nextSteps[] = 'Tambahkan link Google Maps';
+                    break;
+                case 'products':
+                    $nextSteps[] = 'Upload minimal 3 produk';
+                    break;
+                case 'galleries':
+                    $nextSteps[] = 'Upload minimal 3 foto galeri';
+                    break;
+                case 'testimonials':
+                    $nextSteps[] = 'Tambahkan minimal 2 testimoni';
+                    break;
+            }
+        }
+    }
+
+    return array_slice($nextSteps, 0, 3); // Return top 3 next steps
+}
+
+// Add scope for businesses with testimonials
+
+/**
+ * Scope for businesses with testimonials
+ */
+public function scopeWithTestimonials($query)
+{
+    return $query->has('testimonials');
+}
+
+/**
+ * Scope for businesses with sufficient testimonials
+ */
+public function scopeWithSufficientTestimonials($query, int $minCount = 2)
+{
+    return $query->whereHas('testimonials', null, '>=', $minCount);
+}
 }

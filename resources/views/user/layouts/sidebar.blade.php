@@ -71,9 +71,9 @@
         </a>
 
         <!-- Testimoni -->
-        <a href="{{ route('user.testimonials') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.testimonials') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-quote-right mr-3 {{ request()->routeIs('user.testimonials') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.testimonials.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.testimonials.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-quote-right mr-3 {{ request()->routeIs('user.testimonials.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>Testimoni</span>
         </a>
 
