@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\User\BranchController;
 use App\Http\Controllers\User\BusinessController;
+use App\Http\Controllers\User\GalleryController;
 use App\Http\Controllers\User\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\DashboardController;
@@ -47,6 +48,17 @@ Route::controller(ProductController::class)->prefix('user/products')->name('user
         Route::post('/bulk-action', 'bulkAction')->name('bulk-action');
         Route::post('/{product}/generate-whatsapp-order', 'generateWhatsAppOrder')->name('generate-whatsapp-order');
 });
+
+Route::prefix('user/gallery')->name('user.gallery.')->group(function () {
+     Route::get('/', [GalleryController::class, 'index'])
+          ->name('index');
+     Route::post('/', [GalleryController::class, 'store'])
+          ->name('store');
+     Route::delete('/{gallery}', [GalleryController::class, 'destroy'])
+          ->name('destroy');
+     // Removed: show, update, bulk-action, featured, search, toggle-featured, update-order, stats, quota
+ });
+
 Route::middleware(['auth'])->prefix('dashboard')->name('user.')->group(function () {
     
     // Cabang
@@ -54,8 +66,6 @@ Route::middleware(['auth'])->prefix('dashboard')->name('user.')->group(function 
     
     // Produk
     
-    // Galeri
-    Route::get('/gallery', [DashboardController::class, 'gallery'])->name('gallery');
     
     // Testimoni
     Route::get('/testimonials', [DashboardController::class, 'testimonials'])->name('testimonials');

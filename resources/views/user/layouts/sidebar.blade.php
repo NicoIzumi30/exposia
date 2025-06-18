@@ -64,9 +64,9 @@
         </a>
 
         <!-- Galeri -->
-        <a href="{{ route('user.gallery') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.gallery') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-images mr-3 {{ request()->routeIs('user.gallery') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.gallery.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.gallery.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-images mr-3 {{ request()->routeIs('user.gallery.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>Galeri</span>
         </a>
 

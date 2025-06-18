@@ -72,14 +72,6 @@ class Business extends Model
     }
 
     /**
-     * Get the galleries for the business.
-     */
-    public function galleries(): HasMany
-    {
-        return $this->hasMany(Gallery::class);
-    }
-
-    /**
      * Get the testimonials for the business.
      */
     public function testimonials(): HasMany
@@ -853,6 +845,387 @@ class Business extends Model
             'price_range' => $this->product_price_range
         ];
     }
-
-    // Don't forget to add the import at the top of the Business model:
+// ========================================
+    // SUPER SIMPLE GALLERY METHODS
+    // ========================================
+    
+    /**
+     * Get the galleries for the business.
+     */
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(Gallery::class, 'business_id');
+    }
+    
+    /**
+     * Get total galleries count
+     */
+    public function getGalleriesCountAttribute(): int
+    {
+        return $this->galleries()->count();
+    }
+    
+    /**
+     * Get latest galleries (newest first)
+     */
+    public function getLatestGalleriesAttribute($limit = 6)
+    {
+        return $this->galleries()
+                    ->latest()
+                    ->limit($limit)
+                    ->get();
+    }
+    
+    /**
+     * Get random galleries for showcase
+     */
+    public function getRandomGalleriesAttribute($limit = 4)
+    {
+        return $this->galleries()
+                    ->inRandomOrder()
+                    ->limit($limit)
+                    ->get();
+    }
+    
+    /**
+     * Get simple gallery stats
+     */
+    public function getGalleryStatsAttribute(): array
+    {
+        $count = $this->galleries_count;
+        
+        return [
+            'total' => $count,
+            'remaining' => max(0, 8 - $count), // Max 8 images
+            'can_upload' => $count < 8,
+        ];
+    }
+    
+    /**
+     * Check if business has galleries
+     */
+    public function hasGalleries(): bool
+    {
+        return $this->galleries_count > 0;
+    }
+    
+    /**
+     * Get first gallery image
+     */
+    public function getMainGalleryImageAttribute(): ?Gallery
+    {
+        return $this->galleries()->latest()->first();
+    }
+    
+    /**
+     * Get simple gallery showcase data for public display
+     */
+    public function getGalleryShowcaseAttribute(): array
+    {
+        $galleries = $this->galleries()->latest()->take(8)->get();
+        
+        return [
+            'galleries' => $galleries->map(function ($gallery) {
+                return $gallery->getSimpleData();
+            }),
+            'total_count' => $this->galleries_count,
+            'has_more' => $this->galleries_count > 8,
+        ];
+    }
+    
+    /**
+     * Get galleries for sitemap generation
+     */
+    public function getGalleriesForSitemapAttribute()
+    {
+        return $this->galleries()
+                    ->latest()
+                    ->get(['id', 'gallery_image', 'updated_at']);
+    }
+    
+    /**
+     * Calculate business completion including galleries (simplified)
+     */
+    public function calculateCompletionWithGalleries(): int
+    {
+        $baseCompletion = business_completion($this);
+    
+        // Add bonus points for having galleries
+        if ($this->galleries_count > 0) {
+            $baseCompletion = min(100, $baseCompletion + 10); // Simple 10 point bonus
+        }
+    
+        return $baseCompletion;
+    }
+    
+    /**
+     * Get business hero image (logo or first gallery image)
+     */
+    public function getHeroImageUrlAttribute(): string
+    {
+        // Priority: logo_url > main_gallery_image > fallback
+        if (!empty($this->logo_url)) {
+            return $this->getLogoUrl();
+        }
+    
+        if ($this->main_gallery_image) {
+            return $this->main_gallery_image->image_url;
+        }
+    
+        return asset('images/placeholder-business.jpg');
+    }
+    
+    /**
+     * Get all media files (products + gallery) - simplified
+     */
+    public function getAllMediaFilesAttribute(): array
+    {
+        $media = [];
+    
+        // Add product images
+        foreach ($this->products as $product) {
+            if ($product->product_image) {
+                $media[] = [
+                    'type' => 'product',
+                    'id' => $product->id,
+                    'name' => $product->product_name,
+                    'url' => $product->image_url,
+                ];
+            }
+        }
+    
+        // Add gallery images
+        foreach ($this->galleries as $gallery) {
+            if ($gallery->gallery_image) {
+                $media[] = [
+                    'type' => 'gallery',
+                    'id' => $gallery->id,
+                    'name' => $gallery->display_name,
+                    'url' => $gallery->image_url,
+                ];
+            }
+        }
+    
+        return $media;
+    }
+    
+    /**
+     * Check if business has sufficient media content
+     */
+    public function hasSufficientMediaContent(): bool
+    {
+        // Consider sufficient if has at least 3 products with images OR 3 gallery images
+        $productImages = $this->products()->whereNotNull('product_image')->count();
+        $galleryImages = $this->galleries_count;
+    
+        return ($productImages >= 3) || ($galleryImages >= 3) || (($productImages + $galleryImages) >= 5);
+    }
+    
+    /**
+     * Get simple media content summary
+     */
+    public function getMediaSummaryAttribute(): array
+    {
+        return [
+            'products_with_images' => $this->products()->whereNotNull('product_image')->count(),
+            'total_products' => $this->products_count,
+            'gallery_images' => $this->galleries_count,
+            'total_media_files' => count($this->all_media_files),
+            'has_sufficient_content' => $this->hasSufficientMediaContent(),
+        ];
+    }
+    
+    /**
+     * Update business completion including all media
+     */
+    public function updateCompletionWithMedia(): int
+    {
+        $completion = $this->calculateCompletionWithGalleries();
+    
+        // Update the stored completion
+        $this->update(['progress_completion' => $completion]);
+    
+        return $completion;
+    }
+    
+    /**
+     * Get business showcase data including galleries (simplified)
+     */
+    public function getCompleteShowcaseDataAttribute(): array
+    {
+        return [
+            'business' => [
+                'name' => $this->business_name,
+                'description' => $this->short_description,
+                'logo' => $this->logo_url,
+                'hero_image' => $this->hero_image_url,
+                'url' => $this->public_url,
+            ],
+            'stats' => [
+                'products_count' => $this->products_count,
+                'galleries_count' => $this->galleries_count,
+                'branches_count' => $this->branches_count ?? 0,
+                'completion_rate' => $this->calculateCompletionWithGalleries(),
+            ],
+            'featured_content' => [
+                'products' => $this->featured_products->take(6)->map(function ($product) {
+                    return $product->getCardData();
+                }),
+                'galleries' => $this->latest_galleries->map(function ($gallery) {
+                    return $gallery->getSimpleData();
+                }),
+            ],
+            'media_summary' => $this->media_summary,
+        ];
+    }
+    
+    /**
+     * Check if business can add more galleries
+     */
+    public function canAddMoreGalleries(): bool
+    {
+        return $this->galleries_count < 8; // Max 8 galleries
+    }
+    
+    /**
+     * Get simple gallery quota information
+     */
+    public function getGalleryQuotaInfoAttribute(): array
+    {
+        $count = $this->galleries_count;
+        $max = 8;
+        $remaining = max(0, $max - $count);
+        $percentage = $max > 0 ? round(($count / $max) * 100) : 0;
+    
+        return [
+            'current' => $count,
+            'max' => $max,
+            'remaining' => $remaining,
+            'percentage' => $percentage,
+            'can_upload' => $count < $max,
+            'is_full' => $count >= $max,
+        ];
+    }
+    
+    // ========================================
+    // SIMPLIFIED COMPLETION CALCULATION
+    // ========================================
+    
+    /**
+     * Simple completion status including galleries
+     */
+    public function getSimpleCompletionStatusAttribute(): array
+    {
+        $fields = [
+            'basic_info' => [
+                'label' => 'Informasi Dasar',
+                'completed' => !empty($this->business_name) && !empty($this->main_address) && !empty($this->main_operational_hours),
+                'weight' => 25
+            ],
+            'descriptions' => [
+                'label' => 'Deskripsi',
+                'completed' => !empty($this->short_description) && !empty($this->full_description),
+                'weight' => 20
+            ],
+            'logo' => [
+                'label' => 'Logo',
+                'completed' => !empty($this->logo_url),
+                'weight' => 15
+            ],
+            'location' => [
+                'label' => 'Lokasi',
+                'completed' => !empty($this->google_maps_link),
+                'weight' => 10
+            ],
+            'products' => [
+                'label' => 'Produk',
+                'completed' => $this->products()->count() >= 3,
+                'weight' => 20
+            ],
+            'galleries' => [
+                'label' => 'Galeri',
+                'completed' => $this->galleries()->count() >= 3,
+                'weight' => 10
+            ]
+        ];
+    
+        $totalWeight = array_sum(array_column($fields, 'weight'));
+        $completedWeight = 0;
+    
+        foreach ($fields as $field) {
+            if ($field['completed']) {
+                $completedWeight += $field['weight'];
+            }
+        }
+    
+        $percentage = $totalWeight > 0 ? round(($completedWeight / $totalWeight) * 100) : 0;
+    
+        return [
+            'fields' => $fields,
+            'total_weight' => $totalWeight,
+            'completed_weight' => $completedWeight,
+            'percentage' => $percentage,
+            'next_steps' => $this->getSimpleNextSteps($fields),
+        ];
+    }
+    
+    /**
+     * Get next steps for completion (simplified)
+     */
+    private function getSimpleNextSteps(array $fields): array
+    {
+        $nextSteps = [];
+        
+        foreach ($fields as $key => $field) {
+            if (!$field['completed']) {
+                switch ($key) {
+                    case 'basic_info':
+                        $nextSteps[] = 'Lengkapi informasi dasar bisnis';
+                        break;
+                    case 'descriptions':
+                        $nextSteps[] = 'Tambahkan deskripsi bisnis';
+                        break;
+                    case 'logo':
+                        $nextSteps[] = 'Upload logo bisnis';
+                        break;
+                    case 'location':
+                        $nextSteps[] = 'Tambahkan link Google Maps';
+                        break;
+                    case 'products':
+                        $nextSteps[] = 'Upload minimal 3 produk';
+                        break;
+                    case 'galleries':
+                        $nextSteps[] = 'Upload minimal 3 foto galeri';
+                        break;
+                }
+            }
+        }
+    
+        return array_slice($nextSteps, 0, 3); // Return top 3 next steps
+    }
+    
+    // ========================================
+    // SIMPLE QUERY SCOPES
+    // ========================================
+    
+    /**
+     * Scope for businesses with galleries
+     */
+    public function scopeWithGalleries($query)
+    {
+        return $query->has('galleries');
+    }
+    
+    /**
+     * Scope for businesses with sufficient media content
+     */
+    public function scopeWithSufficientMediaContent($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereHas('products', function ($productQuery) {
+                $productQuery->whereNotNull('product_image');
+            }, '>=', 3)
+            ->orWhereHas('galleries', null, '>=', 3);
+        });
+    }
 }

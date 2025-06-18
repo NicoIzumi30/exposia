@@ -227,7 +227,7 @@
                     <span class="font-medium">Tambah Produk</span>
                 </a>
 
-                <a href="{{ route('user.gallery') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-purple-500 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                <a href="{{ route('user.gallery.index') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-purple-500 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
                     <i class="fas fa-images mr-3"></i>
                     <span class="font-medium">Upload Galeri</span>
                 </a>

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('business_id')->constrained()->onDelete('cascade');
             $table->string('gallery_image');
-            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }
