@@ -251,14 +251,7 @@ class DashboardController extends Controller
     {
         return view('user.dashboard.testimonials');
     }
-
-    /**
-     * About business page
-     */
-    public function about()
-    {
-        return view('user.dashboard.about');
-    }
+    
 
     /**
      * Templates and appearance page

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasUuid;
 
 class BusinessTemplate extends Model
 {
@@ -19,25 +18,62 @@ class BusinessTemplate extends Model
         'about_section',
         'products_section',
         'gallery_section',
-        'testimonial_section',
+        'testimonial_section'
     ];
 
     protected $casts = [
-        'color_palette' => 'json',
-        'hero_section' => 'json',
-        'about_section' => 'json',
-        'products_section' => 'json',
-        'gallery_section' => 'json',
-        'testimonial_section' => 'json',
+        'color_palette' => 'array',
+        'hero_section' => 'array',
+        'about_section' => 'array',
+        'products_section' => 'array',
+        'gallery_section' => 'array',
+        'testimonial_section' => 'array'
     ];
 
-    public function business(): BelongsTo
+    // Relationships
+    public function business()
     {
         return $this->belongsTo(Business::class);
     }
 
-    public function template(): BelongsTo
+    public function template()
     {
         return $this->belongsTo(Template::class);
+    }
+
+    // Helper methods
+    public function getPrimaryColor()
+    {
+        return $this->color_palette['primary'] ?? '#3B82F6';
+    }
+
+    public function getSecondaryColor()
+    {
+        return $this->color_palette['secondary'] ?? '#64748B';
+    }
+
+    public function getAccentColor()
+    {
+        return $this->color_palette['accent'] ?? '#F59E0B';
+    }
+
+    public function getColorPalette()
+    {
+        return [
+            'primary' => $this->getPrimaryColor(),
+            'secondary' => $this->getSecondaryColor(),
+            'accent' => $this->getAccentColor()
+        ];
+    }
+
+    public function getSectionConfig($section)
+    {
+        return $this->{$section . '_section'} ?? [];
+    }
+
+    public function updateSectionConfig($section, $config)
+    {
+        $this->{$section . '_section'} = array_merge($this->getSectionConfig($section), $config);
+        $this->save();
     }
 }

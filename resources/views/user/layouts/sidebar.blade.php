@@ -78,9 +78,9 @@
         </a>
 
         <!-- Tentang Usaha -->
-        <a href="{{ route('user.about') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.about') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-info-circle mr-3 {{ request()->routeIs('user.about') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.about.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.about.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-info-circle mr-3 {{ request()->routeIs('user.about.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>Tentang Usaha</span>
         </a>
 
@@ -92,16 +92,16 @@
         </div>
 
         <!-- Template & Tampilan -->
-        <a href="{{ route('user.templates') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.templates') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-palette mr-3 {{ request()->routeIs('user.templates') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.templates.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.templates.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-palette mr-3 {{ request()->routeIs('user.templates.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>Template & Tampilan</span>
         </a>
 
         <!-- AI Konten Generator -->
-        <a href="{{ route('user.ai-content') }}" 
-           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.ai-content') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
-            <i class="fas fa-robot mr-3 {{ request()->routeIs('user.ai-content') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+        <a href="{{ route('user.ai-content.index') }}" 
+           class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('user.ai-content.index') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' }}">
+            <i class="fas fa-robot mr-3 {{ request()->routeIs('user.ai-content.index') ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
             <span>AI Konten Generator</span>
         </a>
 

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasUuid;
 
 class Template extends Model
 {
@@ -15,16 +14,39 @@ class Template extends Model
         'name',
         'description',
         'thumbnail',
-        'preview_url', 
-        'is_active',
+        'preview_url',
+        'is_active'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active' => 'boolean'
     ];
 
-    public function businessTemplates(): HasMany
+    // Relationships
+    public function businessTemplates()
     {
         return $this->hasMany(BusinessTemplate::class);
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    // Helper methods
+    public function getThumbnailUrl()
+    {
+        return $this->thumbnail ? asset('storage/' . $this->thumbnail) : asset('images/template-placeholder.jpg');
+    }
+
+    public function getPreviewLink()
+    {
+        return $this->preview_url ?: '#';
+    }
+
+    public function isUsed()
+    {
+        return $this->businessTemplates()->count() > 0;
     }
 }

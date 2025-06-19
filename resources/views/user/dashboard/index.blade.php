@@ -232,7 +232,7 @@
                     <span class="font-medium">Upload Galeri</span>
                 </a>
 
-                <a href="{{ route('user.templates') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200">
+                <a href="{{ route('user.templates.index') }}" class="flex items-center p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200">
                     <i class="fas fa-palette mr-3"></i>
                     <span class="font-medium">Pilih Template</span>
                 </a>
