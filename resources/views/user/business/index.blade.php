@@ -166,7 +166,7 @@
         <!-- Right Column - Logo Upload & Actions -->
         <div class="lg:col-span-1 space-y-8">
             <!-- Logo Upload -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up sticky top-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up sticky">
                 <div class="flex items-center mb-6">
                     <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
                         <i class="fas fa-image text-white"></i>
@@ -307,9 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(editor => {
             fullDescriptionEditor = editor;
+            showToast('Editor siap digunakan', 'success', 2000);
         })
         .catch(error => {
             console.error('CKEditor error:', error);
+            showToast('Gagal memuat editor teks', 'error');
         });
 
     // Character counter for short description
@@ -408,12 +410,12 @@ function validateLogoFile(file) {
     const maxSize = 2 * 1024 * 1024; // 2MB
 
     if (!allowedTypes.includes(file.type)) {
-        showToast('Please select a valid image file (JPG, PNG)', 'error');
+        showToast('Format file harus JPG atau PNG', 'error');
         return false;
     }
 
     if (file.size > maxSize) {
-        showToast('File size must be less than 2MB', 'error');
+        showToast('Ukuran file maksimal 2MB', 'error');
         return false;
     }
 
@@ -439,7 +441,7 @@ function handleLogoUpload(file) {
         setTimeout(() => {
             progress.classList.add('hidden');
             previewContainer.classList.remove('hidden');
-            showToast('Logo siap untuk diupload!', 'success');
+            showToast('Logo siap untuk diupload!', 'success', 3000);
         }, 1000);
     };
 
@@ -455,7 +457,7 @@ function removeLogo() {
     placeholder.classList.remove('hidden');
     previewContainer.classList.add('hidden');
     
-    showToast('Logo dihapus', 'info');
+    showToast('Logo dihapus', 'info', 2000);
 }
 
 function generateUrlSuggestion(businessName) {
@@ -519,50 +521,10 @@ document.getElementById('business-form').addEventListener('submit', function(e) 
         const textareaElement = document.querySelector('#full-description-editor');
         textareaElement.value = fullDescriptionEditor.getData();
     }
+    
+    // Show saving notification
+    showToast('Menyimpan perubahan...', 'info', 0);
 });
-
-// Toast notification function
-function showToast(message, type = 'info', duration = 5000) {
-    const toast = document.createElement('div');
-    const bgColors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
-    toast.className = `fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-y-full opacity-0 ${bgColors[type] || bgColors.info}`;
-    
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-2"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('translate-y-full', 'opacity-0');
-        toast.classList.add('translate-y-0', 'opacity-100');
-    }, 100);
-    
-    if (duration > 0) {
-        setTimeout(() => {
-            toast.classList.add('translate-y-full', 'opacity-0');
-            setTimeout(() => toast.remove(), 300);
-        }, duration);
-    }
-    
-    return toast;
-}
 </script>
 @endpush
 

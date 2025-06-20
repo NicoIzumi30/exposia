@@ -11,7 +11,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between">
             <div class="mb-4 md:mb-0">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">
-                    Selamat datang, {{ auth()->user()->name }}! 👋
+                    Selamat datang, {{ auth()->user()->name }}!
                 </h1>
                 <p class="text-blue-100 text-lg">
                     @if($business)
@@ -115,7 +115,7 @@
             Lihat website →
         </a>
         @else
-        <a href="{{ route('user.publish') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+        <a href="{{ route('user.publish.index') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
             Publikasikan →
         </a>
         @endif
@@ -238,7 +238,7 @@
                 </a>
 
                 @if($business && !$websiteStatus['is_published'])
-                <a href="{{ route('user.publish') }}" class="flex items-center p-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors duration-200">
+                <a href="{{ route('user.publish.index') }}" class="flex items-center p-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors duration-200">
                     <i class="fas fa-globe mr-3"></i>
                     <span class="font-medium">Publikasikan Website</span>
                 </a>
@@ -271,7 +271,7 @@
                     <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">
                         Website Anda sudah siap! Publikasikan sekarang agar dapat diakses oleh pelanggan.
                     </p>
-                    <a href="{{ route('user.publish') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
+                    <a href="{{ route('user.publish.index') }}" class="inline-flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors duration-200">
                         Publikasikan
                     </a>
                     @else
@@ -289,75 +289,36 @@
 
 @push('scripts')
 <script>
-    // Copy to clipboard function
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            showToast('Link berhasil disalin!', 'success');
-        }, function(err) {
-            console.error('Could not copy text: ', err);
-            showToast('Gagal menyalin link', 'error');
-        });
-    }
-
-    // Share website function
     function shareWebsite() {
         @if($business && $websiteStatus['is_published'])
-        const url = '{{ $websiteStatus['
-        public_url '] }}';
+        const url = '{{ $websiteStatus['public_url'] }}';
         const title = '{{ $business->business_name }}';
         const text = 'Kunjungi website {{ $business->business_name }}';
-
+        
         if (navigator.share) {
             navigator.share({
-                title: title
-                , text: text
-                , url: url
+                title: title,
+                text: text,
+                url: url
             }).then(() => {
                 showToast('Berhasil membagikan website!', 'success');
             }).catch(() => {
-                copyToClipboard(url);
+                copyToClipboard(url, 'Link website berhasil disalin!');
             });
         } else {
-            copyToClipboard(url);
+            copyToClipboard(url, 'Link website berhasil disalin!');
         }
         @else
         showToast('Website belum dipublikasikan', 'warning');
         @endif
     }
-
-    // Simple toast notification
-    function showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `fixed bottom-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-y-full opacity-0`;
-
-        const bgColor = type === 'success' ? 'bg-green-500' :
-            type === 'error' ? 'bg-red-500' :
-            type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
-
-        toast.classList.add(bgColor);
-        toast.textContent = message;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.remove('translate-y-full', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-        }, 100);
-
-        setTimeout(() => {
-            toast.classList.add('translate-y-full', 'opacity-0');
-            setTimeout(() => {
-                document.body.removeChild(toast);
-            }, 300);
-        }, 3000);
-    }
-
+    
     // Animate elements on scroll
     const observerOptions = {
-        threshold: 0.1
-        , rootMargin: '0px 0px -50px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     };
-
+    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -366,45 +327,19 @@
             }
         });
     }, observerOptions);
-
+    
     document.addEventListener('DOMContentLoaded', () => {
-        // Observe all cards for animation
         const cards = document.querySelectorAll('.bg-white, .bg-gradient-to-br');
         cards.forEach(card => observer.observe(card));
+        
+        // Show welcome message on first visit
+        const hasVisited = localStorage.getItem('dashboard_visited');
+        if (!hasVisited) {
+            showToast('Selamat datang di Dashboard Exposia Platform!', 'info', 5000, {
+                title: 'Selamat Datang!'
+            });
+            localStorage.setItem('dashboard_visited', 'true');
+        }
     });
-
 </script>
-
-<style>
-    @keyframes slide-up {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .animate-slide-up {
-        animation: slide-up 0.6s ease-out forwards;
-    }
-
-    .animate-fade-in {
-        animation: fade-in 0.5s ease-out forwards;
-    }
-
-</style>
 @endpush

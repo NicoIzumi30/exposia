@@ -219,77 +219,9 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * Business data management page
-     */
-    public function business()
-    {
-        return view('user.dashboard.business');
-    }
-
-    /**
-     * Branches management page
-     */
-    public function branches()
-    {
-        return view('user.dashboard.branches');
-    }
-
-
-    /**
-     * Gallery management page
-     */
-    public function gallery()
-    {
-        return view('user.dashboard.gallery');
-    }
-
-    /**
-     * Testimonials management page
-     */
-    public function testimonials()
-    {
-        return view('user.dashboard.testimonials');
-    }
-    
-
-    /**
-     * Templates and appearance page
-     */
-    public function templates()
-    {
-        return view('user.dashboard.templates');
-    }
-
-    /**
-     * AI content generator page
-     */
-    public function aiContent()
-    {
-        return view('user.dashboard.ai-content');
-    }
-
-    /**
-     * Publish and website link page
-     */
-    public function publish()
-    {
-        return view('user.dashboard.publish');
-    }
-
-    /**
-     * Help and support page
-     */
     public function support()
     {
-        return view('user.dashboard.support');
+        return view('user.support.index');
     }
 
-    /**
-     * Account management page
-     */
-    public function account()
-    {
-        return view('user.dashboard.account');
-    }
 }

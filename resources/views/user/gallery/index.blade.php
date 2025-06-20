@@ -260,521 +260,428 @@
 
 @push('scripts')
 <script>
-let selectedFiles = [];
+    let selectedFiles = [];
 
-// Build URLs dynamically
-function buildUrl(action, id = null) {
-    const baseUrl = '{{ url("user/gallery") }}';
-    
-    switch(action) {
-        case 'index':
-        case 'store':
-            return baseUrl;
-        case 'destroy':
-            return `${baseUrl}/${id}`;
-        default:
-            return baseUrl;
+    function buildUrl(action, id = null) {
+        const baseUrl = '{{ url("user/gallery") }}';
+        switch (action) {
+            case 'index':
+            case 'store':
+                return baseUrl;
+            case 'destroy':
+                return `${baseUrl}/${id}`;
+            default:
+                return baseUrl;
+        }
     }
-}
 
-// Get CSRF token
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-}
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
 
-// Open gallery modal
-function openGalleryModal() {
-    const modal = document.getElementById('galleryModal');
-    const form = document.getElementById('galleryForm');
-    
-    // Reset form
-    form.reset();
-    clearErrors();
-    resetImageUpload();
-    selectedFiles = [];
-    
-    // Show modal
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
+    function openGalleryModal() {
+        const modal = document.getElementById('galleryModal');
+        const form = document.getElementById('galleryForm');
+        form.reset();
+        clearErrors();
+        resetImageUpload();
+        selectedFiles = [];
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        showToast('Siap untuk upload foto galeri', 'info', 2000);
+    }
 
-// Close gallery modal
-function closeGalleryModal() {
-    const modal = document.getElementById('galleryModal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-    selectedFiles = [];
-}
+    function closeGalleryModal() {
+        const modal = document.getElementById('galleryModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        selectedFiles = [];
+    }
 
-// Delete gallery
-function deleteGallery(galleryId, galleryName) {
-    if (confirm(`Apakah Anda yakin ingin menghapus "${galleryName}"?`)) {
-        fetch(buildUrl('destroy', galleryId), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken()
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message, 'success');
-                // Remove gallery item from DOM
-                const galleryItem = document.querySelector(`[data-gallery-id="${galleryId}"]`);
-                if (galleryItem) {
-                    galleryItem.style.transform = 'scale(0)';
-                    galleryItem.style.opacity = '0';
-                    setTimeout(() => {
-                        galleryItem.remove();
-                        updateGalleryStats(data.stats);
-                    }, 300);
-                }
-            } else {
-                showToast(data.message || 'Gagal menghapus foto', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Terjadi kesalahan saat menghapus foto', 'error');
+    function deleteGallery(galleryId, galleryName) {
+        showConfirmation({
+            title: 'Hapus Foto Ini?',
+            text: `Foto "${galleryName}" akan dihapus secara permanen.`,
+            icon: 'warning',
+            confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus foto...', 'info', 0);
+            fetch(buildUrl('destroy', galleryId), {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.clearAllToasts();
+                    if (data.success) {
+                        showToast(data.message || 'Foto berhasil dihapus', 'success');
+                        const galleryItem = document.querySelector(`[data-gallery-id="${galleryId}"]`);
+                        if (galleryItem) {
+                            galleryItem.style.transform = 'scale(0)';
+                            galleryItem.style.opacity = '0';
+                            setTimeout(() => {
+                                galleryItem.remove();
+                                updateGalleryStats(data.stats);
+                            }, 300);
+                        }
+                    } else {
+                        showToast(data.message || 'Gagal menghapus foto', 'error');
+                    }
+                })
+                .catch(error => {
+                    window.clearAllToasts();
+                    showToast('Terjadi kesalahan saat menghapus foto', 'error');
+                });
         });
     }
-}
 
-// Handle form submission for upload
-document.getElementById('galleryForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalContent = submitBtn.innerHTML;
-    
-    // Show loading state
-    submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Mengupload...';
-    submitBtn.disabled = true;
-    
-    clearErrors();
-    
-    // Create FormData
-    const formData = new FormData();
-    const csrfToken = getCsrfToken();
-    formData.append('_token', csrfToken);
-    
-    // Add files
-    const fileInput = document.getElementById('galleryImages');
-    if (fileInput.files && fileInput.files.length > 0) {
-        Array.from(fileInput.files).forEach((file, index) => {
-            formData.append(`gallery_images[${index}]`, file);
-        });
-    } else {
-        showToast('Silakan pilih foto untuk diupload', 'error');
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-        return;
-    }
-    
-    const url = buildUrl('store');
-    
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast(data.message, 'success');
-            closeGalleryModal();
-            
-            // Reload page to show updated data
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+    document.getElementById('galleryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Mengupload...';
+        submitBtn.disabled = true;
+        clearErrors();
+
+        const formData = new FormData();
+        const csrfToken = getCsrfToken();
+        formData.append('_token', csrfToken);
+
+        const fileInput = document.getElementById('galleryImages');
+        if (selectedFiles.length > 0) {
+            selectedFiles.forEach((fileData, index) => {
+                formData.append(`gallery_images[${index}]`, fileData.file);
+            });
         } else {
-            showToast(data.message || 'Terjadi kesalahan', 'error');
-            
-            if (data.errors) {
-                displayErrors(data.errors);
+            showToast('Silakan pilih foto untuk diupload', 'error');
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const url = buildUrl('store');
+        showToast('Mengupload foto galeri...', 'info', 0);
+
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.clearAllToasts();
+                if (data.success) {
+                    showToast(data.message || 'Foto berhasil diupload', 'success');
+                    closeGalleryModal();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Terjadi kesalahan', 'error');
+                    if (data.errors) {
+                        displayErrors(data.errors);
+                    }
+                }
+            })
+            .catch(error => {
+                window.clearAllToasts();
+                showToast('Terjadi kesalahan saat mengupload foto', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+    });
+
+    function initializeImageUpload() {
+        const dropzone = document.getElementById('imageDropzone');
+        const fileInput = document.getElementById('galleryImages');
+        if (!dropzone || !fileInput) return;
+
+        dropzone.addEventListener('click', (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
             }
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan saat mengupload foto', 'error');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-    });
-});
+        });
 
-// Initialize image upload
-function initializeImageUpload() {
-    const dropzone = document.getElementById('imageDropzone');
-    const fileInput = document.getElementById('galleryImages');
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                handleMultipleImageUpload(files);
+            }
+        });
 
-    if (!dropzone || !fileInput) return;
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+        });
 
-    // Click to upload
-    dropzone.addEventListener('click', (e) => {
-        if (e.target !== fileInput) {
-            fileInput.click();
-        }
-    });
+        dropzone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            if (!dropzone.contains(e.relatedTarget)) {
+                dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+            }
+        });
 
-    // File input change
-    fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length > 0) {
-            handleMultipleImageUpload(files);
-        }
-    });
-
-    // Drag and drop events
-    dropzone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropzone.classList.add('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
-    });
-
-    dropzone.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        if (!dropzone.contains(e.relatedTarget)) {
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
             dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
-        }
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
-
-        const files = Array.from(e.dataTransfer.files);
-        if (files.length > 0) {
-            const validFiles = files.filter(file => file.type.startsWith('image/'));
-            if (validFiles.length > 0) {
-                handleMultipleImageUpload(validFiles);
-            } else {
-                showToast('Silakan pilih file gambar yang valid', 'error');
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length > 0) {
+                const validFiles = files.filter(file => file.type.startsWith('image/'));
+                if (validFiles.length > 0) {
+                    handleMultipleImageUpload(validFiles);
+                } else {
+                    showToast('Silakan pilih file gambar yang valid', 'error');
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-function handleMultipleImageUpload(files) {
-    const maxFiles = 8;
-    const currentGalleryCount = {{ $galleryStats['total'] ?? 0 }};
-    const remainingSlots = maxFiles - currentGalleryCount;
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    
-    if (files.length > remainingSlots) {
-        showToast(`Anda hanya dapat menambahkan ${remainingSlots} foto lagi. Total maksimal: ${maxFiles} foto`, 'error');
-        return;
-    }
-    
-    if (files.length > maxFiles) {
-        showToast(`Maksimal ${maxFiles} foto dapat diupload`, 'error');
-        return;
-    }
-    
-    const validFiles = [];
-    for (let file of files) {
-        if (!file.type.startsWith('image/')) {
-            showToast(`File ${file.name} bukan file gambar yang valid`, 'error');
-            continue;
-        }
-        
-        if (file.size > maxSize) {
-            showToast(`File ${file.name} terlalu besar (maksimal 5MB)`, 'error');
-            continue;
-        }
-        
-        validFiles.push(file);
-    }
-    
-    if (validFiles.length === 0) {
-        return;
-    }
-    
-    selectedFiles = validFiles.map(file => ({ file: file }));
-    showImagePreviews();
-}
+    function handleMultipleImageUpload(files) {
+        const maxFiles = 8;
+        const currentGalleryCount = {{ $galleryStats['total'] ?? 0 }};
+        const remainingSlots = maxFiles - currentGalleryCount;
+        const maxSize = 5 * 1024 * 1024;
 
-function showImagePreviews() {
-    const placeholder = document.getElementById('imageUploadPlaceholder');
-    const previewsContainer = document.getElementById('imagePreviewsContainer');
-    const previews = document.getElementById('imagePreviews');
-    
-    placeholder.classList.add('hidden');
-    previewsContainer.classList.remove('hidden');
-    
-    previews.innerHTML = '';
-    
-    selectedFiles.forEach((fileData, index) => {
-        const file = fileData.file;
-        const reader = new FileReader();
-        
-        reader.onload = (e) => {
-            const previewItem = document.createElement('div');
-            previewItem.className = 'relative bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden';
-            previewItem.innerHTML = `
+        if (files.length > remainingSlots) {
+            showToast(`Anda hanya dapat menambahkan ${remainingSlots} foto lagi.`, 'error');
+            return;
+        }
+
+        const validFiles = [];
+        for (let file of files) {
+            if (!file.type.startsWith('image/')) {
+                showToast(`File ${file.name} bukan gambar.`, 'error');
+                continue;
+            }
+            if (file.size > maxSize) {
+                showToast(`File ${file.name} terlalu besar (maks 5MB).`, 'error');
+                continue;
+            }
+            validFiles.push(file);
+        }
+
+        if (validFiles.length === 0) {
+            return;
+        }
+
+        selectedFiles = validFiles.map(file => ({ file: file }));
+        showToast(`${validFiles.length} foto siap untuk diupload`, 'success', 3000);
+        showImagePreviews();
+    }
+
+    function showImagePreviews() {
+        const placeholder = document.getElementById('imageUploadPlaceholder');
+        const previewsContainer = document.getElementById('imagePreviewsContainer');
+        const previews = document.getElementById('imagePreviews');
+        placeholder.classList.add('hidden');
+        previewsContainer.classList.remove('hidden');
+        previews.innerHTML = '';
+        selectedFiles.forEach((fileData, index) => {
+            const file = fileData.file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'relative bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden';
+                previewItem.innerHTML = `
                 <div class="aspect-square">
                     <img src="${e.target.result}" alt="${file.name}" class="w-full h-full object-cover">
                 </div>
                 <div class="p-3">
                     <p class="text-xs text-gray-600 dark:text-gray-400 truncate">${file.name}</p>
                 </div>
-                <button type="button" onclick="removeFilePreview(${index})" 
-                        class="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center">
+                <button type="button" onclick="removeFilePreview(${index})" class="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center">
                     <i class="fas fa-times text-xs"></i>
-                </button>
-            `;
-            
-            previews.appendChild(previewItem);
-        };
-        
-        reader.readAsDataURL(file);
-    });
-}
-
-function removeFilePreview(index) {
-    selectedFiles.splice(index, 1);
-    
-    if (selectedFiles.length === 0) {
-        resetImageUpload();
-    } else {
-        showImagePreviews();
+                </button>`;
+                previews.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+        });
     }
-}
 
-function resetImageUpload() {
-    const fileInput = document.getElementById('galleryImages');
-    const placeholder = document.getElementById('imageUploadPlaceholder');
-    const previewsContainer = document.getElementById('imagePreviewsContainer');
+    function removeFilePreview(index) {
+        selectedFiles.splice(index, 1);
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(fileData => dataTransfer.items.add(fileData.file));
+        document.getElementById('galleryImages').files = dataTransfer.files;
 
-    fileInput.value = '';
-    placeholder.classList.remove('hidden');
-    previewsContainer.classList.add('hidden');
-    selectedFiles = [];
-}
+        if (selectedFiles.length === 0) {
+            resetImageUpload();
+            showToast('Semua foto dibatalkan', 'info', 2000);
+        } else {
+            showImagePreviews();
+            showToast('Foto dihapus dari daftar upload', 'info', 2000);
+        }
+    }
 
-// Lightbox functions
-function openLightbox(imageUrl, caption) {
-    const modal = document.getElementById('lightboxModal');
-    const image = document.getElementById('lightboxImage');
-    const captionElement = document.getElementById('lightboxCaption');
-    
-    image.src = imageUrl;
-    captionElement.querySelector('p').textContent = caption;
-    
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
+    function resetImageUpload() {
+        const fileInput = document.getElementById('galleryImages');
+        const placeholder = document.getElementById('imageUploadPlaceholder');
+        const previewsContainer = document.getElementById('imagePreviewsContainer');
+        fileInput.value = '';
+        placeholder.classList.remove('hidden');
+        previewsContainer.classList.add('hidden');
+        selectedFiles = [];
+    }
 
-function closeLightbox() {
-    const modal = document.getElementById('lightboxModal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-}
+    function openLightbox(imageUrl, caption) {
+        const modal = document.getElementById('lightboxModal');
+        const image = document.getElementById('lightboxImage');
+        const captionElement = document.getElementById('lightboxCaption');
+        image.src = imageUrl;
+        captionElement.querySelector('p').textContent = caption;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        showToast('Tekan ESC untuk menutup', 'info', 2000);
+    }
 
-// Update gallery stats
-function updateGalleryStats(stats) {
-    // Update stats in sidebar if needed
-    console.log('Updated stats:', stats);
-}
+    function closeLightbox() {
+        const modal = document.getElementById('lightboxModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
 
-// Utility functions
-function clearErrors() {
-    const errorMessages = document.querySelectorAll('#galleryModal .error-message');
-    errorMessages.forEach(msg => {
-        msg.classList.add('hidden');
-        msg.textContent = '';
-    });
-    
-    const inputs = document.querySelectorAll('#galleryModal input');
-    inputs.forEach(input => {
-        input.classList.remove('border-red-500');
-    });
-}
+    function updateGalleryStats(stats) {
+        if (stats) {
+            const totalElement = document.querySelector('.text-2xl.font-bold.text-purple-600');
+            const remainingElement = document.querySelector('.text-lg.font-semibold.text-green-600');
+            const progressElement = document.querySelector('.w-full.bg-gray-200 .bg-gradient-to-r');
+            const progressText = document.querySelector('.text-xs.text-gray-500.text-center');
 
-function displayErrors(errors) {
-    Object.keys(errors).forEach(field => {
-        const input = document.querySelector(`#galleryModal [name="${field}"]`);
-        if (input) {
-            input.classList.add('border-red-500');
-            const errorDiv = input.parentElement.querySelector('.error-message');
-            if (errorDiv) {
-                errorDiv.textContent = errors[field][0];
-                errorDiv.classList.remove('hidden');
+            if(totalElement) totalElement.textContent = stats.total;
+            if(remainingElement) remainingElement.textContent = stats.remaining;
+            if(progressElement) progressElement.style.width = `${stats.percentage}%`;
+            if(progressText) progressText.textContent = `${stats.total} dari 8 foto`;
+            
+            showToast(`Sisa slot foto: ${stats.remaining}`, 'info', 3000);
+        }
+    }
+
+    function clearErrors() {
+        const errorMessages = document.querySelectorAll('#galleryModal .error-message');
+        errorMessages.forEach(msg => {
+            msg.classList.add('hidden');
+            msg.textContent = '';
+        });
+        const inputs = document.querySelectorAll('#galleryModal input');
+        inputs.forEach(input => {
+            input.classList.remove('border-red-500');
+        });
+    }
+
+    function displayErrors(errors) {
+        const firstErrorKey = Object.keys(errors)[0];
+        if (firstErrorKey) {
+            showToast(errors[firstErrorKey][0], 'error');
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (document.getElementById('lightboxModal').classList.contains('hidden')) {
+                closeGalleryModal();
+            } else {
+                closeLightbox();
             }
         }
     });
-}
 
-// Toast notification function
-function showToast(message, type = 'info', duration = 5000) {
-    const toast = document.createElement('div');
-    
-    const bgColors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-purple-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
-    toast.className = `fixed bottom-4 right-4 z-[9999] p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-x-full opacity-0 max-w-sm ${bgColors[type] || bgColors.info}`;
-    
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-3"></i>
-            <div class="flex-1">
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
-                <i class="fas fa-times text-sm"></i>
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('translate-x-full', 'opacity-0');
-        toast.classList.add('translate-x-0', 'opacity-100');
-    }, 100);
-    
-    if (duration > 0) {
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => {
-                    if (toast.parentElement) {
-                        toast.remove();
-                    }
-                }, 300);
-            }
-        }, duration);
-    }
-}
-
-// Handle escape key to close modals
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeGalleryModal();
-        closeLightbox();
-    }
-});
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    initializeImageUpload();
-    console.log('Super simple gallery initialized');
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeImageUpload();
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        if (galleryItems.length === 0) {
+            showToast('Upload foto terbaik untuk galeri bisnis Anda', 'info', 5000);
+        } else if (galleryItems.length >= 6) {
+            showToast('Galeri Anda sudah cukup lengkap!', 'success', 3000, {
+                title: 'Bagus!'
+            });
+        }
+    });
 </script>
 @endpush
 
 @push('styles')
 <style>
-/* Gallery item animations */
-.gallery-item {
-    transition: all 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: translateY(-4px);
-}
-
-/* Line clamp utilities */
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Modal animations */
-#galleryModal {
-    backdrop-filter: blur(4px);
-}
-
-#galleryModal > div > div {
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
+    #branchModal {
+        backdrop-filter: blur(4px);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+    #branchModal>div>div {
+        animation: modalSlideIn 0.3s ease-out;
     }
-}
 
-/* Image upload styles */
-.image-upload-dropzone {
-    transition: all 0.3s ease;
-}
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
 
-.image-upload-dropzone:hover {
-    transform: translateY(-2px);
-}
-
-.image-upload-dropzone.drag-over {
-    border-color: rgb(147 51 234);
-    background-color: rgb(243 232 255);
-}
-
-.dark .image-upload-dropzone.drag-over {
-    background-color: rgb(147 51 234 / 0.2);
-}
-
-/* Lightbox styles */
-#lightboxModal {
-    backdrop-filter: blur(8px);
-}
-
-#lightboxModal img {
-    animation: lightboxZoomIn 0.3s ease-out;
-}
-
-@keyframes lightboxZoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
-    to {
-        opacity: 1;
-        transform: scale(1);
+
+    .branch-card {
+        transition: all 0.3s ease;
     }
-}
 
-/* Preview grid styles */
-#imagePreviews {
-    animation: fadeIn 0.3s ease-out;
-}
+    .branch-card:hover {
+        transform: translateY(-2px);
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    .loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
 
-/* Aspect ratio utilities */
-.aspect-square {
-    aspect-ratio: 1 / 1;
-}
+    input:focus,
+    textarea:focus {
+        transform: translateY(-1px);
+    }
 
-/* Custom hover effects */  
-.group:hover .group-hover\:scale-105 {
-    transform: scale(1.05);
-}
+    #branchModal .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #branchModal .overflow-y-auto::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #branchModal .overflow-y-auto::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 3px;
+    }
+
+    .empty-state {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        #branchModal>div>div {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
+        }
+    }
 </style>
 @endpush

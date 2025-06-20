@@ -17,8 +17,7 @@
     </div>
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
         <!-- Add Branch Button -->
-        <button onclick="openBranchModal()" 
-                class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center space-x-2">
+        <button onclick="openBranchModal()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center space-x-2">
             <i class="fas fa-plus"></i>
             <span>Tambah Cabang</span>
         </button>
@@ -58,8 +57,7 @@
                                     <div class="flex items-center space-x-2">
                                         <i class="fas fa-phone text-gray-400 flex-shrink-0"></i>
                                         <span class="text-gray-600 dark:text-gray-400">{{ $branch->branch_phone }}</span>
-                                        <a href="{{ whatsapp_link($branch->branch_phone) }}" target="_blank" 
-                                           class="text-green-500 hover:text-green-600 transition-colors duration-200">
+                                        <a href="{{ whatsapp_link($branch->branch_phone) }}" target="_blank" class="text-green-500 hover:text-green-600 transition-colors duration-200">
                                             <i class="fab fa-whatsapp"></i>
                                         </a>
                                     </div>
@@ -67,8 +65,7 @@
                                     @if($branch->branch_google_maps_link)
                                     <div class="flex items-center space-x-2">
                                         <i class="fas fa-map text-gray-400 flex-shrink-0"></i>
-                                        <a href="{{ $branch->branch_google_maps_link }}" target="_blank" 
-                                           class="text-blue-500 hover:text-blue-600 transition-colors duration-200">
+                                        <a href="{{ $branch->branch_google_maps_link }}" target="_blank" class="text-blue-500 hover:text-blue-600 transition-colors duration-200">
                                             Lihat di Google Maps
                                         </a>
                                     </div>
@@ -80,12 +77,10 @@
 
                     <!-- Actions -->
                     <div class="flex items-center space-x-2 mt-4 md:mt-0 ml-16 md:ml-4">
-                        <button onclick="editBranch('{{ $branch->id }}')" 
-                                class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200">
+                        <button onclick="editBranch('{{ $branch->id }}')" class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="deleteBranch('{{ $branch->id }}', '{{ $branch->branch_name }}')" 
-                                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200">
+                        <button onclick="deleteBranch('{{ $branch->id }}', '{{ $branch->branch_name }}')" class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -103,8 +98,7 @@
             <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                 Tambahkan cabang usaha Anda untuk mempermudah pelanggan menemukan lokasi bisnis.
             </p>
-            <button onclick="openBranchModal()" 
-                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+            <button onclick="openBranchModal()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Cabang Pertama
             </button>
@@ -171,8 +165,7 @@
         </div>
 
         <!-- Back to Dashboard -->
-        <a href="{{ route('user.dashboard') }}" 
-           class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-center flex items-center justify-center space-x-2">
+        <a href="{{ route('user.dashboard') }}" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-center flex items-center justify-center space-x-2">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Dashboard</span>
         </a>
@@ -199,16 +192,14 @@
             <form id="branchForm" class="space-y-6">
                 @csrf
                 <input type="hidden" id="branchId" name="branch_id">
-                
+
                 <!-- Branch Name -->
                 <div>
                     <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-store mr-2 text-blue-500"></i>
                         Nama Cabang <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <input type="text" id="branchName" name="branch_name" required
-                           class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"
-                           placeholder="Contoh: Cabang Malioboro, Cabang Yogya">
+                    <input type="text" id="branchName" name="branch_name" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Cabang Malioboro, Cabang Yogya">
                     <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
                 </div>
 
@@ -218,9 +209,7 @@
                         <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
                         Alamat Cabang <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <textarea id="branchAddress" name="branch_address" rows="3" required
-                              class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"
-                              placeholder="Masukkan alamat lengkap cabang"></textarea>
+                    <textarea id="branchAddress" name="branch_address" rows="3" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Masukkan alamat lengkap cabang"></textarea>
                     <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
                 </div>
 
@@ -231,9 +220,7 @@
                             <i class="fas fa-clock mr-2 text-blue-500"></i>
                             Jam Operasional <span class="text-red-500 ml-1">*</span>
                         </label>
-                        <input type="text" id="branchHours" name="branch_operational_hours" required
-                               class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"
-                               placeholder="Senin-Sabtu 08:00-17:00">
+                        <input type="text" id="branchHours" name="branch_operational_hours" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Senin-Sabtu 08:00-17:00">
                         <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
                     </div>
 
@@ -243,9 +230,7 @@
                             <i class="fas fa-phone mr-2 text-blue-500"></i>
                             Nomor Telepon
                         </label>
-                        <input type="text" id="branchPhone" name="branch_phone"
-                               class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"
-                               placeholder="08123456789">
+                        <input type="text" id="branchPhone" name="branch_phone" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="08123456789">
                         <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
                     </div>
                 </div>
@@ -256,21 +241,17 @@
                         <i class="fas fa-map mr-2 text-blue-500"></i>
                         Link Google Maps
                     </label>
-                    <input type="url" id="branchMapsLink" name="branch_google_maps_link"
-                           class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"
-                           placeholder="https://maps.google.com/...">
+                    <input type="url" id="branchMapsLink" name="branch_google_maps_link" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="https://maps.google.com/...">
                     <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
                 </div>
 
                 <!-- Modal Actions -->
                 <div class="flex flex-col sm:flex-row gap-3 pt-6">
-                    <button type="submit" id="submitBtn"
-                            class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2">
+                    <button type="submit" id="submitBtn" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2">
                         <i class="fas fa-save"></i>
                         <span>Simpan Cabang</span>
                     </button>
-                    <button type="button" onclick="closeBranchModal()"
-                            class="flex-1 sm:flex-none bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    <button type="button" onclick="closeBranchModal()" class="flex-1 sm:flex-none bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                         Batal
                     </button>
                 </div>
@@ -282,399 +263,312 @@
 
 @push('scripts')
 <script>
-let isEditMode = false;
-let currentBranchId = null;
+    let isEditMode = false;
+    let currentBranchId = null;
 
-// Build URLs dynamically
-function buildUrl(action, id = null) {
-    const baseUrl = '{{ url("user/branches") }}';
-    
-    switch(action) {
-        case 'store':
-            return baseUrl;
-        case 'show':
-        case 'update':
-        case 'destroy':
-            return `${baseUrl}/${id}`;
-        default:
-            return baseUrl;
+    function buildUrl(action, id = null) {
+        const baseUrl = '{{ url("user/branches") }}';
+        switch (action) {
+            case 'store':
+                return baseUrl;
+            case 'show':
+            case 'update':
+            case 'destroy':
+                return `${baseUrl}/${id}`;
+            default:
+                return baseUrl;
+        }
     }
-}
 
-// Get CSRF token
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-}
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
 
-// Open branch modal
-function openBranchModal(branchData = null) {
-    const modal = document.getElementById('branchModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const form = document.getElementById('branchForm');
-    
-    // Reset form
-    form.reset();
-    clearErrors();
-    
-    if (branchData) {
-        // Edit mode
-        isEditMode = true;
-        currentBranchId = branchData.id;
-        modalTitle.textContent = 'Edit Cabang';
-        
-        // Fill form with branch data
-        document.getElementById('branchId').value = branchData.id;
-        document.getElementById('branchName').value = branchData.branch_name;
-        document.getElementById('branchAddress').value = branchData.branch_address;
-        document.getElementById('branchHours').value = branchData.branch_operational_hours;
-        document.getElementById('branchPhone').value = branchData.branch_phone || '';
-        document.getElementById('branchMapsLink').value = branchData.branch_google_maps_link || '';
-    } else {
-        // Add mode
+    function openBranchModal(branchData = null) {
+        const modal = document.getElementById('branchModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const form = document.getElementById('branchForm');
+        form.reset();
+        clearErrors();
+
+        if (branchData) {
+            isEditMode = true;
+            currentBranchId = branchData.id;
+            modalTitle.textContent = 'Edit Cabang';
+            document.getElementById('branchId').value = branchData.id;
+            document.getElementById('branchName').value = branchData.branch_name;
+            document.getElementById('branchAddress').value = branchData.branch_address;
+            document.getElementById('branchHours').value = branchData.branch_operational_hours;
+            document.getElementById('branchPhone').value = branchData.branch_phone || '';
+            document.getElementById('branchMapsLink').value = branchData.branch_Maps_link || '';
+            showToast('Data cabang dimuat', 'info', 2000);
+        } else {
+            isEditMode = false;
+            currentBranchId = null;
+            modalTitle.textContent = 'Tambah Cabang Baru';
+        }
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            document.getElementById('branchName').focus();
+        }, 100);
+    }
+
+    function closeBranchModal() {
+        const modal = document.getElementById('branchModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
         isEditMode = false;
         currentBranchId = null;
-        modalTitle.textContent = 'Tambah Cabang Baru';
     }
-    
-    // Show modal
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus first input
-    setTimeout(() => {
-        document.getElementById('branchName').focus();
-    }, 100);
-}
 
-// Close branch modal
-function closeBranchModal() {
-    const modal = document.getElementById('branchModal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-    isEditMode = false;
-    currentBranchId = null;
-}
-
-// Edit branch
-function editBranch(branchId) {
-    fetch(buildUrl('show', branchId), {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken()
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            openBranchModal(data.branch);
-        } else {
-            showToast(data.message || 'Gagal memuat data cabang', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan saat memuat data cabang', 'error');
-    });
-}
-
-// Delete branch
-function deleteBranch(branchId, branchName) {
-    if (confirm(`Apakah Anda yakin ingin menghapus cabang "${branchName}"?`)) {
-        fetch(buildUrl('destroy', branchId), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken()
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message, 'success');
-                // Remove branch card from DOM
-                const branchCard = document.querySelector(`[data-branch-id="${branchId}"]`);
-                if (branchCard) {
-                    branchCard.style.transform = 'translateX(-100%)';
-                    branchCard.style.opacity = '0';
-                    setTimeout(() => {
-                        branchCard.remove();
-                        updateBranchCount();
-                    }, 300);
+    function editBranch(branchId) {
+        showToast('Memuat data cabang...', 'info', 1000);
+        fetch(buildUrl('show', branchId), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
                 }
-            } else {
-                showToast(data.message || 'Gagal menghapus cabang', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Terjadi kesalahan saat menghapus cabang', 'error');
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    openBranchModal(data.branch);
+                } else {
+                    showToast(data.message || 'Gagal memuat data cabang', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Terjadi kesalahan saat memuat data cabang', 'error');
+            });
+    }
+
+    function deleteBranch(branchId, branchName) {
+        showConfirmation({
+            title: 'Hapus Cabang Ini?',
+            text: `Cabang "${branchName}" akan dihapus secara permanen.`,
+            icon: 'warning',
+            confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus cabang...', 'info', 0);
+            fetch(buildUrl('destroy', branchId), {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.clearAllToasts();
+                    if (data.success) {
+                        showToast(data.message || 'Cabang berhasil dihapus', 'success');
+                        const branchCard = document.querySelector(`[data-branch-id="${branchId}"]`);
+                        if (branchCard) {
+                            branchCard.style.transform = 'translateX(-100%)';
+                            branchCard.style.opacity = '0';
+                            setTimeout(() => {
+                                branchCard.remove();
+                                updateBranchCount();
+                            }, 300);
+                        }
+                    } else {
+                        showToast(data.message || 'Gagal menghapus cabang', 'error');
+                    }
+                })
+                .catch(error => {
+                    window.clearAllToasts();
+                    showToast('Terjadi kesalahan saat menghapus cabang', 'error');
+                });
         });
     }
-}
 
-// Handle form submission
-document.getElementById('branchForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalContent = submitBtn.innerHTML;
-    
-    // Show loading state
-    submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
-    submitBtn.disabled = true;
-    
-    clearErrors();
-    
-    const formData = new FormData(this);
-    const url = isEditMode 
-        ? buildUrl('update', currentBranchId)
-        : buildUrl('store');
-    
-    const method = isEditMode ? 'PUT' : 'POST';
-    
-    // Convert FormData to regular object for PUT request
-    const data = {};
-    for (let [key, value] of formData.entries()) {
-        if (key !== 'branch_id') {
-            data[key] = value;
+    document.getElementById('branchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
+        submitBtn.disabled = true;
+        clearErrors();
+
+        const formData = new FormData(this);
+        const url = isEditMode ? buildUrl('update', currentBranchId) : buildUrl('store');
+        const method = isEditMode ? 'PUT' : 'POST';
+
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'branch_id') {
+                data[key] = value;
+            }
         }
+
+        showToast('Menyimpan data cabang...', 'info', 0);
+
+        fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.clearAllToasts();
+                if (data.success) {
+                    showToast(data.message || 'Cabang berhasil disimpan', 'success');
+                    closeBranchModal();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Terjadi kesalahan', 'error');
+                    if (data.errors) {
+                        displayErrors(data.errors);
+                    }
+                }
+            })
+            .catch(error => {
+                window.clearAllToasts();
+                showToast('Terjadi kesalahan saat menyimpan cabang', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+    });
+
+    function clearErrors() {
+        document.querySelectorAll('.error-message').forEach(msg => {
+            msg.classList.add('hidden');
+            msg.textContent = '';
+        });
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.classList.remove('border-red-500');
+        });
     }
-    
-    fetch(url, {
-        method: method,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken()
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast(data.message, 'success');
-            closeBranchModal();
-            
-            // Reload page to show updated data
+
+    function displayErrors(errors) {
+        Object.keys(errors).forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('border-red-500');
+                const errorDiv = input.parentElement.querySelector('.error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = errors[field][0];
+                    errorDiv.classList.remove('hidden');
+                }
+            }
+        });
+        showToast('Periksa kembali form Anda', 'warning');
+    }
+
+    function updateBranchCount() {
+        const branchCards = document.querySelectorAll('.branch-card');
+        const count = branchCards.length;
+        const countElement = document.querySelector('.text-2xl.font-bold.text-blue-600');
+        if (countElement) {
+            countElement.textContent = count;
+        }
+        if (count === 0) {
             setTimeout(() => {
                 window.location.reload();
-            }, 1000);
-        } else {
-            showToast(data.message || 'Terjadi kesalahan', 'error');
-            
-            // Handle validation errors
-            if (data.errors) {
-                displayErrors(data.errors);
-            }
+            }, 500);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan saat menyimpan cabang', 'error');
-    })
-    .finally(() => {
-        // Restore button state
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-    });
-});
+    }
 
-// Clear form errors
-function clearErrors() {
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(msg => {
-        msg.classList.add('hidden');
-        msg.textContent = '';
-    });
-    
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.classList.remove('border-red-500');
-    });
-}
-
-// Display validation errors
-function displayErrors(errors) {
-    Object.keys(errors).forEach(field => {
-        const input = document.querySelector(`[name="${field}"]`);
-        if (input) {
-            input.classList.add('border-red-500');
-            const errorDiv = input.parentElement.querySelector('.error-message');
-            if (errorDiv) {
-                errorDiv.textContent = errors[field][0];
-                errorDiv.classList.remove('hidden');
-            }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeBranchModal();
         }
     });
-}
 
-// Update branch count in UI
-function updateBranchCount() {
-    const branchCards = document.querySelectorAll('.branch-card');
-    const count = branchCards.length;
-    
-    // Update stats if exists
-    const countElement = document.querySelector('.text-2xl.font-bold.text-blue-600');
-    if (countElement) {
-        countElement.textContent = count;
-    }
-    
-    // Show empty state if no branches
-    if (count === 0) {
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
-    }
-}
-
-// Toast notification function
-function showToast(message, type = 'info', duration = 5000) {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    
-    const bgColors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
-    toast.className = `p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-x-full opacity-0 max-w-sm ${bgColors[type] || bgColors.info}`;
-    
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-3"></i>
-            <div class="flex-1">
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
-                <i class="fas fa-times text-sm"></i>
-            </button>
-        </div>
-    `;
-    
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('translate-x-full', 'opacity-0');
-        toast.classList.add('translate-x-0', 'opacity-100');
-    }, 100);
-    
-    if (duration > 0) {
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => {
-                    if (toast.parentElement) {
-                        toast.remove();
-                    }
-                }, 300);
-            }
-        }, duration);
-    }
-}
-
-// Handle escape key to close modal
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeBranchModal();
-    }
-});
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Branches page initialized');
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        const branchCards = document.querySelectorAll('.branch-card');
+        if (branchCards.length === 0) {
+            showToast('Tambahkan cabang pertama Anda untuk memulai', 'info', 5000);
+        }
+    });
 </script>
 @endpush
-
 @push('styles')
 <style>
-/* Modal animations */
-#branchModal {
-    backdrop-filter: blur(4px);
-}
-
-#branchModal > div > div {
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
+    #branchModal {
+        backdrop-filter: blur(4px);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+    #branchModal>div>div {
+        animation: modalSlideIn 0.3s ease-out;
     }
-}
 
-/* Branch card animations */
-.branch-card {
-    transition: all 0.3s ease;
-}
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
 
-.branch-card:hover {
-    transform: translateY(-2px);
-}
-
-/* Loading states */
-.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-/* Form field focus styles */
-input:focus, textarea:focus {
-    transform: translateY(-1px);
-}
-
-/* Custom scrollbar for modal */
-#branchModal .overflow-y-auto::-webkit-scrollbar {
-    width: 6px;
-}
-
-#branchModal .overflow-y-auto::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-#branchModal .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(156, 163, 175, 0.5);
-    border-radius: 3px;
-}
-
-/* Empty state animation */
-.empty-state {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-/* Responsive improvements */
-@media (max-width: 768px) {
-    #branchModal > div > div {
-        margin: 1rem;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
+    .branch-card {
+        transition: all 0.3s ease;
     }
-}
+
+    .branch-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    input:focus,
+    textarea:focus {
+        transform: translateY(-1px);
+    }
+
+    #branchModal .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #branchModal .overflow-y-auto::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #branchModal .overflow-y-auto::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 3px;
+    }
+
+    .empty-state {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        #branchModal>div>div {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
+        }
+    }
 </style>
 @endpush

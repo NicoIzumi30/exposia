@@ -556,27 +556,21 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tab Switching
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Reset all tabs
                 tabButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.classList.remove('text-blue-600', 'dark:text-blue-400', 'border-blue-500');
                 });
-
                 tabContents.forEach(content => {
                     content.classList.remove('active');
                     content.classList.add('hidden');
                 });
-
-                // Activate selected tab
                 button.classList.add('active');
                 button.classList.add('text-blue-600', 'dark:text-blue-400', 'border-blue-500');
-
                 const contentId = 'content-' + button.id.replace('tab-', '');
                 const content = document.getElementById(contentId);
                 content.classList.add('active');
@@ -584,7 +578,6 @@
             });
         });
 
-        // Short Description Character Counter
         const shortDescResult = document.getElementById('short-description-result');
         const shortDescCount = document.getElementById('short-desc-count');
 
@@ -594,7 +587,6 @@
             function updateCharCount() {
                 const count = shortDescResult.value.length;
                 shortDescCount.textContent = `${count}/160`;
-
                 if (count > 160) {
                     shortDescCount.classList.add('text-red-500');
                 } else {
@@ -603,93 +595,67 @@
             }
         }
 
-        // Business Description Form
         const businessDescForm = document.getElementById('business-description-form');
         if (businessDescForm) {
             businessDescForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                // Show loading state
                 document.getElementById('business-description-initial').classList.add('hidden');
                 document.getElementById('business-description-result').classList.add('hidden');
                 document.getElementById('business-description-loading').classList.remove('hidden');
-
-                // Get form data
                 const formData = new FormData(businessDescForm);
                 const data = Object.fromEntries(formData.entries());
-
-                // Use JSON format for clean results
                 data.format = 'json';
-
-                // Send API request
                 fetch('{{ route("user.ai-content.generate-business-description") }}', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify(data)
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
                     })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Hide loading
                             document.getElementById('business-description-loading').classList.add('hidden');
                             document.getElementById('business-description-result').classList.remove('hidden');
-
-                            // Tampilkan nilai ke dalam form
                             document.getElementById('short-description-result').value = data.content.short_description || '';
                             document.getElementById('full-description-result').value = data.content.full_description || '';
-
-                            // Update character count
-                            updateCharCount();
-
-                            // Show success toast
+                            shortDescResult.dispatchEvent(new Event('input'));
                             showToast('Deskripsi bisnis berhasil dibuat!', 'success');
                         } else {
-                            // Show error
                             document.getElementById('business-description-loading').classList.add('hidden');
                             document.getElementById('business-description-initial').classList.remove('hidden');
-
                             showToast(data.message || 'Gagal membuat deskripsi bisnis.', 'error');
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         document.getElementById('business-description-loading').classList.add('hidden');
                         document.getElementById('business-description-initial').classList.remove('hidden');
-
                         showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     });
             });
         }
 
-        // Save Business Description
         const saveBizDescBtn = document.getElementById('save-business-description-btn');
         if (saveBizDescBtn) {
             saveBizDescBtn.addEventListener('click', function() {
                 const shortDesc = document.getElementById('short-description-result').value;
                 const fullDesc = document.getElementById('full-description-result').value;
-
                 if (!shortDesc || !fullDesc) {
                     showToast('Harap buat deskripsi terlebih dahulu.', 'warning');
                     return;
                 }
-
-                // Show loading state
                 saveBizDescBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
                 saveBizDescBtn.disabled = true;
-
-                // Send API request
                 fetch('{{ route("user.ai-content.save-business-description") }}', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify({
-                            short_description: shortDesc
-                            , full_description: fullDesc
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            short_description: shortDesc,
+                            full_description: fullDesc
                         })
                     })
                     .then(response => response.json())
@@ -701,193 +667,141 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     })
                     .finally(() => {
-                        // Reset button
                         saveBizDescBtn.innerHTML = '<i class="fas fa-save"></i><span>Simpan ke Profil Bisnis</span>';
                         saveBizDescBtn.disabled = false;
                     });
             });
         }
 
-        // Regenerate Business Description
         const regenerateBizDescBtn = document.getElementById('regenerate-business-description-btn');
         if (regenerateBizDescBtn) {
             regenerateBizDescBtn.addEventListener('click', function() {
-                // Trigger form submission to regenerate
                 businessDescForm.dispatchEvent(new Event('submit'));
             });
         }
 
-        // Product selector change handler
         const productSelector = document.getElementById('product_id');
         if (productSelector) {
             productSelector.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
-
                 if (this.value) {
-                    // Set hidden field values from data attributes
                     document.getElementById('product_name').value = selectedOption.dataset.name || '';
                     document.getElementById('product_price').value = selectedOption.dataset.price || '';
-
-                    // Update the product info display
                     document.getElementById('product-name-display').textContent = selectedOption.dataset.name || '';
                     document.getElementById('product-price-display').textContent = selectedOption.dataset.price || '';
-
-                    // Show the product info display
                     document.getElementById('product-info-display').classList.remove('hidden');
                 } else {
-                    // Hide the product info display if no product selected
                     document.getElementById('product-info-display').classList.add('hidden');
                 }
             });
         }
 
-        // Product Description Form
         const productDescForm = document.getElementById('product-description-form');
         if (productDescForm) {
             productDescForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                // Check if product is selected
                 const productId = document.getElementById('product_id').value;
                 if (!productId) {
                     showToast('Harap pilih produk terlebih dahulu.', 'warning');
                     return;
                 }
-
-                // Show loading state
                 document.getElementById('product-description-initial').classList.add('hidden');
                 document.getElementById('product-description-result').classList.add('hidden');
                 document.getElementById('product-description-loading').classList.remove('hidden');
-
-                // Get form data
                 const formData = new FormData(productDescForm);
                 const data = Object.fromEntries(formData.entries());
-
-                // Check if structured format is requested
                 const useStructuredFormat = document.getElementById('use-structured-format-product').checked;
                 if (useStructuredFormat) {
                     data.format = 'json';
                 }
-
-                // Send API request
                 fetch('{{ route("user.ai-content.generate-product-description") }}', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify(data)
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
                     })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Store the product ID for saving later
                             document.getElementById('product-selector').value = data.product_id || '';
-
-                            // Hide loading
                             document.getElementById('product-description-loading').classList.add('hidden');
                             document.getElementById('product-description-result').classList.remove('hidden');
-
-                            // Hide structured sections by default
                             document.getElementById('product-key-features-section').classList.add('hidden');
                             document.getElementById('product-meta-description-section').classList.add('hidden');
 
                             if (useStructuredFormat && typeof data.content === 'object') {
-                                // Structured format (JSON)
                                 const content = data.content;
-
-                                // Set main description
                                 document.getElementById('product-description-result-text').value = content.product_description || '';
 
-                                // Show and populate key features if available
                                 if (content.key_features && Array.isArray(content.key_features) && content.key_features.length > 0) {
                                     const keyFeaturesSection = document.getElementById('product-key-features-section');
                                     const keyFeaturesContainer = document.getElementById('product-key-features');
-
                                     keyFeaturesSection.classList.remove('hidden');
                                     keyFeaturesContainer.innerHTML = '';
-
                                     const featuresList = document.createElement('ul');
                                     featuresList.className = 'list-disc pl-5 space-y-2';
-
                                     content.key_features.forEach(feature => {
                                         const listItem = document.createElement('li');
                                         listItem.className = 'text-gray-800 dark:text-gray-200';
                                         listItem.textContent = feature;
                                         featuresList.appendChild(listItem);
                                     });
-
                                     keyFeaturesContainer.appendChild(featuresList);
                                 }
 
-                                // Show and populate meta description if available
                                 if (content.meta_description) {
                                     const metaDescSection = document.getElementById('product-meta-description-section');
                                     const metaDescTextarea = document.getElementById('product-meta-description');
-
                                     metaDescSection.classList.remove('hidden');
                                     metaDescTextarea.value = content.meta_description;
                                 }
                             } else {
-                                // Text format - use as is
                                 document.getElementById('product-description-result-text').value = data.content.product_description || data.content;
                             }
-
-                            // Show success toast
                             showToast('Deskripsi produk berhasil dibuat!', 'success');
                         } else {
-                            // Show error
                             document.getElementById('product-description-loading').classList.add('hidden');
                             document.getElementById('product-description-initial').classList.remove('hidden');
-
                             showToast(data.message || 'Gagal membuat deskripsi produk.', 'error');
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         document.getElementById('product-description-loading').classList.add('hidden');
                         document.getElementById('product-description-initial').classList.remove('hidden');
-
                         showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     });
             });
         }
 
-        // Save Product Description
         const saveProductDescBtn = document.getElementById('save-product-description-btn');
         if (saveProductDescBtn) {
             saveProductDescBtn.addEventListener('click', function() {
                 const productDesc = document.getElementById('product-description-result-text').value;
                 const productId = document.getElementById('product_id').value;
-
                 if (!productDesc) {
                     showToast('Harap buat deskripsi terlebih dahulu.', 'warning');
                     return;
                 }
-
                 if (!productId) {
                     showToast('Harap pilih produk untuk menyimpan deskripsi.', 'warning');
                     return;
                 }
-
-                // Show loading state
                 saveProductDescBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
                 saveProductDescBtn.disabled = true;
-
-                // Send API request
                 fetch('{{ route("user.ai-content.save-product-description") }}', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify({
-                            product_id: productId
-                            , product_description: productDesc
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            product_description: productDesc
                         })
                     })
                     .then(response => response.json())
@@ -899,77 +813,56 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     })
                     .finally(() => {
-                        // Reset button
                         saveProductDescBtn.innerHTML = '<i class="fas fa-save"></i><span>Simpan ke Produk</span>';
                         saveProductDescBtn.disabled = false;
                     });
             });
         }
 
-        // Regenerate Product Description
         const regenerateProductDescBtn = document.getElementById('regenerate-product-description-btn');
         if (regenerateProductDescBtn) {
             regenerateProductDescBtn.addEventListener('click', function() {
-                // Trigger form submission to regenerate
                 productDescForm.dispatchEvent(new Event('submit'));
             });
         }
 
-        // Headline Form
         const headlineForm = document.getElementById('headline-form');
         if (headlineForm) {
             headlineForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                // Show loading state
                 document.getElementById('headline-initial').classList.add('hidden');
                 document.getElementById('headline-result').classList.add('hidden');
                 document.getElementById('headline-loading').classList.remove('hidden');
-
-                // Get form data
                 const formData = new FormData(headlineForm);
                 const data = Object.fromEntries(formData.entries());
-
-                
-
-                // Send API request
                 fetch('{{ route("user.ai-content.generate-headline") }}', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify(data)
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
                     })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Hide loading
                             document.getElementById('headline-loading').classList.add('hidden');
                             document.getElementById('headline-result').classList.remove('hidden');
-
-                            // Generate headline options
                             const headlineOptions = document.getElementById('headline-options');
                             headlineOptions.innerHTML = '';
-
                             if (typeof data.content === 'object' && data.content.headlines) {
-                                // Structured format (JSON)
                                 const headlines = data.content.headlines;
-
                                 headlines.forEach((headline, index) => {
                                     const optionDiv = document.createElement('div');
                                     optionDiv.className = 'relative p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl hover:shadow-md transition-all duration-200';
-
                                     let styleTag = '';
                                     if (headline.style) {
                                         const styleColorClass = getStyleColorClass(headline.style);
                                         styleTag = `<span class="text-xs ${styleColorClass} ml-2 px-2 py-1 rounded-full bg-opacity-10 border border-current">${headline.style}</span>`;
                                     }
-
                                     optionDiv.innerHTML = `
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -982,25 +875,15 @@
                                     <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fas fa-copy"></i>
                                     </button>
-                                </div>
-                            `;
-
+                                </div>`;
                                     headlineOptions.appendChild(optionDiv);
                                 });
                             } else {
-                                // Process the text content
                                 const content = data.content;
-
-                                // Extract headlines (assuming they are numbered or in a list)
-                                const headlines = content.split('\n')
-                                    .filter(line => line.trim().length > 0)
-                                    .filter(line => /^\d+[\.\)\-]|^\-|\*/.test(line.trim()))
-                                    .map(line => line.replace(/^\d+[\.\)\-]|\-|\*/, '').trim());
-
+                                const headlines = content.split('\n').filter(line => line.trim().length > 0).filter(line => /^\d+[\.\)\-]|^\-|\*/.test(line.trim())).map(line => line.replace(/^\d+[\.\)\-]|\-|\*/, '').trim());
                                 headlines.forEach((headline, index) => {
                                     const optionDiv = document.createElement('div');
                                     optionDiv.className = 'relative p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl hover:shadow-md transition-all duration-200';
-
                                     optionDiv.innerHTML = `
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -1012,43 +895,32 @@
                                     <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fas fa-copy"></i>
                                     </button>
-                                </div>
-                            `;
-
+                                </div>`;
                                     headlineOptions.appendChild(optionDiv);
                                 });
                             }
-
-                            // Show success toast
                             showToast('Headline berhasil dibuat!', 'success');
                         } else {
-                            // Show error
                             document.getElementById('headline-loading').classList.add('hidden');
                             document.getElementById('headline-initial').classList.remove('hidden');
-
                             showToast(data.message || 'Gagal membuat headline.', 'error');
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         document.getElementById('headline-loading').classList.add('hidden');
                         document.getElementById('headline-initial').classList.remove('hidden');
-
                         showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     });
             });
         }
 
-        // Regenerate Headline
         const regenerateHeadlineBtn = document.getElementById('regenerate-headline-btn');
         if (regenerateHeadlineBtn) {
             regenerateHeadlineBtn.addEventListener('click', function() {
-                // Trigger form submission to regenerate
                 headlineForm.dispatchEvent(new Event('submit'));
             });
         }
 
-        // Helper function to get style color class
         function getStyleColorClass(style) {
             style = style.toLowerCase();
             if (style.includes('profesional')) return 'text-blue-500 dark:text-blue-400 bg-blue-500';
@@ -1058,7 +930,6 @@
         }
     });
 
-    // Copy text to clipboard
     function copyToClipboard(elementId) {
         const element = document.getElementById(elementId);
         element.select();
@@ -1066,59 +937,13 @@
         showToast('Teks berhasil disalin!', 'success', 2000);
     }
 
-    // Copy headline to clipboard
     function copyHeadline(button) {
         const headline = button.parentElement.querySelector('p').textContent;
         navigator.clipboard.writeText(headline);
         showToast('Headline berhasil disalin!', 'success', 2000);
     }
-
-    // Toast Notification Function
-    function showToast(message, type = 'info', duration = 5000) {
-        const toast = document.createElement('div');
-        const bgColors = {
-            success: 'bg-green-500'
-            , error: 'bg-red-500'
-            , warning: 'bg-yellow-500'
-            , info: 'bg-blue-500'
-        };
-
-        const icons = {
-            success: 'fa-check-circle'
-            , error: 'fa-exclamation-circle'
-            , warning: 'fa-exclamation-triangle'
-            , info: 'fa-info-circle'
-        };
-
-        toast.className = `fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-y-full opacity-0 ${bgColors[type] || bgColors.info}`;
-
-        toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-2"></i>
-            <span>${message}</span>
-        </div>
-    `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.remove('translate-y-full', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-        }, 100);
-
-        if (duration > 0) {
-            setTimeout(() => {
-                toast.classList.add('translate-y-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
-        }
-
-        return toast;
-    }
-
 </script>
 @endpush
-
 @push('styles')
 <style>
     /* Tab Styles */

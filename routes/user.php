@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\User\AccountController;
 use App\Http\Controllers\User\AiContentController;
 use App\Http\Controllers\User\BranchController;
 use App\Http\Controllers\User\BusinessController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\GalleryController;
 use App\Http\Controllers\User\ProductController;
+use App\Http\Controllers\User\PublishController;
 use App\Http\Controllers\User\TemplateController;
 use App\Http\Controllers\User\TestimonialController;
 use Illuminate\Support\Facades\Route;
@@ -80,7 +82,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
      // Dashboard Pages
      Route::prefix('dashboard')->group(function () {
           Route::get('/branches', [DashboardController::class, 'branches'])->name('branches');
-          Route::get('/publish', [DashboardController::class, 'publish'])->name('publish');
           Route::get('/support', [DashboardController::class, 'support'])->name('support');
           Route::get('/account', [DashboardController::class, 'account'])->name('account');
      });
@@ -108,8 +109,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
                Route::get('/preview', 'preview')->name('preview');
                Route::post('/update-section-style', 'updateSectionStyle')->name('update-section-style');
           });
-     // AI Content Generator
-     // AI Content Generator
      Route::controller(AiContentController::class)->prefix('ai-content')->name('ai-content.')->group(function () {
           Route::get('/', 'index')->name('index');
           Route::post('/generate-business-description', 'generateBusinessDescription')->name('generate-business-description');
@@ -117,5 +116,19 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
           Route::post('/generate-headline', 'generateHeadline')->name('generate-headline');
           Route::post('/save-business-description', 'saveBusinessDescription')->name('save-business-description');
           Route::post('/save-product-description', 'saveProductDescription')->name('save-product-description');
+     });
+     Route::controller(PublishController::class)->prefix('publish')->name('publish.')->group(function () {
+          Route::get('/', 'index')->name('index');
+          Route::post('/toggle-status', 'togglePublishStatus')->name('toggle-status');
+          Route::post('/update-url', 'updateUrl')->name('update-url');
+          Route::get('download-qr', 'downloadQrCode')->name('download-qr');
+          Route::get('qr-code', 'displayQrCode')->name('display-qr');
+      });
+       // Account Management
+     Route::controller(AccountController::class)->prefix('account')->name('account.')->group(function () {
+          Route::get('/', 'index')->name('index');
+          Route::put('/update-profile', 'updateProfile')->name('update-profile');
+          Route::put('/update-password', 'updatePassword')->name('update-password');
+          Route::post('/logout-all-devices', 'logoutAllDevices')->name('logout-all-devices');
      });
 });

@@ -260,386 +260,308 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
 <script>
-let isEditMode = false;
-let currentTestimonialId = null;
+    let isEditMode = false;
+    let currentTestimonialId = null;
 
-// Build URLs dynamically
-function buildUrl(action, id = null) {
-    const baseUrl = '{{ url("user/testimonials") }}';
-    
-    switch(action) {
-        case 'index':
-        case 'store':
-            return baseUrl;
-        case 'show':
-        case 'update':
-        case 'destroy':
-            return `${baseUrl}/${id}`;
-        default:
-            return baseUrl;
+    function buildUrl(action, id = null) {
+        const baseUrl = '{{ url("user/testimonials") }}';
+        switch (action) {
+            case 'index':
+            case 'store':
+                return baseUrl;
+            case 'show':
+            case 'update':
+            case 'destroy':
+                return `${baseUrl}/${id}`;
+            default:
+                return baseUrl;
+        }
     }
-}
 
-// Get CSRF token
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-}
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
 
-// Open testimonial modal
-function openTestimonialModal(testimonialData = null) {
-    const modal = document.getElementById('testimonialModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const form = document.getElementById('testimonialForm');
-    
-    // Reset form
-    form.reset();
-    clearErrors();
-    
-    if (testimonialData) {
-        // Edit mode
-        isEditMode = true;
-        currentTestimonialId = testimonialData.id;
-        modalTitle.textContent = 'Edit Testimoni';
-        
-        // Fill form with testimonial data
-        document.getElementById('testimonialId').value = testimonialData.id;
-        document.getElementById('testimonialName').value = testimonialData.testimonial_name;
-        document.getElementById('testimonialPosition').value = testimonialData.testimonial_position || '';
-        document.getElementById('testimonialContent').value = testimonialData.testimonial_content;
-    } else {
-        // Add mode
+    function openTestimonialModal(testimonialData = null) {
+        const modal = document.getElementById('testimonialModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const form = document.getElementById('testimonialForm');
+        form.reset();
+        clearErrors();
+        if (testimonialData) {
+            isEditMode = true;
+            currentTestimonialId = testimonialData.id;
+            modalTitle.textContent = 'Edit Testimoni';
+            document.getElementById('testimonialId').value = testimonialData.id;
+            document.getElementById('testimonialName').value = testimonialData.testimonial_name;
+            document.getElementById('testimonialPosition').value = testimonialData.testimonial_position || '';
+            document.getElementById('testimonialContent').value = testimonialData.testimonial_content;
+            showToast('Data testimoni siap untuk diedit', 'info', 3000);
+        } else {
+            isEditMode = false;
+            currentTestimonialId = null;
+            modalTitle.textContent = 'Tambah Testimoni Baru';
+        }
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            document.getElementById('testimonialName').focus();
+        }, 100);
+    }
+
+    function closeTestimonialModal() {
+        const modal = document.getElementById('testimonialModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
         isEditMode = false;
         currentTestimonialId = null;
-        modalTitle.textContent = 'Tambah Testimoni Baru';
     }
-    
-    // Show modal
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus first input
-    setTimeout(() => {
-        document.getElementById('testimonialName').focus();
-    }, 100);
-}
 
-// Close testimonial modal
-function closeTestimonialModal() {
-    const modal = document.getElementById('testimonialModal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-    isEditMode = false;
-    currentTestimonialId = null;
-}
-
-// Edit testimonial
-function editTestimonial(testimonialId) {
-    fetch(buildUrl('show', testimonialId), {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken()
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            openTestimonialModal(data.testimonial);
-        } else {
-            showToast(data.message || 'Gagal memuat data testimoni', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan saat memuat data testimoni', 'error');
-    });
-}
-
-// Delete testimonial
-function deleteTestimonial(testimonialId, testimonialName) {
-    if (confirm(`Apakah Anda yakin ingin menghapus testimoni dari "${testimonialName}"?`)) {
-        fetch(buildUrl('destroy', testimonialId), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken()
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message, 'success');
-                // Remove testimonial row from DOM
-                const testimonialRow = document.querySelector(`[data-testimonial-id="${testimonialId}"]`);
-                if (testimonialRow) {
-                    testimonialRow.style.opacity = '0';
-                    testimonialRow.style.transform = 'translateX(-100%)';
-                    setTimeout(() => {
-                        testimonialRow.remove();
-                        updateTestimonialCount();
-                    }, 300);
+    function editTestimonial(testimonialId) {
+        showToast('Memuat data testimoni...', 'info', 2000);
+        fetch(buildUrl('show', testimonialId), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
                 }
-            } else {
-                showToast(data.message || 'Gagal menghapus testimoni', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Terjadi kesalahan saat menghapus testimoni', 'error');
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    openTestimonialModal(data.testimonial);
+                } else {
+                    showToast(data.message || 'Gagal memuat data testimoni', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Terjadi kesalahan saat memuat data. Periksa koneksi Anda.', 'error');
+            });
+    }
+
+    function deleteTestimonial(testimonialId, testimonialName) {
+        showConfirmation({
+            title: 'Hapus Testimoni Ini?',
+            text: `Testimoni dari "${testimonialName}" akan dihapus secara permanen.`,
+            icon: 'warning',
+            confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus testimoni...', 'info', 0);
+            fetch(buildUrl('destroy', testimonialId), {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.clearAllToasts();
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        const testimonialRow = document.querySelector(`[data-testimonial-id="${testimonialId}"]`);
+                        if (testimonialRow) {
+                            testimonialRow.style.opacity = '0';
+                            testimonialRow.style.transform = 'translateX(-100%)';
+                            setTimeout(() => {
+                                testimonialRow.remove();
+                                updateTestimonialCount();
+                            }, 300);
+                        }
+                    } else {
+                        showToast(data.message || 'Gagal menghapus testimoni', 'error');
+                    }
+                })
+                .catch(error => {
+                    window.clearAllToasts();
+                    showToast('Terjadi kesalahan saat menghapus. Periksa koneksi Anda.', 'error');
+                });
         });
     }
-}
 
-// Handle form submission
-document.getElementById('testimonialForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalContent = submitBtn.innerHTML;
-    
-    // Show loading state
-    submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
-    submitBtn.disabled = true;
-    
-    clearErrors();
-    
-    const formData = new FormData(this);
-    const url = isEditMode 
-        ? buildUrl('update', currentTestimonialId)
-        : buildUrl('store');
-    
-    // For PUT request, we need to add method override
-    if (isEditMode) {
-        formData.append('_method', 'PUT');
+    document.getElementById('testimonialForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
+        submitBtn.disabled = true;
+        clearErrors();
+        showToast('Menyimpan data...', 'info', 0);
+        const formData = new FormData(this);
+        const url = isEditMode ?
+            buildUrl('update', currentTestimonialId) :
+            buildUrl('store');
+        if (isEditMode) {
+            formData.append('_method', 'PUT');
+        }
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.clearAllToasts();
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    closeTestimonialModal();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Terdapat kesalahan pada input Anda', 'error');
+                    if (data.errors) {
+                        displayErrors(data.errors);
+                    }
+                }
+            })
+            .catch(error => {
+                window.clearAllToasts();
+                showToast('Terjadi kesalahan. Tidak dapat terhubung ke server.', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+    });
+
+    function clearErrors() {
+        document.querySelectorAll('.error-message').forEach(msg => {
+            msg.classList.add('hidden');
+            msg.textContent = '';
+        });
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.classList.remove('border-red-500', 'dark:border-red-500');
+            input.classList.add('border-gray-300', 'dark:border-gray-600');
+        });
     }
-    
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken()
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast(data.message, 'success');
-            closeTestimonialModal();
-            
-            // Reload page to show updated data
+
+    function displayErrors(errors) {
+        Object.keys(errors).forEach(field => {
+            const inputIdMap = {
+                'testimonial_name': 'testimonialName',
+                'testimonial_position': 'testimonialPosition',
+                'testimonial_content': 'testimonialContent'
+            };
+            const inputName = inputIdMap[field] ? `[name="${field}"]` : `[name="${field}"]`;
+            const input = document.querySelector(inputName);
+            if (input) {
+                input.classList.remove('border-gray-300', 'dark:border-gray-600');
+                input.classList.add('border-red-500', 'dark:border-red-500');
+                const errorDiv = input.parentElement.querySelector('.error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = errors[field][0];
+                    errorDiv.classList.remove('hidden');
+                }
+            }
+        });
+        showToast('Harap periksa kembali isian form Anda', 'warning');
+    }
+
+    function updateTestimonialCount() {
+        const testimonialRows = document.querySelectorAll('[data-testimonial-id]');
+        const count = testimonialRows.length;
+        if (count === 0) {
             setTimeout(() => {
                 window.location.reload();
-            }, 1000);
-        } else {
-            showToast(data.message || 'Terjadi kesalahan', 'error');
-            
-            // Handle validation errors
-            if (data.errors) {
-                displayErrors(data.errors);
-            }
+            }, 500);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan saat menyimpan testimoni', 'error');
-    })
-    .finally(() => {
-        // Restore button state
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-    });
-});
+    }
 
-// Utility functions
-function clearErrors() {
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(msg => {
-        msg.classList.add('hidden');
-        msg.textContent = '';
-    });
-    
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.classList.remove('border-red-500');
-    });
-}
-
-function displayErrors(errors) {
-    Object.keys(errors).forEach(field => {
-        const input = document.querySelector(`[name="${field}"]`);
-        if (input) {
-            input.classList.add('border-red-500');
-            const errorDiv = input.parentElement.querySelector('.error-message');
-            if (errorDiv) {
-                errorDiv.textContent = errors[field][0];
-                errorDiv.classList.remove('hidden');
-            }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeTestimonialModal();
         }
     });
-}
 
-function updateTestimonialCount() {
-    const testimonialRows = document.querySelectorAll('[data-testimonial-id]');
-    const count = testimonialRows.length;
-    
-    // Show empty state if no testimonials
-    if (count === 0) {
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
-    }
-}
-
-// Toast notification function
-function showToast(message, type = 'info', duration = 5000) {
-    const container = document.getElementById('toast-container') || document.body;
-    const toast = document.createElement('div');
-    
-    const bgColors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
-    toast.className = `fixed bottom-4 right-4 z-[9999] p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-x-full opacity-0 max-w-sm ${bgColors[type] || bgColors.info}`;
-    
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-3"></i>
-            <div class="flex-1">
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
-                <i class="fas fa-times text-sm"></i>
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('translate-x-full', 'opacity-0');
-        toast.classList.add('translate-x-0', 'opacity-100');
-    }, 100);
-    
-    if (duration > 0) {
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => {
-                    if (toast.parentElement) {
-                        toast.remove();
-                    }
-                }, 300);
-            }
-        }, duration);
-    }
-}
-
-// Handle escape key to close modal
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeTestimonialModal();
-    }
-});
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Testimonials page initialized');
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        const testimonialRows = document.querySelectorAll('[data-testimonial-id]');
+        if (testimonialRows.length === 0) {
+            showToast('Tambahkan testimoni pertama Anda!', 'info', 5000, {
+                title: 'Selamat Datang'
+            });
+        }
+    });
 </script>
 @endpush
 
 @push('styles')
 <style>
-/* Table styles */
-.table-auto th {
-    font-weight: 600;
-}
-
-/* Line clamp utilities */
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Modal animations */
-#testimonialModal {
-    backdrop-filter: blur(4px);
-}
-
-#testimonialModal > div > div {
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
+    .table-auto th {
+        font-weight: 600;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
-}
 
-/* Table hover effects */
-tbody tr {
-    transition: all 0.2s ease;
-}
-
-tbody tr:hover {
-    transform: translateY(-1px);
-}
-
-/* Form field focus styles */
-input:focus, textarea:focus {
-    transform: translateY(-1px);
-}
-
-/* Button hover effects */
-button {
-    transition: all 0.2s ease;
-}
-
-/* Responsive table */
-@media (max-width: 768px) {
-    .table-auto {
-        font-size: 0.875rem;
+    #testimonialModal {
+        backdrop-filter: blur(4px);
     }
-    
-    .table-auto th,
-    .table-auto td {
-        padding: 0.75rem 0.5rem;
+
+    #testimonialModal>div>div {
+        animation: modalSlideIn 0.3s ease-out;
     }
-}
 
-/* Custom scrollbar for modal */
-#testimonialModal .overflow-y-auto::-webkit-scrollbar {
-    width: 6px;
-}
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
 
-#testimonialModal .overflow-y-auto::-webkit-scrollbar-track {
-    background: transparent;
-}
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
 
-#testimonialModal .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(156, 163, 175, 0.5);
-    border-radius: 3px;
-}
+    tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    tbody tr:hover {
+        transform: translateY(-1px);
+    }
+
+    input:focus,
+    textarea:focus {
+        transform: translateY(-1px);
+    }
+
+    button {
+        transition: all 0.2s ease;
+    }
+
+    @media (max-width: 768px) {
+        .table-auto {
+            font-size: 0.875rem;
+        }
+
+        .table-auto th,
+        .table-auto td {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+
+    #testimonialModal .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #testimonialModal .overflow-y-auto::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #testimonialModal .overflow-y-auto::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 3px;
+    }
 </style>
 @endpush

@@ -240,7 +240,7 @@
     <!-- Right Column - Hero Image & Actions -->
     <div class="lg:col-span-1 space-y-8">
         <!-- Hero Image Upload -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up sticky top-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up sticky">
             <div class="flex items-center mb-6">
                 <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-image text-white"></i>
@@ -346,11 +346,10 @@ function initializeColorPickers() {
     ['primary', 'secondary', 'accent'].forEach(type => {
         const colorInput = document.getElementById(`${type}-color`);
         const textInput = document.getElementById(`${type}-color-text`);
-        
-        colorInput.addEventListener('change', function() {
+        if (!colorInput || !textInput) return;
+        colorInput.addEventListener('input', function() {
             textInput.value = this.value;
         });
-        
         textInput.addEventListener('input', function() {
             if (this.value.match(/^#[0-9A-F]{6}$/i)) {
                 colorInput.value = this.value;
@@ -362,30 +361,24 @@ function initializeColorPickers() {
 function initializeHeroImageUpload() {
     const dropzone = document.getElementById('hero-dropzone');
     const fileInput = document.getElementById('hero-image');
-
+    if (!dropzone || !fileInput) return;
     dropzone.addEventListener('click', () => fileInput.click());
-    
     fileInput.addEventListener('change', function() {
         if (this.files[0]) {
             handleHeroImageUpload(this.files[0]);
         }
     });
-
-    // Drag and drop
     dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropzone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
     });
-
     dropzone.addEventListener('dragleave', (e) => {
         e.preventDefault();
         dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
     });
-
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
-        
         const files = e.dataTransfer.files;
         if (files.length > 0) {
             fileInput.files = files;
@@ -399,14 +392,9 @@ function initializeSectionToggles() {
         toggle.addEventListener('change', function() {
             const section = this.dataset.section;
             const isChecked = this.checked;
-            
-            // Toggle section
             toggleSection(section);
-            
-            // Show/hide style variants
             const variantsDiv = document.getElementById(`variants-${section}`);
             const sectionItem = this.closest('.section-config-item');
-            
             if (isChecked) {
                 variantsDiv.classList.remove('hidden');
                 sectionItem.classList.add('bg-blue-50', 'dark:bg-blue-900/10', 'border-blue-200', 'dark:border-blue-800');
@@ -421,17 +409,16 @@ function initializeSectionToggles() {
 }
 
 function updateTemplate(templateId) {
-    // Get default style for this template
     const templateCard = document.querySelector(`[data-template-id="${templateId}"]`);
     const defaultStyle = templateCard.dataset.defaultStyle || 'A';
-    
+    showToast('Memperbarui template...', 'info', 0);
     fetch('{{ route("user.templates.update-template") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             template_id: templateId,
             default_style: defaultStyle
         })
@@ -445,7 +432,10 @@ function updateTemplate(templateId) {
             showToast(data.message, 'error');
         }
     })
-    .catch(() => showToast('Terjadi kesalahan saat memperbarui template', 'error'));
+    .catch(() => {
+        showToast('Terjadi kesalahan saat memperbarui template.', 'error');
+        window.clearAllToasts();
+    });
 }
 
 function updateColors() {
@@ -454,12 +444,12 @@ function updateColors() {
         secondary: document.getElementById('secondary-color').value,
         accent: document.getElementById('accent-color').value
     };
-
+    showToast('Menyimpan palet warna...', 'info');
     fetch('{{ route("user.templates.update-colors") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(colors)
     })
@@ -467,71 +457,48 @@ function updateColors() {
     .then(data => {
         showToast(data.message, data.success ? 'success' : 'error');
     })
-    .catch(() => showToast('Terjadi kesalahan saat menyimpan warna', 'error'));
+    .catch(() => showToast('Terjadi kesalahan saat menyimpan warna.', 'error'));
 }
 
 function handleHeroImageUpload(file) {
     const placeholder = document.getElementById('hero-upload-placeholder');
     const progress = document.getElementById('hero-upload-progress');
 
-    // Log file details
-    console.log('File details:', {
-        name: file.name,
-        type: file.type,
-        size: file.size + ' bytes'
-    });
-
-    // Validate file
     if (!file.type.startsWith('image/')) {
-        showToast('File harus berupa gambar', 'error');
+        showToast('File harus berupa gambar (JPG, PNG, WEBP)', 'error');
         return;
     }
-
     if (file.size > 2 * 1024 * 1024) {
-        showToast('Ukuran file maksimal 2MB', 'error');
+        showToast('Ukuran file maksimal adalah 2MB', 'error');
         return;
     }
 
-    // Show progress
     placeholder.classList.add('hidden');
     progress.classList.remove('hidden');
 
-    // Auto upload - create FormData
     const formData = new FormData();
     formData.append('hero_image', file);
-    formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-    // Debugging - log FormData contents
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
-    }
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
     fetch('{{ route("user.templates.update-hero") }}', {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            // Let browser set Content-Type with boundary
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
     })
     .then(response => {
-        console.log('Response status:', response.status);
-        return response.json().catch(error => {
-            console.error('Error parsing JSON:', error);
-            throw new Error('Invalid JSON response');
-        });
+        if (!response.ok) {
+            throw new Error('Gagal mengupload, respons server tidak valid.');
+        }
+        return response.json();
     })
     .then(data => {
-        console.log('Response data:', data);
         progress.classList.add('hidden');
         placeholder.classList.remove('hidden');
-        
         if (data.success) {
             showToast(data.message, 'success');
-            
-            // If response includes image URL, update the display immediately
             if (data.image_url) {
-                // Check if we have a current hero image container, or create one
                 let currentHero = document.querySelector('.current-hero');
                 if (!currentHero) {
                     const heroUploadContainer = document.getElementById('hero-dropzone').parentElement;
@@ -547,35 +514,30 @@ function handleHeroImageUpload(file) {
                     `;
                     heroUploadContainer.insertBefore(currentHero, document.getElementById('hero-dropzone'));
                 } else {
-                    // Update existing image
                     const img = currentHero.querySelector('img');
                     if (img) img.src = data.image_url;
                 }
             }
-            
-            // Adjust upload text
             const uploadText = document.querySelector('#hero-upload-placeholder p.text-sm.font-medium');
             if (uploadText) uploadText.textContent = 'Ganti gambar hero';
-            
-            // Don't reload the page - we updated the UI already
         } else {
-            showToast(data.message || 'Terjadi kesalahan', 'error');
+            showToast(data.message || 'Terjadi kesalahan saat mengupload gambar.', 'error');
         }
     })
     .catch((error) => {
-        console.error('Upload error:', error);
         progress.classList.add('hidden');
         placeholder.classList.remove('hidden');
-        showToast('Terjadi kesalahan saat mengupload gambar: ' + error.message, 'error');
+        showToast('Gagal mengupload gambar. Periksa koneksi Anda.', 'error');
     });
 }
 
 function toggleSection(section) {
+    showToast('Mengubah status section...', 'info');
     fetch('{{ route("user.templates.toggle-section") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({ section: section })
     })
@@ -583,11 +545,10 @@ function toggleSection(section) {
     .then(data => {
         showToast(data.message, data.success ? 'success' : 'error');
     })
-    .catch(() => showToast('Terjadi kesalahan saat mengubah bagian', 'error'));
+    .catch(() => showToast('Terjadi kesalahan saat mengubah status section.', 'error'));
 }
 
 function updateSectionStyle(section, styleVariant) {
-    // Update UI immediately for better UX
     document.querySelectorAll(`[data-section="${section}"].variant-option`).forEach(option => {
         option.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
         option.classList.add('border-gray-200', 'dark:border-gray-600');
@@ -599,21 +560,22 @@ function updateSectionStyle(section, styleVariant) {
     if (selectedOption) {
         selectedOption.classList.remove('border-gray-200', 'dark:border-gray-600');
         selectedOption.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
-        
         const titleDiv = selectedOption.querySelector('.flex.items-center.justify-between');
         if (titleDiv && !titleDiv.querySelector('.fa-check-circle')) {
-            titleDiv.innerHTML += '<i class="fas fa-check-circle text-blue-500"></i>';
+            const checkIcon = document.createElement('i');
+            checkIcon.className = 'fas fa-check-circle text-blue-500';
+            titleDiv.appendChild(checkIcon);
         }
     }
 
-    // Send to server
+    showToast('Memperbarui style...', 'info');
     fetch('{{ route("user.templates.update-section-style") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             section: section,
             style_variant: styleVariant
         })
@@ -622,185 +584,77 @@ function updateSectionStyle(section, styleVariant) {
     .then(data => {
         if (data.success) {
             showToast(data.message, 'success');
-            
-            // Update section description
             const sectionItem = document.querySelector(`[data-section="${section}"].section-toggle`).closest('.section-config-item');
             const descriptionP = sectionItem.querySelector('h3 + p');
-            if (descriptionP) {
-                descriptionP.textContent = data.display_name.split(' - ')[1] || '';
+            if (descriptionP && data.display_name) {
+                const variantName = data.display_name.split(' - ')[1] || 'Default';
+                descriptionP.textContent = variantName;
             }
         } else {
             showToast(data.message, 'error');
-            // Revert UI changes if failed
-            location.reload();
+            setTimeout(() => location.reload(), 1500);
         }
     })
     .catch(() => {
-        showToast('Terjadi kesalahan saat mengubah style', 'error');
-        // Revert UI changes if failed
-        location.reload();
+        showToast('Terjadi kesalahan saat mengubah style.', 'error');
+        setTimeout(() => location.reload(), 1500);
     });
 }
 
-// Path images untuk preview section
 const sectionPreviews = {
-    'navbar': {
-        'A': '/images/sections/navbar-a.jpg',
-        'B': '/images/sections/navbar-b.jpg',
-        'C': '/images/sections/navbar-c.jpg'
-    },
-    'hero': {
-        'A': '/images/sections/hero-a.jpg',
-        'B': '/images/sections/hero-b.jpg',
-        'C': '/images/sections/hero-c.jpg'
-    },
-    'about': {
-        'A': '/images/sections/about-a.jpg',
-        'B': '/images/sections/about-b.jpg',
-        'C': '/images/sections/about-c.jpg'
-    },
-    'branches': {
-        'A': '/images/sections/branches-a.jpg',
-        'B': '/images/sections/branches-b.jpg',
-        'C': '/images/sections/branches-c.jpg'
-    },
-    'produk': {
-        'A': '/images/sections/produk-a.jpg',
-        'B': '/images/sections/produk-b.jpg',
-        'C': '/images/sections/produk-c.jpg'
-    },
-    'galeri': {
-        'A': '/images/sections/galeri-a.jpg',
-        'B': '/images/sections/galeri-b.jpg',
-        'C': '/images/sections/galeri-c.jpg'
-    },
-    'testimoni': {
-        'A': '/images/sections/testimoni-a.jpg',
-        'B': '/images/sections/testimoni-b.jpg',
-        'C': '/images/sections/testimoni-c.jpg'
-    },
-    'footer': {
-        'A': '/images/sections/footer-a.jpg',
-        'B': '/images/sections/footer-b.jpg',
-        'C': '/images/sections/footer-c.jpg'
-    }
+    'navbar': { 'A': '/images/sections/navbar-a.jpg', 'B': '/images/sections/navbar-b.jpg', 'C': '/images/sections/navbar-c.jpg' },
+    'hero': { 'A': '/images/sections/hero-a.jpg', 'B': '/images/sections/hero-b.jpg', 'C': '/images/sections/hero-c.jpg' },
+    'about': { 'A': '/images/sections/about-a.jpg', 'B': '/images/sections/about-b.jpg', 'C': '/images/sections/about-c.jpg' },
+    'branches': { 'A': '/images/sections/branches-a.jpg', 'B': '/images/sections/branches-b.jpg', 'C': '/images/sections/branches-c.jpg' },
+    'produk': { 'A': '/images/sections/produk-a.jpg', 'B': '/images/sections/produk-b.jpg', 'C': '/images/sections/produk-c.jpg' },
+    'galeri': { 'A': '/images/sections/galeri-a.jpg', 'B': '/images/sections/galeri-b.jpg', 'C': '/images/sections/galeri-c.jpg' },
+    'testimoni': { 'A': '/images/sections/testimoni-a.jpg', 'B': '/images/sections/testimoni-b.jpg', 'C': '/images/sections/testimoni-c.jpg' },
+    'footer': { 'A': '/images/sections/footer-a.jpg', 'B': '/images/sections/footer-b.jpg', 'C': '/images/sections/footer-c.jpg' }
 };
 
-// Fungsi untuk menampilkan modal preview
 function showPreviewModal(event, section, variant, variantName) {
-    event.stopPropagation(); // Prevent variant selection when clicking preview button
-    
+    event.stopPropagation();
     const modal = document.getElementById('preview-modal');
     const modalTitle = document.getElementById('preview-modal-title');
     const modalImage = document.getElementById('preview-modal-image');
     const modalDescription = document.getElementById('preview-modal-description');
+    const sectionName = document.querySelector(`.section-config-item [data-section="${section}"]`).closest('.section-config-item').querySelector('h3').textContent;
     
-    // Dapatkan data section
-    const sectionName = document.querySelector(`.section-config-item [data-section="${section}"]`)
-                        .closest('.section-config-item')
-                        .querySelector('h3').textContent;
-    
-    // Set modal content
     modalTitle.textContent = `${sectionName} - Style ${variant}`;
     modalDescription.textContent = variantName;
-    
-    // Set image source (fallback to placeholder if image not available)
     const imagePath = sectionPreviews[section]?.[variant] || '/images/sections/placeholder.jpg';
     modalImage.src = imagePath;
     modalImage.alt = `${sectionName} Style ${variant}`;
-    
-    // Add loading state to image
     modalImage.classList.add('opacity-50');
-    modalImage.onload = () => {
-        modalImage.classList.remove('opacity-50');
-    };
-    
-    // Show modal with animation
+    modalImage.onload = () => modalImage.classList.remove('opacity-50');
+
     modal.classList.remove('hidden');
     setTimeout(() => {
         modal.classList.remove('opacity-0');
         modal.querySelector('.max-w-3xl').classList.remove('scale-95');
         modal.querySelector('.max-w-3xl').classList.add('scale-100');
     }, 10);
-    
-    // Add event listener to close modal when clicking outside
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closePreviewModal();
-        }
-    });
-    
-    // Add escape key listener
+    modal.addEventListener('click', (e) => e.target === modal && closePreviewModal());
     document.addEventListener('keydown', handleEscapeKey);
 }
 
-// Handle escape key press
 function handleEscapeKey(e) {
     if (e.key === 'Escape') {
         closePreviewModal();
     }
 }
 
-// Close preview modal
 function closePreviewModal() {
     const modal = document.getElementById('preview-modal');
-    
-    // Hide with animation
     modal.classList.add('opacity-0');
     modal.querySelector('.max-w-3xl').classList.remove('scale-100');
     modal.querySelector('.max-w-3xl').classList.add('scale-95');
-    
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-    
-    // Remove escape key listener
+    setTimeout(() => modal.classList.add('hidden'), 300);
     document.removeEventListener('keydown', handleEscapeKey);
 }
 
 function previewWebsite() {
     window.open('{{ route("user.templates.preview") }}', '_blank');
-}
-
-// Toast notification function (consistent with other pages)
-function showToast(message, type = 'info', duration = 5000) {
-    const toast = document.createElement('div');
-    const bgColors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
-    toast.className = `fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-y-full opacity-0 ${bgColors[type] || bgColors.info}`;
-    
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-2"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('translate-y-full', 'opacity-0');
-        toast.classList.add('translate-y-0', 'opacity-100');
-    }, 100);
-    
-    if (duration > 0) {
-        setTimeout(() => {
-            toast.classList.add('translate-y-full', 'opacity-0');
-            setTimeout(() => toast.remove(), 300);
-        }, duration);
-    }
 }
 </script>
 @endpush

@@ -341,9 +341,7 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
-<!-- CKEditor 5 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
 <script>
@@ -351,10 +349,8 @@
     let currentHighlightId = null;
     let storyEditor = null;
 
-    // Build URLs dynamically
     function buildUrl(action, id = null) {
         const baseUrl = '{{ url("user/about") }}';
-
         switch (action) {
             case 'update-story':
                 return `${baseUrl}/story`;
@@ -371,35 +367,23 @@
         }
     }
 
-    // Get CSRF token
     function getCsrfToken() {
         return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     }
 
-    // Initialize CKEditor for story
     function initializeStoryEditor() {
         ClassicEditor
             .create(document.querySelector('#fullStory'), {
-                toolbar: [
-                    'heading', '|'
-                    , 'bold', 'italic', 'underline', '|'
-                    , 'bulletedList', 'numberedList', '|'
-                    , 'indent', 'outdent', '|'
-                    , 'blockQuote', 'insertTable', '|'
-                    , 'undo', 'redo'
-                ]
-                , placeholder: 'Ceritakan kisah perjalanan bisnis Anda, visi, misi, dan nilai-nilai yang dijunjung tinggi...'
+                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'indent', 'outdent', '|', 'blockQuote', 'insertTable', '|', 'undo', 'redo'],
+                placeholder: 'Ceritakan kisah perjalanan bisnis Anda, visi, misi, dan nilai-nilai yang dijunjung tinggi...'
             })
             .then(editor => {
                 storyEditor = editor;
-
-                // Character counter
                 const counter = document.getElementById('storyCounter');
                 editor.model.document.on('change:data', () => {
                     const data = editor.getData();
                     const textLength = data.replace(/<[^>]*>/g, '').length;
                     counter.textContent = textLength;
-
                     if (textLength > 5000) {
                         counter.classList.add('text-red-500');
                     } else {
@@ -408,33 +392,26 @@
                 });
             })
             .catch(error => {
-                console.error('CKEditor initialization error:', error);
+                showToast('Gagal memuat editor cerita. Silakan refresh halaman.', 'error');
             });
     }
 
-    // Handle story form submission
     document.getElementById('storyForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const submitBtn = document.getElementById('storySubmitBtn');
         const originalContent = submitBtn.innerHTML;
-
-        // Show loading state
         submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
         submitBtn.disabled = true;
-
         clearErrors();
-
         const formData = new FormData();
         formData.append('_token', getCsrfToken());
         formData.append('full_story', storyEditor.getData());
-
         fetch(buildUrl('update-story'), {
-                method: 'POST'
-                , headers: {
+                method: 'POST',
+                headers: {
                     'Accept': 'application/json'
-                }
-                , body: formData
+                },
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
@@ -442,15 +419,13 @@
                     showToast(data.message, 'success');
                 } else {
                     showToast(data.message || 'Terjadi kesalahan', 'error');
-
                     if (data.errors) {
                         displayErrors(data.errors);
                     }
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan saat menyimpan cerita', 'error');
+                showToast('Gagal terhubung ke server saat menyimpan cerita.', 'error');
             })
             .finally(() => {
                 submitBtn.innerHTML = originalContent;
@@ -458,47 +433,34 @@
             });
     });
 
-    // Initialize about image upload
     function initializeAboutImageUpload() {
         const dropzone = document.getElementById('aboutImageDropzone');
         const fileInput = document.getElementById('aboutImage');
-        const previewContainer = document.getElementById('aboutImagePreviewContainer');
-        const preview = document.getElementById('aboutImagePreview');
-
         if (!dropzone || !fileInput) return;
-
-        // Click to upload
         dropzone.addEventListener('click', (e) => {
             if (e.target !== fileInput) {
                 fileInput.click();
             }
         });
-
-        // File input change
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file && validateImageFile(file)) {
                 handleAboutImageUpload(file);
             }
         });
-
-        // Drag and drop events
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropzone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
         });
-
         dropzone.addEventListener('dragleave', (e) => {
             e.preventDefault();
             if (!dropzone.contains(e.relatedTarget)) {
                 dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
             }
         });
-
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
-
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 const file = files[0];
@@ -512,18 +474,15 @@
 
     function validateImageFile(file) {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        const maxSize = 2 * 1024 * 1024; // 2MB
-
+        const maxSize = 2 * 1024 * 1024;
         if (!allowedTypes.includes(file.type)) {
             showToast('Format file harus JPG, PNG, atau WEBP', 'error');
             return false;
         }
-
         if (file.size > maxSize) {
             showToast('Ukuran file maksimal 2MB', 'error');
             return false;
         }
-
         return true;
     }
 
@@ -531,16 +490,13 @@
         const dropzone = document.getElementById('aboutImageDropzone');
         const previewContainer = document.getElementById('aboutImagePreviewContainer');
         const preview = document.getElementById('aboutImagePreview');
-
-        // Create preview
         const reader = new FileReader();
         reader.onload = (e) => {
             preview.src = e.target.result;
             dropzone.classList.add('hidden');
             previewContainer.classList.remove('hidden');
-            showToast('Foto siap untuk disimpan!', 'success');
+            showToast('Foto siap untuk disimpan!', 'info');
         };
-
         reader.readAsDataURL(file);
     }
 
@@ -548,118 +504,98 @@
         const fileInput = document.getElementById('aboutImage');
         const dropzone = document.getElementById('aboutImageDropzone');
         const previewContainer = document.getElementById('aboutImagePreviewContainer');
-
         fileInput.value = '';
         dropzone.classList.remove('hidden');
         previewContainer.classList.add('hidden');
     }
 
-    // Handle about image form submission
     document.getElementById('aboutImageForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const submitBtn = document.getElementById('aboutImageSubmitBtn');
         const originalContent = submitBtn.innerHTML;
-
-        // Show loading state
         submitBtn.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Menyimpan...';
         submitBtn.disabled = true;
-
         const formData = new FormData(this);
-
         fetch(buildUrl('update-story'), {
-                method: 'POST'
-                , headers: {
+                method: 'POST',
+                headers: {
                     'Accept': 'application/json'
-                }
-                , body: formData
+                },
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     showToast(data.message, 'success');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
                     showToast(data.message || 'Terjadi kesalahan', 'error');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan saat menyimpan foto', 'error');
+                showToast('Gagal terhubung ke server saat menyimpan foto.', 'error');
             })
             .finally(() => {
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             });
     });
-
-    // Remove about image
     function removeAboutImage() {
-        if (confirm('Apakah Anda yakin ingin menghapus foto tentang bisnis?')) {
+        showConfirmation({
+            title: 'Hapus Foto Ini?',
+            text: 'Foto tentang bisnis akan dihapus secara permanen.',
+            icon: 'warning',
+            confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus foto...', 'info', 0);
             fetch(buildUrl('remove-about-image'), {
-                    method: 'DELETE'
-                    , headers: {
-                        'Accept': 'application/json'
-                        , 'X-CSRF-TOKEN': getCsrfToken()
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
                     }
                 })
                 .then(response => response.json())
                 .then(data => {
+                    window.clearAllToasts();
                     if (data.success) {
                         showToast(data.message, 'success');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
+                        setTimeout(() => window.location.reload(), 1000);
                     } else {
                         showToast(data.message || 'Gagal menghapus foto', 'error');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Terjadi kesalahan saat menghapus foto', 'error');
+                    window.clearAllToasts();
+                    showToast('Gagal terhubung ke server saat menghapus foto.', 'error');
                 });
-        }
+        });
     }
 
-    // Highlight management functions
-    function openHighlightModal(highlightData = null) {
+   function openHighlightModal(highlightData = null) {
         const modal = document.getElementById('highlightModal');
         const modalTitle = document.getElementById('highlightModalTitle');
         const form = document.getElementById('highlightForm');
-
-        // Reset form
         form.reset();
         clearErrors();
         clearIconSelection();
-
         if (highlightData) {
-            // Edit mode
             isEditHighlightMode = true;
             currentHighlightId = highlightData.id;
             modalTitle.textContent = 'Edit Highlight';
-
-            // Fill form with highlight data
             document.getElementById('highlightId').value = highlightData.id;
             document.getElementById('highlightTitle').value = highlightData.title;
             document.getElementById('highlightDescription').value = highlightData.description;
             selectIcon(highlightData.icon);
+            showToast('Data highlight siap diedit', 'info');
         } else {
-            // Add mode
             isEditHighlightMode = false;
             currentHighlightId = null;
             modalTitle.textContent = 'Tambah Highlight Baru';
         }
-
-        // Show modal
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-
-        // Focus first input
-        setTimeout(() => {
-            document.getElementById('highlightTitle').focus();
-        }, 100);
+        setTimeout(() => document.getElementById('highlightTitle').focus(), 100);
     }
 
     function closeHighlightModal() {
@@ -671,12 +607,9 @@
     }
 
     function selectIcon(iconClass) {
-        // Clear previous selection
         document.querySelectorAll('.icon-option').forEach(btn => {
             btn.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
         });
-
-        // Select new icon
         const iconBtn = document.querySelector(`[data-icon="${iconClass}"]`);
         if (iconBtn) {
             iconBtn.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
@@ -691,13 +624,13 @@
         document.getElementById('selectedIcon').value = '';
     }
 
-    // Edit highlight
     function editHighlight(highlightId) {
+        showToast('Memuat data highlight...', 'info');
         fetch(buildUrl('show-highlight', highlightId), {
-                method: 'GET'
-                , headers: {
-                    'Accept': 'application/json'
-                    , 'X-CSRF-TOKEN': getCsrfToken()
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
                 }
             })
             .then(response => response.json())
@@ -709,30 +642,33 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan saat memuat data highlight', 'error');
+                showToast('Gagal terhubung ke server.', 'error');
             });
     }
-
-    // Delete highlight
     function deleteHighlight(highlightId, highlightTitle) {
-        if (confirm(`Apakah Anda yakin ingin menghapus highlight "${highlightTitle}"?`)) {
+        showConfirmation({
+            title: 'Hapus Highlight Ini?',
+            text: `Highlight "${highlightTitle}" akan dihapus secara permanen.`,
+            icon: 'warning',
+            confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus highlight...', 'info', 0);
             fetch(buildUrl('destroy-highlight', highlightId), {
-                    method: 'DELETE'
-                    , headers: {
-                        'Accept': 'application/json'
-                        , 'X-CSRF-TOKEN': getCsrfToken()
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
                     }
                 })
                 .then(response => response.json())
                 .then(data => {
+                    window.clearAllToasts();
                     if (data.success) {
                         showToast(data.message, 'success');
-                        // Remove highlight card from DOM
                         const highlightCard = document.querySelector(`[data-highlight-id="${highlightId}"]`);
                         if (highlightCard) {
                             highlightCard.style.opacity = '0';
-                            highlightCard.style.transform = 'translateX(-100%)';
+                            highlightCard.style.transform = 'scale(0.9)';
                             setTimeout(() => {
                                 highlightCard.remove();
                                 updateHighlightCount();
@@ -743,84 +679,65 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Terjadi kesalahan saat menghapus highlight', 'error');
+                    window.clearAllToasts();
+                    showToast('Gagal terhubung ke server saat menghapus.', 'error');
                 });
-        }
+        });
     }
 
-    // Handle highlight form submission
-    document.getElementById('highlightForm').addEventListener('submit', function(e) {
+   document.getElementById('highlightForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const submitBtn = document.getElementById('highlightSubmitBtn');
         const originalContent = submitBtn.innerHTML;
-
-        // Show loading state
         submitBtn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>Menyimpan...';
         submitBtn.disabled = true;
-
         clearErrors();
-
         const formData = new FormData(this);
-        const url = isEditHighlightMode ?
-            buildUrl('update-highlight', currentHighlightId) :
-            buildUrl('store-highlight');
-
-        // For PUT request, we need to add method override
+        const url = isEditHighlightMode ? buildUrl('update-highlight', currentHighlightId) : buildUrl('store-highlight');
         if (isEditHighlightMode) {
             formData.append('_method', 'PUT');
         }
-
         fetch(url, {
-                method: 'POST'
-                , headers: {
-                    'Accept': 'application/json'
-                    , 'X-CSRF-TOKEN': getCsrfToken()
-                }
-                , body: formData
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     showToast(data.message, 'success');
                     closeHighlightModal();
-
-                    // Reload page to show updated data
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
                     showToast(data.message || 'Terjadi kesalahan', 'error');
-
-                    // Handle validation errors
                     if (data.errors) {
                         displayErrors(data.errors);
                     }
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan saat menyimpan highlight', 'error');
+                showToast('Gagal terhubung ke server saat menyimpan.', 'error');
             })
             .finally(() => {
-                // Restore button state
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             });
     });
 
-    // Utility functions
     function clearErrors() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => {
+        document.querySelectorAll('.error-message').forEach(msg => {
             msg.classList.add('hidden');
             msg.textContent = '';
         });
-
-        const inputs = document.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.classList.remove('border-red-500');
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.classList.remove('border-red-500', 'dark:border-red-500');
+            input.classList.add('border-gray-300', 'dark:border-gray-600');
+        });
+        document.querySelectorAll('.icon-option').forEach(btn => {
+            btn.parentElement.classList.remove('border-red-500', 'dark:border-red-500');
         });
     }
 
@@ -828,96 +745,35 @@
         Object.keys(errors).forEach(field => {
             const input = document.querySelector(`[name="${field}"]`);
             if (input) {
-                input.classList.add('border-red-500');
-                const errorDiv = input.parentElement.querySelector('.error-message');
+                const parentElement = input.type === 'hidden' ? input.parentElement : input;
+                parentElement.classList.add('border-red-500', 'dark:border-red-500');
+                const errorDiv = parentElement.parentElement.querySelector('.error-message');
                 if (errorDiv) {
                     errorDiv.textContent = errors[field][0];
                     errorDiv.classList.remove('hidden');
                 }
             }
         });
+        showToast('Harap periksa kembali isian form Anda.', 'warning');
     }
 
     function updateHighlightCount() {
         const highlightCards = document.querySelectorAll('[data-highlight-id]');
-        const count = highlightCards.length;
-
-        // Show empty state if no highlights
-        if (count === 0) {
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+        if (highlightCards.length === 0) {
+            setTimeout(() => window.location.reload(), 500);
         }
     }
 
-    // Toast notification function
-    function showToast(message, type = 'info', duration = 5000) {
-        const container = document.getElementById('toast-container') || document.body;
-        const toast = document.createElement('div');
-
-        const bgColors = {
-            success: 'bg-green-500'
-            , error: 'bg-red-500'
-            , warning: 'bg-yellow-500'
-            , info: 'bg-blue-500'
-        };
-
-        const icons = {
-            success: 'fa-check-circle'
-            , error: 'fa-exclamation-circle'
-            , warning: 'fa-exclamation-triangle'
-            , info: 'fa-info-circle'
-        };
-
-        toast.className = `fixed bottom-4 right-4 z-[9999] p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-x-full opacity-0 max-w-sm ${bgColors[type] || bgColors.info}`;
-
-        toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${icons[type] || icons.info} mr-3"></i>
-            <div class="flex-1">
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
-                <i class="fas fa-times text-sm"></i>
-            </button>
-        </div>
-    `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.remove('translate-x-full', 'opacity-0');
-            toast.classList.add('translate-x-0', 'opacity-100');
-        }, 100);
-
-        if (duration > 0) {
-            setTimeout(() => {
-                if (toast.parentElement) {
-                    toast.classList.add('translate-x-full', 'opacity-0');
-                    setTimeout(() => {
-                        if (toast.parentElement) {
-                            toast.remove();
-                        }
-                    }, 300);
-                }
-            }, duration);
-        }
-    }
-
-    // Handle escape key to close modal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeHighlightModal();
         }
     });
 
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         initializeStoryEditor();
         initializeAboutImageUpload();
-        console.log('About business page initialized');
     });
-
 </script>
 @endpush
 
