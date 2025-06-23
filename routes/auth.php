@@ -14,22 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Guest Routes (tidak boleh sudah login)
+Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
+Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::middleware('guest')->group(function () {
-    
     // Registration Routes
-    Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-
     // Login Routes
-    Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-
-    // Password Reset Routes (jika dibutuhkan)
-    Route::get('/forgot-password', [AuthController::class, 'forgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
-
-    // Google OAuth Routes (optional)
-    Route::get('/auth/google', [AuthController::class, 'googleLogin'])->name('auth.google');
 });
 
 // Authenticated Routes (harus sudah login)

@@ -46,7 +46,6 @@ class BranchRequest extends FormRequest
                 'nullable',
                 'url',
                 'max:500',
-                'regex:/^https:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|goo\.gl\/maps).*$/'
             ],
             'branch_phone' => [
                 'nullable',
