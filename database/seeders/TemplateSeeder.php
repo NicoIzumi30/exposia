@@ -18,7 +18,7 @@ class TemplateSeeder extends Seeder
             'id' => Str::uuid(),
             'name' => 'Modern',
             'description' => 'Template modern dengan desain minimalis dan tampilan yang bersih. Cocok untuk berbagai jenis UMKM.',
-            'thumbnail' => 'templates/modern.jpg',
+            'thumbnail' => 'img/templates/modern.png',
             'preview_url' => 'https://exposia.com/preview/modern',
             'is_active' => true,
         ]);
@@ -28,7 +28,7 @@ class TemplateSeeder extends Seeder
             'id' => Str::uuid(),
             'name' => 'Classic',
             'description' => 'Template klasik dengan tampilan yang elegan dan profesional. Cocok untuk UMKM yang ingin menonjolkan kualitas dan kesan tradisional.',
-            'thumbnail' => 'templates/classic.jpg',
+            'thumbnail' => 'img/templates/classic.png',
             'preview_url' => 'https://exposia.com/preview/classic',
             'is_active' => true,
         ]);
@@ -38,7 +38,7 @@ class TemplateSeeder extends Seeder
             'id' => Str::uuid(),
             'name' => 'Teknologi',
             'description' => 'Template yang dirancang untuk bisnis teknologi dan teknologi. Fokus pada tampilan galeri produk yang detail dan menarik.',
-            'thumbnail' => 'templates/tech.jpg',
+            'thumbnail' => 'img/templates/tech.png',
             'preview_url' => 'https://exposia.com/preview/tech',
             'is_active' => true,
         ]);

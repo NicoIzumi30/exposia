@@ -37,7 +37,7 @@ class Template extends Model
     // Helper methods
     public function getThumbnailUrl()
     {
-        return $this->thumbnail ? asset('storage/' . $this->thumbnail) : asset('images/template-placeholder.jpg');
+        return $this->thumbnail ? asset('/' . $this->thumbnail) : asset('images/template-placeholder.jpg');
     }
 
     public function getPreviewLink()
