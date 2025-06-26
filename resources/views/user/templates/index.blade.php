@@ -100,52 +100,49 @@
                 <div class="space-y-6 sm:space-y-4">
                     <!-- Warna Utama -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                        <label
-                            class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
+                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-blue-500"></i>
                             Warna Utama
                         </label>
                         <div class="flex items-center gap-3 flex-1">
-                            <input type="color" id="primary-color"
-                                value="{{ $businessTemplate ? $businessTemplate->getPrimaryColor() : '#3B82F6' }}"
-                                class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
-                            <input type="text" id="primary-color-text"
-                                value="{{ $businessTemplate ? $businessTemplate->getPrimaryColor() : '#3B82F6' }}"
-                                class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                            <input type="color" id="primary-color" value="{{ $businessTemplate ? $businessTemplate->getPrimaryColor() : '#3B82F6' }}" class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
+                            <input type="text" id="primary-color-text" value="{{ $businessTemplate ? $businessTemplate->getPrimaryColor() : '#3B82F6' }}" class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
                         </div>
                     </div>
 
                     <!-- Warna Sekunder -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                        <label
-                            class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
+                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-gray-500"></i>
                             Warna Sekunder
                         </label>
                         <div class="flex items-center gap-3 flex-1">
-                            <input type="color" id="secondary-color"
-                                value="{{ $businessTemplate ? $businessTemplate->getSecondaryColor() : '#64748B' }}"
-                                class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
-                            <input type="text" id="secondary-color-text"
-                                value="{{ $businessTemplate ? $businessTemplate->getSecondaryColor() : '#64748B' }}"
-                                class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                            <input type="color" id="secondary-color" value="{{ $businessTemplate ? $businessTemplate->getSecondaryColor() : '#64748B' }}" class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
+                            <input type="text" id="secondary-color-text" value="{{ $businessTemplate ? $businessTemplate->getSecondaryColor() : '#64748B' }}" class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
                         </div>
                     </div>
 
                     <!-- Warna Aksen -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                        <label
-                            class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
+                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-yellow-500"></i>
                             Warna Aksen
                         </label>
                         <div class="flex items-center gap-3 flex-1">
-                            <input type="color" id="accent-color"
-                                value="{{ $businessTemplate ? $businessTemplate->getAccentColor() : '#F59E0B' }}"
-                                class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
-                            <input type="text" id="accent-color-text"
-                                value="{{ $businessTemplate ? $businessTemplate->getAccentColor() : '#F59E0B' }}"
-                                class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                            <input type="color" id="accent-color" value="{{ $businessTemplate ? $businessTemplate->getAccentColor() : '#F59E0B' }}" class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
+                            <input type="text" id="accent-color-text" value="{{ $businessTemplate ? $businessTemplate->getAccentColor() : '#F59E0B' }}" class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- Warna Highlight (Baru) -->
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
+                            <i class="fas fa-circle mr-2 text-purple-500"></i>
+                            Warna Highlight
+                        </label>
+                        <div class="flex items-center gap-3 flex-1">
+                            <input type="color" id="highlight-color" value="{{ $businessTemplate ? $businessTemplate->getHighlightColor() : '#8B5CF6' }}" class="h-12 w-12 sm:w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer">
+                            <input type="text" id="highlight-color-text" value="{{ $businessTemplate ? $businessTemplate->getHighlightColor() : '#8B5CF6' }}" class="flex-1 w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
                         </div>
                     </div>
                 </div>
@@ -311,6 +308,61 @@
                         <p class="text-sm font-medium text-blue-600 dark:text-blue-400">Uploading...</p>
                     </div>
                 </div>
+                <!-- Secondary Hero Image Section -->
+<div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up mt-6">
+    <div class="flex items-center mb-6">
+        <div class="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+            <i class="fas fa-images text-white"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Gambar Hero Kedua</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Gambar pendukung untuk hero section</p>
+        </div>
+    </div>
+
+    <!-- Current Secondary Hero Image Display -->
+    @if($business->hero_image_secondary_url)
+    <div class="current-secondary-hero mb-6">
+        <div class="text-center">
+            <div class="aspect-video bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
+                <img src="{{ Storage::url($business->hero_image_secondary_url) }}" alt="Current Secondary Hero" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 flex justify-center space-x-3">
+                <button type="button" onclick="document.getElementById('hero-image-secondary').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-edit mr-2"></i>Ganti Foto
+                </button>
+                <button type="button" onclick="removeSecondaryHeroImage()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-trash mr-2"></i>Hapus Foto
+                </button>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Gambar hero kedua saat ini</p>
+        </div>
+    </div>
+    @endif
+
+    <!-- Secondary Hero Image Upload Area -->
+    <div class="secondary-hero-upload-dropzone relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-300 cursor-pointer group {{ $business->hero_image_secondary_url ? 'hidden' : '' }}" id="hero-secondary-dropzone">
+        <input type="file" id="hero-image-secondary" accept="image/*" class="hidden">
+
+        <div class="upload-placeholder" id="hero-secondary-upload-placeholder">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20 transition-colors duration-300">
+                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors duration-300"></i>
+            </div>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                {{ $business->hero_image_secondary_url ? 'Ganti gambar hero kedua' : 'Upload gambar hero kedua' }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG max 2MB</p>
+        </div>
+
+        <!-- Upload Progress -->
+        <div class="upload-progress hidden" id="hero-secondary-upload-progress">
+            <div class="w-16 h-16 mx-auto mb-4">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
+            </div>
+            <p class="text-sm font-medium text-purple-600 dark:text-purple-400">Uploading...</p>
+        </div>
+    </div>
+</div>
             </div>
 
             <!-- Form Actions -->
@@ -366,33 +418,34 @@
                 initializeTemplateSelection();
                 initializeColorPickers();
                 initializeHeroImageUpload();
+                initializeSecondaryHeroImageUpload(); 
                 initializeSectionToggles();
-            });
-
-            function initializeTemplateSelection() {
-                document.querySelectorAll('.template-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        const templateId = this.dataset.templateId;
-                        updateTemplate(templateId);
-                    });
                 });
-            }
 
-            function initializeColorPickers() {
-                ['primary', 'secondary', 'accent'].forEach(type => {
-                    const colorInput = document.getElementById(`${type}-color`);
-                    const textInput = document.getElementById(`${type}-color-text`);
-                    if (!colorInput || !textInput) return;
-                    colorInput.addEventListener('input', function() {
-                        textInput.value = this.value;
+                function initializeTemplateSelection() {
+                    document.querySelectorAll('.template-card').forEach(card => {
+                        card.addEventListener('click', function() {
+                            const templateId = this.dataset.templateId;
+                            updateTemplate(templateId);
+                        });
                     });
-                    textInput.addEventListener('input', function() {
-                        if (this.value.match(/^#[0-9A-F]{6}$/i)) {
-                            colorInput.value = this.value;
-                        }
+                }
+
+                function initializeColorPickers() {
+                    ['primary', 'secondary', 'accent', 'highlight'].forEach(type => { // Tambahkan 'highlight'
+                        const colorInput = document.getElementById(`${type}-color`);
+                        const textInput = document.getElementById(`${type}-color-text`);
+                        if (!colorInput || !textInput) return;
+                        colorInput.addEventListener('input', function() {
+                            textInput.value = this.value;
+                        });
+                        textInput.addEventListener('input', function() {
+                            if (this.value.match(/^#[0-9A-F]{6}$/i)) {
+                                colorInput.value = this.value;
+                            }
+                        });
                     });
-                });
-            }
+                }
 
             function initializeHeroImageUpload() {
                 const dropzone = document.getElementById('hero-dropzone');
@@ -480,7 +533,8 @@
                 const colors = {
                     primary: document.getElementById('primary-color').value,
                     secondary: document.getElementById('secondary-color').value,
-                    accent: document.getElementById('accent-color').value
+                    accent: document.getElementById('accent-color').value,
+                    highlight: document.getElementById('highlight-color').value // Tambahkan highlight color
                 };
                 showToast('Menyimpan palet warna...', 'info');
                 fetch('{{ route('user.templates.update-colors') }}', {
@@ -497,7 +551,6 @@
                     })
                     .catch(() => showToast('Terjadi kesalahan saat menyimpan warna.', 'error'));
             }
-
             function handleHeroImageUpload(file) {
                 const placeholder = document.getElementById('hero-upload-placeholder');
                 const progress = document.getElementById('hero-upload-progress');
@@ -684,7 +737,151 @@
                     'C': '/img/sections/footer-c.png'
                 }
             };
+function initializeSecondaryHeroImageUpload() {
+    const dropzone = document.getElementById('hero-secondary-dropzone');
+    const fileInput = document.getElementById('hero-image-secondary');
+    if (!dropzone || !fileInput) return;
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', function() {
+        if (this.files[0]) {
+            handleSecondaryHeroImageUpload(this.files[0]);
+        }
+    });
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+    });
+    dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+    });
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleSecondaryHeroImageUpload(files[0]);
+        }
+    });
+}
 
+function handleSecondaryHeroImageUpload(file) {
+    const placeholder = document.getElementById('hero-secondary-upload-placeholder');
+    const progress = document.getElementById('hero-secondary-upload-progress');
+
+    if (!file.type.startsWith('image/')) {
+        showToast('File harus berupa gambar (JPG, PNG, WEBP)', 'error');
+        return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+        showToast('Ukuran file maksimal adalah 2MB', 'error');
+        return;
+    }
+
+    placeholder.classList.add('hidden');
+    progress.classList.remove('hidden');
+
+    const formData = new FormData();
+    formData.append('hero_image_secondary', file);
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+    fetch('{{ route('user.templates.update-secondary-hero') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal mengupload, respons server tidak valid.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            progress.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            if (data.success) {
+                showToast(data.message, 'success');
+                if (data.image_url) {
+                    let currentSecondaryHero = document.querySelector('.current-secondary-hero');
+                    if (!currentSecondaryHero) {
+                        const heroSecondaryUploadContainer = document.getElementById('hero-secondary-dropzone').parentElement;
+                        currentSecondaryHero = document.createElement('div');
+                        currentSecondaryHero.className = 'current-secondary-hero mb-6';
+                        currentSecondaryHero.innerHTML = `
+                            <div class="text-center">
+                                <div class="aspect-video bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
+                                    <img src="${data.image_url}" alt="Current Secondary Hero" class="w-full h-full object-cover">
+                                </div>
+                                <div class="mt-4 flex justify-center space-x-3">
+                                    <button type="button" onclick="document.getElementById('hero-image-secondary').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                                        <i class="fas fa-edit mr-2"></i>Ganti Foto
+                                    </button>
+                                    <button type="button" onclick="removeSecondaryHeroImage()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                                        <i class="fas fa-trash mr-2"></i>Hapus Foto
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Gambar hero kedua saat ini</p>
+                            </div>
+                        `;
+                        heroSecondaryUploadContainer.insertBefore(currentSecondaryHero, document.getElementById('hero-secondary-dropzone'));
+                        document.getElementById('hero-secondary-dropzone').classList.add('hidden');
+                    } else {
+                        const img = currentSecondaryHero.querySelector('img');
+                        if (img) img.src = data.image_url;
+                    }
+                }
+                const uploadText = document.querySelector('#hero-secondary-upload-placeholder p.text-sm.font-medium');
+                if (uploadText) uploadText.textContent = 'Ganti gambar hero kedua';
+            } else {
+                showToast(data.message || 'Terjadi kesalahan saat mengupload gambar.', 'error');
+            }
+        })
+        .catch((error) => {
+            progress.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            showToast('Gagal mengupload gambar. Periksa koneksi Anda.', 'error');
+            console.error(error);
+        });
+}
+
+function removeSecondaryHeroImage() {
+    showConfirmation({
+        title: 'Hapus Gambar Hero Kedua?',
+        text: 'Gambar hero kedua akan dihapus secara permanen.',
+        icon: 'warning',
+        confirmButtonText: 'Ya, Hapus!'
+    }, () => {
+        showToast('Menghapus gambar...', 'info', 0);
+        fetch('{{ route('user.templates.remove-secondary-hero') }}', {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.clearAllToasts();
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    const currentSecondaryHero = document.querySelector('.current-secondary-hero');
+                    if (currentSecondaryHero) {
+                        currentSecondaryHero.remove();
+                    }
+                    document.getElementById('hero-secondary-dropzone').classList.remove('hidden');
+                } else {
+                    showToast(data.message || 'Gagal menghapus gambar', 'error');
+                }
+            })
+            .catch(error => {
+                window.clearAllToasts();
+                showToast('Gagal terhubung ke server saat menghapus gambar.', 'error');
+            });
+    });
+}
             function showPreviewModal(event, section, variant, variantName) {
                 event.stopPropagation();
                 const modal = document.getElementById('preview-modal');

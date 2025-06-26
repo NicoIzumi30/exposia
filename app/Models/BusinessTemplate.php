@@ -56,14 +56,25 @@ class BusinessTemplate extends Model
     {
         return $this->color_palette['accent'] ?? '#F59E0B';
     }
-
-    public function getColorPalette()
+    public function getHighlightColor()
+{
+    $palette = $this->color_palette;
+    return isset($palette['highlight']) ? $palette['highlight'] : '#8B5CF6'; // Default: Purple
+}
+    public function getColorPalette(): array
     {
-        return [
-            'primary' => $this->getPrimaryColor(),
-            'secondary' => $this->getSecondaryColor(),
-            'accent' => $this->getAccentColor()
+        $defaultPalette = [
+            'primary' => '#3B82F6',
+            'secondary' => '#64748B',
+            'accent' => '#F59E0B',
+            'highlight' => '#8B5CF6' // Warna keempat: highlight
         ];
+
+        if (empty($this->color_palette)) {
+            return $defaultPalette;
+        }
+
+        return array_merge($defaultPalette, $this->color_palette);
     }
 
     public function getSectionConfig($section)

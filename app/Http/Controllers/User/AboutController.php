@@ -20,16 +20,16 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return redirect()->route('user.business.index')
                 ->with('warning', 'Silakan lengkapi data usaha terlebih dahulu sebelum mengatur halaman tentang bisnis.');
         }
-        
+
         $highlights = $business->highlights()
             ->ordered()
             ->get();
-        
+
         $highlightStats = [
             'total' => $business->highlights()->count(),
             'complete' => $business->highlights()->get()->filter(function ($highlight) {
@@ -49,7 +49,7 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -59,7 +59,7 @@ class AboutController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $updateData = [];
 
             // Handle full story
@@ -67,8 +67,8 @@ class AboutController extends Controller
                 $updateData['full_story'] = $request->input('full_story');
             }
 
-            // Handle about image upload
-            if ($request->hasImageUpload()) {
+            // Handle primary about image upload
+            if ($request->hasFile('about_image') && $request->file('about_image')->isValid()) {
                 // Delete old image if exists
                 if ($business->about_image && Storage::disk('public')->exists($business->about_image)) {
                     Storage::disk('public')->delete($business->about_image);
@@ -81,9 +81,23 @@ class AboutController extends Controller
                 $updateData['about_image'] = $imagePath;
             }
 
+            // Handle secondary about image upload
+            if ($request->hasFile('about_image_secondary') && $request->file('about_image_secondary')->isValid()) {
+                // Delete old secondary image if exists
+                if ($business->about_image_secondary && Storage::disk('public')->exists($business->about_image_secondary)) {
+                    Storage::disk('public')->delete($business->about_image_secondary);
+                }
+
+                // Store new secondary image with optimized name
+                $file = $request->file('about_image_secondary');
+                $filename = 'about-secondary-' . $business->id . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $imagePath = $file->storeAs('about-images', $filename, 'public');
+                $updateData['about_image_secondary'] = $imagePath;
+            }
+
             if (!empty($updateData)) {
                 $business->update($updateData);
-                
+
                 // Update progress completion
                 $business->updateProgressCompletion();
 
@@ -93,9 +107,12 @@ class AboutController extends Controller
                     $changes[] = 'cerita bisnis';
                 }
                 if (isset($updateData['about_image'])) {
-                    $changes[] = 'gambar tentang bisnis';
+                    $changes[] = 'gambar utama tentang bisnis';
                 }
-                
+                if (isset($updateData['about_image_secondary'])) {
+                    $changes[] = 'gambar kedua tentang bisnis';
+                }
+
                 log_activity('Halaman tentang bisnis diperbarui: ' . implode(', ', $changes), $business);
             }
 
@@ -119,7 +136,7 @@ class AboutController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('About business update error: ' . $e->getMessage());
-            
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -131,6 +148,62 @@ class AboutController extends Controller
         }
     }
 
+    public function removeSecondaryAboutImage()
+    {
+        $user = Auth::user();
+        $business = $user->business;
+
+        if (!$business) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Business profile not found.'
+            ], 404);
+        }
+
+        if (!$business->about_image_secondary) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada gambar kedua untuk dihapus.'
+            ], 404);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $imagePath = $business->about_image_secondary;
+
+            // Delete image file if exists
+            if (Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            $business->update(['about_image_secondary' => null]);
+
+            // Update progress completion
+            $business->updateProgressCompletion();
+
+            // Log activity
+            log_activity('Gambar kedua tentang bisnis dihapus', $business);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gambar kedua berhasil dihapus!',
+                'business' => $business->fresh()
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Secondary about image removal error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus gambar kedua. Silakan coba lagi.'
+            ], 500);
+        }
+    }
+
     /**
      * Store a new business highlight.
      */
@@ -138,7 +211,7 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -157,7 +230,7 @@ class AboutController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $highlightData = $request->validated();
             $highlight = $business->highlights()->create($highlightData);
 
@@ -183,7 +256,7 @@ class AboutController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Business highlight creation error: ' . $e->getMessage());
-            
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -201,7 +274,7 @@ class AboutController extends Controller
     public function showHighlight(BusinessHighlight $highlight)
     {
         $user = Auth::user();
-        
+
         // Check ownership
         if ($highlight->business_id !== $user->business?->id) {
             return response()->json([
@@ -229,7 +302,7 @@ class AboutController extends Controller
     public function updateHighlight(BusinessHighlightRequest $request, BusinessHighlight $highlight)
     {
         $user = Auth::user();
-        
+
         // Check ownership
         if ($highlight->business_id !== $user->business?->id) {
             return response()->json([
@@ -240,10 +313,10 @@ class AboutController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $highlightData = $request->validated();
             $oldTitle = $highlight->title;
-            
+
             $highlight->update($highlightData);
 
             // Update business progress completion
@@ -268,7 +341,7 @@ class AboutController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Business highlight update error: ' . $e->getMessage());
-            
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -286,7 +359,7 @@ class AboutController extends Controller
     public function destroyHighlight(BusinessHighlight $highlight)
     {
         $user = Auth::user();
-        
+
         // Check ownership
         if ($highlight->business_id !== $user->business?->id) {
             return response()->json([
@@ -297,7 +370,7 @@ class AboutController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $highlightTitle = $highlight->title;
             $highlight->delete();
 
@@ -318,7 +391,7 @@ class AboutController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Business highlight deletion error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus highlight. Silakan coba lagi.'
@@ -333,7 +406,7 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -377,7 +450,7 @@ class AboutController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('About image removal error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus gambar. Silakan coba lagi.'
@@ -392,7 +465,7 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -401,12 +474,13 @@ class AboutController extends Controller
         }
 
         $aboutSection = $business->getAboutSectionData();
-        
+
         return response()->json([
             'success' => true,
             'completion' => [
                 'has_story' => !empty($business->full_story),
                 'has_image' => $business->has_about_image,
+                'has_secondary_image' => $business->has_about_image_secondary,
                 'highlights_count' => $business->highlights_count,
                 'has_sufficient_highlights' => $business->hasSufficientHighlights(),
                 'overall_percentage' => $business->getAboutCompletionPercentage(),
@@ -425,7 +499,7 @@ class AboutController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -434,7 +508,7 @@ class AboutController extends Controller
         }
 
         $aboutData = $business->getAboutSectionData();
-        
+
         return response()->json([
             'success' => true,
             'preview' => $aboutData,

@@ -4,6 +4,7 @@ use App\Http\Controllers\User\AccountController;
 use App\Http\Controllers\User\AiContentController;
 use App\Http\Controllers\User\BranchController;
 use App\Http\Controllers\User\BusinessController;
+use App\Http\Controllers\User\ContactController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\GalleryController;
 use App\Http\Controllers\User\ProductController;
@@ -90,6 +91,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
           Route::get('/', [App\Http\Controllers\User\AboutController::class, 'index'])->name('index');
           Route::post('/story', [App\Http\Controllers\User\AboutController::class, 'updateStory'])->name('story.update');
           Route::delete('/remove-image', [App\Http\Controllers\User\AboutController::class, 'removeAboutImage'])->name('image.remove');
+          Route::delete('/about/remove-secondary-image', [App\Http\Controllers\User\AboutController::class, 'removeSecondaryAboutImage'])->name('user.about.remove-secondary-image');
 
           // Business Highlights Resource Routes
           Route::prefix('highlights')->name('highlights.')->group(function () {
@@ -108,6 +110,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
                Route::post('/toggle-section', 'toggleSection')->name('toggle-section');
                Route::get('/preview', 'preview')->name('preview');
                Route::post('/update-section-style', 'updateSectionStyle')->name('update-section-style');
+               Route::post('/templates/update-secondary-hero',  'updateSecondaryHeroImage')->name('update-secondary-hero');
+               Route::delete('/templates/remove-secondary-hero',  'removeSecondaryHeroImage')->name('remove-secondary-hero');
           });
      Route::controller(AiContentController::class)->prefix('ai-content')->name('ai-content.')->group(function () {
           Route::get('/', 'index')->name('index');
@@ -123,12 +127,21 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
           Route::post('/update-url', 'updateUrl')->name('update-url');
           Route::get('download-qr', 'downloadQrCode')->name('download-qr');
           Route::get('qr-code', 'displayQrCode')->name('display-qr');
-      });
-       // Account Management
+     });
+     // Account Management
      Route::controller(AccountController::class)->prefix('account')->name('account.')->group(function () {
           Route::get('/', 'index')->name('index');
           Route::put('/update-profile', 'updateProfile')->name('update-profile');
           Route::put('/update-password', 'updatePassword')->name('update-password');
           Route::post('/logout-all-devices', 'logoutAllDevices')->name('logout-all-devices');
      });
+     Route::prefix('contacts')->name('contacts.')->group(function () {
+          Route::get('/', [ContactController::class, 'index'])->name('index');
+          Route::post('/', [ContactController::class, 'store'])->name('store');
+          Route::get('/{contact}', [ContactController::class, 'show'])->name('show');
+          Route::put('/{contact}', [ContactController::class, 'update'])->name('update');
+          Route::delete('/{contact}', [ContactController::class, 'destroy'])->name('destroy');
+          Route::post('/order', [ContactController::class, 'updateOrder'])->name('order');
+          Route::post('/{contact}/toggle', [ContactController::class, 'toggleActive'])->name('toggle');
+      });
 });

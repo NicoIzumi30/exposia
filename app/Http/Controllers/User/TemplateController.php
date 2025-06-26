@@ -21,24 +21,24 @@ class TemplateController extends Controller
         $business = auth()->user()->business;
         $templates = Template::active()->get();
         $businessTemplate = BusinessTemplate::where('business_id', $business->id)->first();
-        
+
         // Get active sections with their variants
         $activeSections = BusinessSection::where('business_id', $business->id)
-                                        ->get()
-                                        ->keyBy('section');
-        
+            ->get()
+            ->keyBy('section');
+
         // Get available sections data
         $availableSections = BusinessSection::getAvailableSections();
 
         return view('user.templates.index', compact(
-            'business', 
-            'templates', 
-            'businessTemplate', 
+            'business',
+            'templates',
+            'businessTemplate',
             'activeSections',
             'availableSections'
         ));
     }
-    
+
     /**
      * Update the template for a business
      */
@@ -46,7 +46,7 @@ class TemplateController extends Controller
     {
         $templateId = $request->input('template_id');
         $defaultStyle = $request->input('default_style', 'A');
-        
+
         // Validate template
         $template = Template::active()->find($templateId);
         if (!$template) {
@@ -55,44 +55,44 @@ class TemplateController extends Controller
                 'message' => 'Template tidak valid'
             ]);
         }
-        
+
         $business = auth()->user()->business;
-        
+
         // Begin transaction
         \DB::beginTransaction();
-        
+
         try {
             // Update template_id
             BusinessTemplate::updateOrCreate(
                 ['business_id' => $business->id],
                 ['template_id' => $templateId]
             );
-            
+
             // Update all sections to the default style
             foreach (BusinessSection::$availableSections as $sectionKey => $config) {
                 BusinessSection::updateSectionStyle($business->id, $sectionKey, $defaultStyle);
             }
-            
+
             // Update business completion
             $business->updateProgressCompletion();
-            
+
             \DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Template dan style berhasil diperbarui'
             ]);
-            
+
         } catch (\Exception $e) {
             \DB::rollBack();
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
         }
     }
-    
+
     /**
      * Update the color palette for a business template
      */
@@ -101,43 +101,48 @@ class TemplateController extends Controller
         $primaryColor = $request->input('primary');
         $secondaryColor = $request->input('secondary');
         $accentColor = $request->input('accent');
-        
+        $highlightColor = $request->input('highlight'); // Tambahkan ini
+
         // Validate color format
         $colorPattern = '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/';
-        if (!preg_match($colorPattern, $primaryColor) || 
-            !preg_match($colorPattern, $secondaryColor) || 
-            !preg_match($colorPattern, $accentColor)) {
-            
+        if (
+            !preg_match($colorPattern, $primaryColor) ||
+            !preg_match($colorPattern, $secondaryColor) ||
+            !preg_match($colorPattern, $accentColor) ||
+            !preg_match($colorPattern, $highlightColor)
+        ) { // Tambahkan validasi untuk highlight
+
             return response()->json([
                 'success' => false,
                 'message' => 'Format warna tidak valid. Gunakan format hex (#FFFFFF)'
             ]);
         }
-        
+
         $business = auth()->user()->business;
-        
+
         try {
             // Get or create business template
             $businessTemplate = BusinessTemplate::firstOrCreate(
                 ['business_id' => $business->id],
                 ['template_id' => Template::active()->first()->id ?? null]
             );
-            
+
             // Update color palette
             $colorPalette = [
                 'primary' => strtoupper($primaryColor),
                 'secondary' => strtoupper($secondaryColor),
-                'accent' => strtoupper($accentColor)
+                'accent' => strtoupper($accentColor),
+                'highlight' => strtoupper($highlightColor) // Tambahkan warna highlight
             ];
-            
+
             $businessTemplate->color_palette = $colorPalette;
             $businessTemplate->save();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Warna berhasil diperbarui'
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -145,7 +150,7 @@ class TemplateController extends Controller
             ]);
         }
     }
-    
+
     /**
      * Update the hero image for a business
      */
@@ -156,7 +161,7 @@ class TemplateController extends Controller
             $request->validate([
                 'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
             ]);
-            
+
             $business = auth()->user()->business;
 
             // Log request untuk debugging
@@ -165,57 +170,57 @@ class TemplateController extends Controller
                 'content_type' => $request->header('Content-Type'),
                 'request_size' => $request->header('Content-Length')
             ]);
-            
+
             if (!$request->hasFile('hero_image')) {
                 return response()->json([
                     'success' => false,
                     'message' => 'File tidak ditemukan dalam request'
                 ], 400);
             }
-            
+
             // Delete old hero image if exists
             if ($business->hero_image_url && Storage::disk('public')->exists($business->hero_image_url)) {
                 Storage::disk('public')->delete($business->hero_image_url);
             }
-            
+
             // Store new hero image (mengikuti pola yang sama dengan upload logo)
             $heroImagePath = $request->file('hero_image')->store('business-hero', 'public');
-            
+
             // Update business
             $business->update([
                 'hero_image_url' => $heroImagePath
             ]);
-            
+
             // Update completion status
             $business->updateProgressCompletion();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Gambar hero berhasil diperbarui',
                 'image_url' => Storage::url($heroImagePath)
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Hero Image Upload Error', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
     }
-    
+
     /**
      * Toggle a section on/off
      */
     public function toggleSection(Request $request)
     {
         $section = $request->input('section');
-        
+
         // Validate section
         if (!array_key_exists($section, BusinessSection::$availableSections)) {
             return response()->json([
@@ -223,23 +228,23 @@ class TemplateController extends Controller
                 'message' => 'Bagian tidak valid'
             ]);
         }
-        
+
         $business = auth()->user()->business;
-        
+
         try {
             // Toggle section
             $businessSection = BusinessSection::toggleSection($business->id, $section);
-            
-            $message = $businessSection->is_active 
-                ? "Bagian {$businessSection->getSectionName()} berhasil diaktifkan" 
+
+            $message = $businessSection->is_active
+                ? "Bagian {$businessSection->getSectionName()} berhasil diaktifkan"
                 : "Bagian {$businessSection->getSectionName()} berhasil dinonaktifkan";
-            
+
             return response()->json([
                 'success' => true,
                 'message' => $message,
                 'is_active' => $businessSection->is_active
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -247,7 +252,107 @@ class TemplateController extends Controller
             ]);
         }
     }
-    
+    public function updateSecondaryHeroImage(Request $request)
+    {
+        try {
+            // Validasi request
+            $request->validate([
+                'hero_image_secondary' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            ]);
+
+            $business = auth()->user()->business;
+
+            // Log request untuk debugging
+            \Log::info('Secondary Hero Image Upload Request', [
+                'has_file' => $request->hasFile('hero_image_secondary'),
+                'content_type' => $request->header('Content-Type'),
+                'request_size' => $request->header('Content-Length')
+            ]);
+
+            if (!$request->hasFile('hero_image_secondary')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File tidak ditemukan dalam request'
+                ], 400);
+            }
+
+            // Delete old secondary hero image if exists
+            if ($business->hero_image_secondary_url && Storage::disk('public')->exists($business->hero_image_secondary_url)) {
+                Storage::disk('public')->delete($business->hero_image_secondary_url);
+            }
+
+            // Store new secondary hero image
+            $heroSecondaryImagePath = $request->file('hero_image_secondary')->store('business-hero-secondary', 'public');
+
+            // Update business
+            $business->update([
+                'hero_image_secondary_url' => $heroSecondaryImagePath
+            ]);
+
+            // Update completion status
+            $business->updateProgressCompletion();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gambar hero kedua berhasil diperbarui',
+                'image_url' => Storage::url($heroSecondaryImagePath)
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Secondary Hero Image Upload Error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the secondary hero image
+     */
+    public function removeSecondaryHeroImage(Request $request)
+    {
+        try {
+            $business = auth()->user()->business;
+
+            if (!$business->hero_image_secondary_url) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada gambar hero kedua'
+                ], 400);
+            }
+
+            // Delete secondary hero image if exists
+            if (Storage::disk('public')->exists($business->hero_image_secondary_url)) {
+                Storage::disk('public')->delete($business->hero_image_secondary_url);
+            }
+
+            // Update business
+            $business->update([
+                'hero_image_secondary_url' => null
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gambar hero kedua berhasil dihapus'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Secondary Hero Image Removal Error', [
+                'message' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Update a section style variant
      */
@@ -255,7 +360,7 @@ class TemplateController extends Controller
     {
         $section = $request->input('section');
         $styleVariant = $request->input('style_variant');
-        
+
         // Validate section & style
         if (!array_key_exists($section, BusinessSection::$availableSections)) {
             return response()->json([
@@ -263,30 +368,30 @@ class TemplateController extends Controller
                 'message' => 'Bagian tidak valid'
             ]);
         }
-        
+
         if (!array_key_exists($styleVariant, BusinessSection::$availableSections[$section]['variants'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Style tidak valid'
             ]);
         }
-        
+
         $business = auth()->user()->business;
-        
+
         try {
             // Update section style
             $businessSection = BusinessSection::updateSectionStyle(
-                $business->id, 
-                $section, 
+                $business->id,
+                $section,
                 $styleVariant
             );
-            
+
             return response()->json([
                 'success' => true,
                 'message' => "Style untuk {$businessSection->getSectionName()} berhasil diperbarui",
                 'display_name' => $businessSection->getFullDisplayName()
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -294,25 +399,25 @@ class TemplateController extends Controller
             ]);
         }
     }
-    
+
     /**
      * Preview the business website
      */
     public function preview()
     {
         $business = auth()->user()->business;
-        
+
         // Check if the business has a template
         if (!$business->businessTemplate) {
             return redirect()->route('user.templates.index')
-                             ->with('error', 'Harap pilih template terlebih dahulu');
+                ->with('error', 'Harap pilih template terlebih dahulu');
         }
-        
+
         // Get template, sections, and other data needed for preview
         $template = $business->businessTemplate->template;
         $sections = $business->businessSections()->where('is_active', true)->get();
         $colorPalette = $business->getColorPalette();
-        
+
         // Get business data for preview
         $businessData = [
             'name' => $business->business_name,
@@ -322,17 +427,18 @@ class TemplateController extends Controller
             'hours' => $business->main_operational_hours,
             'maps_link' => $business->google_maps_link,
             'hero_image' => $business->hero_image_url ? Storage::url($business->hero_image_url) : null,
+            'hero_image_secondary' => $business->hero_image_secondary_url ? Storage::url($business->hero_image_secondary_url) : null,
             'about_image' => $business->about_image_url,
             'story' => $business->full_story,
         ];
-        
+
         // Get content data
         $products = $business->products()->limit(8)->get();
         $galleries = $business->galleries()->limit(8)->get();
         $testimonials = $business->testimonials()->limit(4)->get();
         $highlights = $business->highlights()->limit(6)->get();
         $branches = $business->branches()->limit(3)->get();
-        
+
         return view('user.templates.preview', compact(
             'business',
             'template',

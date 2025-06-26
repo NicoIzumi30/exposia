@@ -128,6 +128,71 @@
             </form>
         </div>
 
+        <!-- Secondary About Image Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up mt-8">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-images text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Foto Kedua Tentang Bisnis</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Upload foto pendukung untuk memperkuat cerita bisnis Anda</p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="aboutImageSecondaryForm" class="space-y-6">
+                @csrf
+                <!-- Current Secondary Image Display -->
+                @if($business->about_image_secondary)
+                <div class="text-center">
+                    <div class="w-full max-w-md mx-auto bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
+                        <img id="currentAboutImageSecondary" src="{{ Storage::url($business->about_image_secondary) }}" alt="Secondary About Business Image" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="mt-4 flex justify-center space-x-3">
+                        <button type="button" onclick="document.getElementById('aboutImageSecondary').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-edit mr-2"></i>Ganti Foto
+                        </button>
+                        <button type="button" onclick="removeSecondaryAboutImage()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-trash mr-2"></i>Hapus Foto
+                        </button>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Secondary Image Upload Area -->
+                <div class="image-upload-dropzone relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-amber-500 dark:hover:border-amber-400 transition-all duration-300 cursor-pointer group {{ $business->about_image_secondary ? 'hidden' : '' }}" id="aboutImageSecondaryDropzone">
+                    <input type="file" id="aboutImageSecondary" name="about_image_secondary" accept="image/*" class="hidden">
+
+                    <div class="upload-placeholder">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-amber-50 dark:group-hover:bg-amber-900/20 transition-colors duration-300">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors duration-300"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                            Upload foto kedua tentang bisnis
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG max 2MB</p>
+                    </div>
+                </div>
+
+                <!-- Secondary Image Preview -->
+                <div class="image-preview-container hidden" id="aboutImageSecondaryPreviewContainer">
+                    <div class="relative text-center">
+                        <img id="aboutImageSecondaryPreview" src="" alt="Preview" class="w-full max-w-md mx-auto h-64 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <button type="button" class="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors duration-200" onclick="removeAboutImageSecondaryPreview()">
+                            <i class="fas fa-times text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button type="submit" id="aboutImageSecondarySubmitBtn" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-save mr-2"></i>Simpan Foto Kedua
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- Business Highlights Section -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
             <div class="flex items-center justify-between mb-6">
@@ -211,9 +276,15 @@
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">Foto Tentang</span>
+                    <span class="text-gray-600 dark:text-gray-400">Foto Utama</span>
                     <span class="text-lg font-semibold {{ $business->about_image ? 'text-green-600 dark:text-green-400' : 'text-gray-400' }}">
                         {{ $business->about_image ? 'Ada' : 'Belum' }}
+                    </span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">Foto Kedua</span>
+                    <span class="text-lg font-semibold {{ $business->about_image_secondary ? 'text-green-600 dark:text-green-400' : 'text-gray-400' }}">
+                        {{ $business->about_image_secondary ? 'Ada' : 'Belum' }}
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
@@ -374,8 +445,8 @@
     function initializeStoryEditor() {
         ClassicEditor
             .create(document.querySelector('#fullStory'), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'indent', 'outdent', '|', 'blockQuote', 'insertTable', '|', 'undo', 'redo'],
-                placeholder: 'Ceritakan kisah perjalanan bisnis Anda, visi, misi, dan nilai-nilai yang dijunjung tinggi...'
+                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'indent', 'outdent', '|', 'blockQuote', 'insertTable', '|', 'undo', 'redo']
+                , placeholder: 'Ceritakan kisah perjalanan bisnis Anda, visi, misi, dan nilai-nilai yang dijunjung tinggi...'
             })
             .then(editor => {
                 storyEditor = editor;
@@ -407,11 +478,11 @@
         formData.append('_token', getCsrfToken());
         formData.append('full_story', storyEditor.getData());
         fetch(buildUrl('update-story'), {
-                method: 'POST',
-                headers: {
+                method: 'POST'
+                , headers: {
                     'Accept': 'application/json'
-                },
-                body: formData
+                }
+                , body: formData
             })
             .then(response => response.json())
             .then(data => {
@@ -517,11 +588,11 @@
         submitBtn.disabled = true;
         const formData = new FormData(this);
         fetch(buildUrl('update-story'), {
-                method: 'POST',
-                headers: {
+                method: 'POST'
+                , headers: {
                     'Accept': 'application/json'
-                },
-                body: formData
+                }
+                , body: formData
             })
             .then(response => response.json())
             .then(data => {
@@ -540,19 +611,20 @@
                 submitBtn.disabled = false;
             });
     });
+
     function removeAboutImage() {
         showConfirmation({
-            title: 'Hapus Foto Ini?',
-            text: 'Foto tentang bisnis akan dihapus secara permanen.',
-            icon: 'warning',
-            confirmButtonText: 'Ya, Hapus!'
+            title: 'Hapus Foto Ini?'
+            , text: 'Foto tentang bisnis akan dihapus secara permanen.'
+            , icon: 'warning'
+            , confirmButtonText: 'Ya, Hapus!'
         }, () => {
             showToast('Menghapus foto...', 'info', 0);
             fetch(buildUrl('remove-about-image'), {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken()
+                    method: 'DELETE'
+                    , headers: {
+                        'Accept': 'application/json'
+                        , 'X-CSRF-TOKEN': getCsrfToken()
                     }
                 })
                 .then(response => response.json())
@@ -572,7 +644,7 @@
         });
     }
 
-   function openHighlightModal(highlightData = null) {
+    function openHighlightModal(highlightData = null) {
         const modal = document.getElementById('highlightModal');
         const modalTitle = document.getElementById('highlightModalTitle');
         const form = document.getElementById('highlightForm');
@@ -627,10 +699,10 @@
     function editHighlight(highlightId) {
         showToast('Memuat data highlight...', 'info');
         fetch(buildUrl('show-highlight', highlightId), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken()
+                method: 'GET'
+                , headers: {
+                    'Accept': 'application/json'
+                    , 'X-CSRF-TOKEN': getCsrfToken()
                 }
             })
             .then(response => response.json())
@@ -645,19 +717,20 @@
                 showToast('Gagal terhubung ke server.', 'error');
             });
     }
+
     function deleteHighlight(highlightId, highlightTitle) {
         showConfirmation({
-            title: 'Hapus Highlight Ini?',
-            text: `Highlight "${highlightTitle}" akan dihapus secara permanen.`,
-            icon: 'warning',
-            confirmButtonText: 'Ya, Hapus!'
+            title: 'Hapus Highlight Ini?'
+            , text: `Highlight "${highlightTitle}" akan dihapus secara permanen.`
+            , icon: 'warning'
+            , confirmButtonText: 'Ya, Hapus!'
         }, () => {
             showToast('Menghapus highlight...', 'info', 0);
             fetch(buildUrl('destroy-highlight', highlightId), {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken()
+                    method: 'DELETE'
+                    , headers: {
+                        'Accept': 'application/json'
+                        , 'X-CSRF-TOKEN': getCsrfToken()
                     }
                 })
                 .then(response => response.json())
@@ -685,7 +758,7 @@
         });
     }
 
-   document.getElementById('highlightForm').addEventListener('submit', function(e) {
+    document.getElementById('highlightForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const submitBtn = document.getElementById('highlightSubmitBtn');
         const originalContent = submitBtn.innerHTML;
@@ -698,12 +771,12 @@
             formData.append('_method', 'PUT');
         }
         fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken()
-                },
-                body: formData
+                method: 'POST'
+                , headers: {
+                    'Accept': 'application/json'
+                    , 'X-CSRF-TOKEN': getCsrfToken()
+                }
+                , body: formData
             })
             .then(response => response.json())
             .then(data => {
@@ -764,6 +837,131 @@
         }
     }
 
+    function initializeAboutImageSecondaryUpload() {
+        const dropzone = document.getElementById('aboutImageSecondaryDropzone');
+        const fileInput = document.getElementById('aboutImageSecondary');
+        if (!dropzone || !fileInput) return;
+        dropzone.addEventListener('click', (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && validateImageFile(file)) {
+                handleAboutImageSecondaryUpload(file);
+            }
+        });
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-amber-500', 'bg-amber-50', 'dark:bg-amber-900/20');
+        });
+        dropzone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            if (!dropzone.contains(e.relatedTarget)) {
+                dropzone.classList.remove('border-amber-500', 'bg-amber-50', 'dark:bg-amber-900/20');
+            }
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-amber-500', 'bg-amber-50', 'dark:bg-amber-900/20');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (validateImageFile(file)) {
+                    fileInput.files = files;
+                    handleAboutImageSecondaryUpload(file);
+                }
+            }
+        });
+    }
+
+    function handleAboutImageSecondaryUpload(file) {
+        const dropzone = document.getElementById('aboutImageSecondaryDropzone');
+        const previewContainer = document.getElementById('aboutImageSecondaryPreviewContainer');
+        const preview = document.getElementById('aboutImageSecondaryPreview');
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            dropzone.classList.add('hidden');
+            previewContainer.classList.remove('hidden');
+            showToast('Foto kedua siap untuk disimpan!', 'info');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeAboutImageSecondaryPreview() {
+        const fileInput = document.getElementById('aboutImageSecondary');
+        const dropzone = document.getElementById('aboutImageSecondaryDropzone');
+        const previewContainer = document.getElementById('aboutImageSecondaryPreviewContainer');
+        fileInput.value = '';
+        dropzone.classList.remove('hidden');
+        previewContainer.classList.add('hidden');
+    }
+
+    document.getElementById('aboutImageSecondaryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('aboutImageSecondarySubmitBtn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Menyimpan...';
+        submitBtn.disabled = true;
+        const formData = new FormData(this);
+        fetch(buildUrl('update-story'), {
+                method: 'POST'
+                , headers: {
+                    'Accept': 'application/json'
+                }
+                , body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Terjadi kesalahan', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Gagal terhubung ke server saat menyimpan foto kedua.', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+    });
+
+    function removeSecondaryAboutImage() {
+        showConfirmation({
+            title: 'Hapus Foto Kedua?'
+            , text: 'Foto kedua tentang bisnis akan dihapus secara permanen.'
+            , icon: 'warning'
+            , confirmButtonText: 'Ya, Hapus!'
+        }, () => {
+            showToast('Menghapus foto kedua...', 'info', 0);
+            fetch(buildUrl('remove-secondary-image'), {
+                    method: 'DELETE'
+                    , headers: {
+                        'Accept': 'application/json'
+                        , 'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.clearAllToasts();
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        showToast(data.message || 'Gagal menghapus foto kedua', 'error');
+                    }
+                })
+                .catch(error => {
+                    window.clearAllToasts();
+                    showToast('Gagal terhubung ke server saat menghapus foto kedua.', 'error');
+                });
+        });
+    }
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeHighlightModal();
@@ -773,7 +971,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         initializeStoryEditor();
         initializeAboutImageUpload();
+        initializeAboutImageSecondaryUpload();
     });
+
 </script>
 @endpush
 

@@ -217,11 +217,9 @@ class AuthController extends Controller
     private function redirectBasedOnRole()
     {
         $user = Auth::user();
-
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
-
         return redirect()->route('user.dashboard');
     }
 

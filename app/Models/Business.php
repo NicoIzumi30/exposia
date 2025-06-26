@@ -30,7 +30,9 @@ class Business extends Model
         'full_description',
         'full_story',
         'hero_image_url',
+        'hero_image_secondary_url',
         'about_image',
+        'about_image_secondary',
         'public_url',
         'publish_status',
         'qr_code',
@@ -819,10 +821,10 @@ class Business extends Model
             'price_range' => $this->product_price_range
         ];
     }
-// ========================================
+    // ========================================
     // SUPER SIMPLE GALLERY METHODS
     // ========================================
-    
+
     /**
      * Get the galleries for the business.
      */
@@ -830,7 +832,7 @@ class Business extends Model
     {
         return $this->hasMany(Gallery::class, 'business_id');
     }
-    
+
     /**
      * Get total galleries count
      */
@@ -838,43 +840,43 @@ class Business extends Model
     {
         return $this->galleries()->count();
     }
-    
+
     /**
      * Get latest galleries (newest first)
      */
     public function getLatestGalleriesAttribute($limit = 6)
     {
         return $this->galleries()
-                    ->latest()
-                    ->limit($limit)
-                    ->get();
+            ->latest()
+            ->limit($limit)
+            ->get();
     }
-    
+
     /**
      * Get random galleries for showcase
      */
     public function getRandomGalleriesAttribute($limit = 4)
     {
         return $this->galleries()
-                    ->inRandomOrder()
-                    ->limit($limit)
-                    ->get();
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
     }
-    
+
     /**
      * Get simple gallery stats
      */
     public function getGalleryStatsAttribute(): array
     {
         $count = $this->galleries_count;
-        
+
         return [
             'total' => $count,
             'remaining' => max(0, 8 - $count), // Max 8 images
             'can_upload' => $count < 8,
         ];
     }
-    
+
     /**
      * Check if business has galleries
      */
@@ -882,7 +884,7 @@ class Business extends Model
     {
         return $this->galleries_count > 0;
     }
-    
+
     /**
      * Get first gallery image
      */
@@ -890,14 +892,14 @@ class Business extends Model
     {
         return $this->galleries()->latest()->first();
     }
-    
+
     /**
      * Get simple gallery showcase data for public display
      */
     public function getGalleryShowcaseAttribute(): array
     {
         $galleries = $this->galleries()->latest()->take(8)->get();
-        
+
         return [
             'galleries' => $galleries->map(function ($gallery) {
                 return $gallery->getSimpleData();
@@ -906,32 +908,32 @@ class Business extends Model
             'has_more' => $this->galleries_count > 8,
         ];
     }
-    
+
     /**
      * Get galleries for sitemap generation
      */
     public function getGalleriesForSitemapAttribute()
     {
         return $this->galleries()
-                    ->latest()
-                    ->get(['id', 'gallery_image', 'updated_at']);
+            ->latest()
+            ->get(['id', 'gallery_image', 'updated_at']);
     }
-    
+
     /**
      * Calculate business completion including galleries (simplified)
      */
     public function calculateCompletionWithGalleries(): int
     {
         $baseCompletion = business_completion($this);
-    
+
         // Add bonus points for having galleries
         if ($this->galleries_count > 0) {
             $baseCompletion = min(100, $baseCompletion + 10); // Simple 10 point bonus
         }
-    
+
         return $baseCompletion;
     }
-    
+
     /**
      * Get business hero image (logo or first gallery image)
      */
@@ -941,21 +943,21 @@ class Business extends Model
         if (!empty($this->logo_url)) {
             return $this->getLogoUrl();
         }
-    
+
         if ($this->main_gallery_image) {
             return $this->main_gallery_image->image_url;
         }
-    
+
         return asset('images/placeholder-business.jpg');
     }
-    
+
     /**
      * Get all media files (products + gallery) - simplified
      */
     public function getAllMediaFilesAttribute(): array
     {
         $media = [];
-    
+
         // Add product images
         foreach ($this->products as $product) {
             if ($product->product_image) {
@@ -967,7 +969,7 @@ class Business extends Model
                 ];
             }
         }
-    
+
         // Add gallery images
         foreach ($this->galleries as $gallery) {
             if ($gallery->gallery_image) {
@@ -979,10 +981,10 @@ class Business extends Model
                 ];
             }
         }
-    
+
         return $media;
     }
-    
+
     /**
      * Check if business has sufficient media content
      */
@@ -991,10 +993,10 @@ class Business extends Model
         // Consider sufficient if has at least 3 products with images OR 3 gallery images
         $productImages = $this->products()->whereNotNull('product_image')->count();
         $galleryImages = $this->galleries_count;
-    
+
         return ($productImages >= 3) || ($galleryImages >= 3) || (($productImages + $galleryImages) >= 5);
     }
-    
+
     /**
      * Get simple media content summary
      */
@@ -1008,20 +1010,20 @@ class Business extends Model
             'has_sufficient_content' => $this->hasSufficientMediaContent(),
         ];
     }
-    
+
     /**
      * Update business completion including all media
      */
     public function updateCompletionWithMedia(): int
     {
         $completion = $this->calculateCompletionWithGalleries();
-    
+
         // Update the stored completion
         $this->update(['progress_completion' => $completion]);
-    
+
         return $completion;
     }
-    
+
     /**
      * Get business showcase data including galleries (simplified)
      */
@@ -1052,7 +1054,7 @@ class Business extends Model
             'media_summary' => $this->media_summary,
         ];
     }
-    
+
     /**
      * Check if business can add more galleries
      */
@@ -1060,7 +1062,7 @@ class Business extends Model
     {
         return $this->galleries_count < 8; // Max 8 galleries
     }
-    
+
     /**
      * Get simple gallery quota information
      */
@@ -1070,7 +1072,7 @@ class Business extends Model
         $max = 8;
         $remaining = max(0, $max - $count);
         $percentage = $max > 0 ? round(($count / $max) * 100) : 0;
-    
+
         return [
             'current' => $count,
             'max' => $max,
@@ -1080,17 +1082,17 @@ class Business extends Model
             'is_full' => $count >= $max,
         ];
     }
-    
-    
+
+
     /**
      * Get next steps for completion (simplified)
      */
 
-    
+
     // ========================================
     // SIMPLE QUERY SCOPES
     // ========================================
-    
+
     /**
      * Scope for businesses with galleries
      */
@@ -1098,7 +1100,7 @@ class Business extends Model
     {
         return $query->has('galleries');
     }
-    
+
     /**
      * Scope for businesses with sufficient media content
      */
@@ -1108,698 +1110,760 @@ class Business extends Model
             $q->whereHas('products', function ($productQuery) {
                 $productQuery->whereNotNull('product_image');
             }, '>=', 3)
-            ->orWhereHas('galleries', null, '>=', 3);
+                ->orWhereHas('galleries', null, '>=', 3);
         });
     }
 
-// Add these methods to your existing Business.php model
+    // Add these methods to your existing Business.php model
 // (Add them in the RELATIONSHIPS section)
 
-/**
- * Get the testimonials for the business.
- */
-public function testimonials(): HasMany
-{
-    return $this->hasMany(Testimonial::class, 'business_id');
-}
-
-// Add these in the ACCESSORS & ATTRIBUTES section
-
-/**
- * Get total testimonials count
- */
-public function getTestimonialsCountAttribute(): int
-{
-    return $this->testimonials()->count();
-}
-
-/**
- * Get latest testimonials
- */
-public function getLatestTestimonialsAttribute($limit = 5)
-{
-    return $this->testimonials()
-                ->latest()
-                ->limit($limit)
-                ->get();
-}
-
-/**
- * Get random testimonials for showcase
- */
-public function getRandomTestimonialsAttribute($limit = 3)
-{
-    return $this->testimonials()
-                ->inRandomOrder()
-                ->limit($limit)
-                ->get();
-}
-
-/**
- * Get testimonial statistics
- */
-public function getTestimonialStatsAttribute(): array
-{
-    $count = $this->testimonials_count;
-    $thisMonth = $this->testimonials()
-                      ->whereMonth('created_at', now()->month)
-                      ->whereYear('created_at', now()->year)
-                      ->count();
-    
-    return [
-        'total' => $count,
-        'this_month' => $thisMonth,
-        'has_testimonials' => $count > 0,
-    ];
-}
-
-// Add these in the BUSINESS HELPER METHODS section
-
-/**
- * Check if business has testimonials
- */
-public function hasTestimonials(): bool
-{
-    return $this->testimonials_count > 0;
-}
-
-/**
- * Check if business has complete testimonial information
- */
-public function hasCompleteTestimonialInfo(): bool
-{
-    if ($this->testimonials_count === 0) {
-        return false;
+    /**
+     * Get the testimonials for the business.
+     */
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class, 'business_id');
     }
 
-    return $this->testimonials->every(function ($testimonial) {
-        return $testimonial->isComplete();
-    });
-}
+    // Add these in the ACCESSORS & ATTRIBUTES section
 
-/**
- * Get testimonials for public website display
- */
-public function getPublicTestimonials(int $limit = 6)
-{
-    return $this->testimonials()
-                ->latest()
-                ->limit($limit)
-                ->get()
-                ->map(function ($testimonial) {
-                    return $testimonial->getDisplayData();
-                });
-}
+    /**
+     * Get total testimonials count
+     */
+    public function getTestimonialsCountAttribute(): int
+    {
+        return $this->testimonials()->count();
+    }
 
-// Update the completion calculation method to include testimonials
+    /**
+     * Get latest testimonials
+     */
+    public function getLatestTestimonialsAttribute($limit = 5)
+    {
+        return $this->testimonials()
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
 
-/**
- * Calculate business completion including testimonials
- */
-public function calculateCompletionWithTestimonials(): int
-{
-    $completion = $this->calculateCompletionWithGalleries(); // Use existing method
-    
-    // Add bonus points for having testimonials
-    if ($this->testimonials_count > 0) {
-        $completion = min(100, $completion + 5); // 5 point bonus
-        
-        // Additional bonus for having multiple testimonials
-        if ($this->testimonials_count >= 3) {
-            $completion = min(100, $completion + 5); // Additional 5 points
+    /**
+     * Get random testimonials for showcase
+     */
+    public function getRandomTestimonialsAttribute($limit = 3)
+    {
+        return $this->testimonials()
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Get testimonial statistics
+     */
+    public function getTestimonialStatsAttribute(): array
+    {
+        $count = $this->testimonials_count;
+        $thisMonth = $this->testimonials()
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        return [
+            'total' => $count,
+            'this_month' => $thisMonth,
+            'has_testimonials' => $count > 0,
+        ];
+    }
+
+    // Add these in the BUSINESS HELPER METHODS section
+
+    /**
+     * Check if business has testimonials
+     */
+    public function hasTestimonials(): bool
+    {
+        return $this->testimonials_count > 0;
+    }
+
+    /**
+     * Check if business has complete testimonial information
+     */
+    public function hasCompleteTestimonialInfo(): bool
+    {
+        if ($this->testimonials_count === 0) {
+            return false;
         }
+
+        return $this->testimonials->every(function ($testimonial) {
+            return $testimonial->isComplete();
+        });
     }
-    
-    return $completion;
-}
 
-// Add this to the SIMPLE COMPLETION CALCULATION section
-// Update the getSimpleCompletionStatusAttribute method to include testimonials:
+    /**
+     * Get testimonials for public website display
+     */
+    public function getPublicTestimonials(int $limit = 6)
+    {
+        return $this->testimonials()
+            ->latest()
+            ->limit($limit)
+            ->get()
+            ->map(function ($testimonial) {
+                return $testimonial->getDisplayData();
+            });
+    }
 
-/**
- * Simple completion status including testimonials (updated)
- */
+    // Update the completion calculation method to include testimonials
 
+    /**
+     * Calculate business completion including testimonials
+     */
+    public function calculateCompletionWithTestimonials(): int
+    {
+        $completion = $this->calculateCompletionWithGalleries(); // Use existing method
 
-// Update the getSimpleNextSteps method to include testimonials:
+        // Add bonus points for having testimonials
+        if ($this->testimonials_count > 0) {
+            $completion = min(100, $completion + 5); // 5 point bonus
 
-/**
- * Get next steps for completion (updated with testimonials)
- */
-private function getSimpleNextSteps(array $fields): array
-{
-    $nextSteps = [];
-    
-    foreach ($fields as $key => $field) {
-        if (!$field['completed']) {
-            switch ($key) {
-                case 'basic_info':
-                    $nextSteps[] = 'Lengkapi informasi dasar bisnis';
-                    break;
-                case 'descriptions':
-                    $nextSteps[] = 'Tambahkan deskripsi bisnis';
-                    break;
-                case 'logo':
-                    $nextSteps[] = 'Upload logo bisnis';
-                    break;
-                case 'location':
-                    $nextSteps[] = 'Tambahkan link Google Maps';
-                    break;
-                case 'products':
-                    $nextSteps[] = 'Upload minimal 3 produk';
-                    break;
-                case 'galleries':
-                    $nextSteps[] = 'Upload minimal 3 foto galeri';
-                    break;
-                case 'testimonials':
-                    $nextSteps[] = 'Tambahkan minimal 2 testimoni';
-                    break;
+            // Additional bonus for having multiple testimonials
+            if ($this->testimonials_count >= 3) {
+                $completion = min(100, $completion + 5); // Additional 5 points
             }
         }
+
+        return $completion;
     }
 
-    return array_slice($nextSteps, 0, 3); // Return top 3 next steps
-}
+    // Add this to the SIMPLE COMPLETION CALCULATION section
+// Update the getSimpleCompletionStatusAttribute method to include testimonials:
 
-// Add scope for businesses with testimonials
-
-/**
- * Scope for businesses with testimonials
- */
-public function scopeWithTestimonials($query)
-{
-    return $query->has('testimonials');
-}
-
-/**
- * Scope for businesses with sufficient testimonials
- */
-public function scopeWithSufficientTestimonials($query, int $minCount = 2)
-{
-    return $query->whereHas('testimonials', null, '>=', $minCount);
-}
+    /**
+     * Simple completion status including testimonials (updated)
+     */
 
 
-// Add these methods to your existing Business.php model
+    // Update the getSimpleNextSteps method to include testimonials:
+
+    /**
+     * Get next steps for completion (updated with testimonials)
+     */
+    private function getSimpleNextSteps(array $fields): array
+    {
+        $nextSteps = [];
+
+        foreach ($fields as $key => $field) {
+            if (!$field['completed']) {
+                switch ($key) {
+                    case 'basic_info':
+                        $nextSteps[] = 'Lengkapi informasi dasar bisnis';
+                        break;
+                    case 'descriptions':
+                        $nextSteps[] = 'Tambahkan deskripsi bisnis';
+                        break;
+                    case 'logo':
+                        $nextSteps[] = 'Upload logo bisnis';
+                        break;
+                    case 'location':
+                        $nextSteps[] = 'Tambahkan link Google Maps';
+                        break;
+                    case 'products':
+                        $nextSteps[] = 'Upload minimal 3 produk';
+                        break;
+                    case 'galleries':
+                        $nextSteps[] = 'Upload minimal 3 foto galeri';
+                        break;
+                    case 'testimonials':
+                        $nextSteps[] = 'Tambahkan minimal 2 testimoni';
+                        break;
+                }
+            }
+        }
+
+        return array_slice($nextSteps, 0, 3); // Return top 3 next steps
+    }
+
+    // Add scope for businesses with testimonials
+
+    /**
+     * Scope for businesses with testimonials
+     */
+    public function scopeWithTestimonials($query)
+    {
+        return $query->has('testimonials');
+    }
+
+    /**
+     * Scope for businesses with sufficient testimonials
+     */
+    public function scopeWithSufficientTestimonials($query, int $minCount = 2)
+    {
+        return $query->whereHas('testimonials', null, '>=', $minCount);
+    }
+
+
+    // Add these methods to your existing Business.php model
 // (Add them in the RELATIONSHIPS section)
 
-/**
- * Get the highlights for the business.
- */
-public function highlights(): HasMany
-{
-    return $this->hasMany(BusinessHighlight::class, 'business_id');
-}
-
-// Add these in the ACCESSORS & ATTRIBUTES section
-
-/**
- * Get total highlights count
- */
-public function getHighlightsCountAttribute(): int
-{
-    return $this->highlights()->count();
-}
-
-/**
- * Get latest highlights
- */
-public function getLatestHighlightsAttribute($limit = 6)
-{
-    return $this->highlights()
-                ->ordered()
-                ->limit($limit)
-                ->get();
-}
-
-/**
- * Get complete highlights (for public display)
- */
-public function getCompleteHighlightsAttribute()
-{
-    return $this->highlights()
-                ->get()
-                ->filter(function ($highlight) {
-                    return $highlight->isComplete();
-                });
-}
-
-/**
- * Get highlights statistics
- */
-public function getHighlightStatsAttribute(): array
-{
-    $total = $this->highlights_count;
-    $complete = $this->complete_highlights->count();
-    
-    return [
-        'total' => $total,
-        'complete' => $complete,
-        'incomplete' => $total - $complete,
-        'has_highlights' => $total > 0,
-        'completion_rate' => $total > 0 ? round(($complete / $total) * 100) : 0,
-    ];
-}
-
-/**
- * Get about image URL with fallback
- */
-public function getAboutImageUrlAttribute(): ?string
-{
-    if (!$this->about_image) {
-        return null;
+    /**
+     * Get the highlights for the business.
+     */
+    public function highlights(): HasMany
+    {
+        return $this->hasMany(BusinessHighlight::class, 'business_id');
     }
 
-    return Storage::url($this->about_image);
-}
+    // Add these in the ACCESSORS & ATTRIBUTES section
 
-/**
- * Check if business has about image
- */
-public function getHasAboutImageAttribute(): bool
-{
-    return !empty($this->about_image) && Storage::disk('public')->exists($this->about_image);
-}
+    /**
+     * Get total highlights count
+     */
+    public function getHighlightsCountAttribute(): int
+    {
+        return $this->highlights()->count();
+    }
 
-// Add these in the BUSINESS HELPER METHODS section
+    /**
+     * Get latest highlights
+     */
+    public function getLatestHighlightsAttribute($limit = 6)
+    {
+        return $this->highlights()
+            ->ordered()
+            ->limit($limit)
+            ->get();
+    }
 
-/**
- * Check if business has highlights
- */
-public function hasHighlights(): bool
-{
-    return $this->highlights_count > 0;
-}
+    /**
+     * Get complete highlights (for public display)
+     */
+    public function getCompleteHighlightsAttribute()
+    {
+        return $this->highlights()
+            ->get()
+            ->filter(function ($highlight) {
+                return $highlight->isComplete();
+            });
+    }
 
-/**
- * Check if business has sufficient highlights
- */
-public function hasSufficientHighlights(int $minCount = 3): bool
-{
-    return $this->highlights_count >= $minCount;
-}
+    /**
+     * Get highlights statistics
+     */
+    public function getHighlightStatsAttribute(): array
+    {
+        $total = $this->highlights_count;
+        $complete = $this->complete_highlights->count();
 
-/**
- * Check if business has complete about section
- */
-public function hasCompleteAboutSection(): bool
-{
-    return !empty($this->full_story) && 
-           $this->has_about_image && 
-           $this->highlights_count >= 3;
-}
+        return [
+            'total' => $total,
+            'complete' => $complete,
+            'incomplete' => $total - $complete,
+            'has_highlights' => $total > 0,
+            'completion_rate' => $total > 0 ? round(($complete / $total) * 100) : 0,
+        ];
+    }
 
-/**
- * Get about section completion percentage
- */
-public function getAboutCompletionPercentage(): int
-{
-    $criteria = [
-        !empty($this->full_story),           // 40%
-        $this->has_about_image,              // 30% 
-        $this->highlights_count >= 3,        // 30%
-    ];
-
-    $weights = [40, 30, 30];
-    $totalWeight = 0;
-
-    foreach ($criteria as $index => $completed) {
-        if ($completed) {
-            $totalWeight += $weights[$index];
+    /**
+     * Get about image URL with fallback
+     */
+    public function getAboutImageUrlAttribute(): ?string
+    {
+        if (!$this->about_image) {
+            return null;
         }
+
+        return Storage::url($this->about_image);
     }
 
-    return $totalWeight;
-}
-
-/**
- * Get highlights for public website display
- */
-public function getPublicHighlights(int $limit = 6)
-{
-    return $this->highlights()
-                ->ordered()
-                ->limit($limit)
-                ->get()
-                ->filter(function ($highlight) {
-                    return $highlight->isComplete();
-                })
-                ->map(function ($highlight) {
-                    return $highlight->getCardData();
-                });
-}
-
-/**
- * Get business story summary (for public display)
- */
-public function getStoryExcerpt(int $wordLimit = 50): string
-{
-    if (empty($this->full_story)) {
-        return '';
+    /**
+     * Check if business has about image
+     */
+    public function getHasAboutImageAttribute(): bool
+    {
+        return !empty($this->about_image) && Storage::disk('public')->exists($this->about_image);
     }
 
-    // Strip HTML tags and get plain text
-    $plainText = strip_tags($this->full_story);
-    
-    // Get excerpt
-    $words = explode(' ', $plainText);
-    if (count($words) <= $wordLimit) {
-        return $plainText;
+    // Add these in the BUSINESS HELPER METHODS section
+
+    /**
+     * Check if business has highlights
+     */
+    public function hasHighlights(): bool
+    {
+        return $this->highlights_count > 0;
     }
 
-    return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
-}
+    /**
+     * Check if business has sufficient highlights
+     */
+    public function hasSufficientHighlights(int $minCount = 3): bool
+    {
+        return $this->highlights_count >= $minCount;
+    }
 
-/**
- * Check if business about section is ready for public display
- */
-public function isAboutSectionPublicReady(): bool
-{
-    return !empty($this->full_story) && $this->highlights_count >= 2;
-}
+    public function getAboutImageSecondaryUrlAttribute(): ?string
+    {
+        if (!$this->about_image_secondary) {
+            return null;
+        }
 
-// Update the completion calculation method to include about section
+        return Storage::url($this->about_image_secondary);
+    }
 
-/**
- * Calculate business completion including about section
- */
-public function calculateCompletionWithAbout(): int
-{
-    $completion = $this->calculateCompletionWithTestimonials(); // Use existing method
-    
-    // Add about section completion
-    $aboutCompletion = $this->getAboutCompletionPercentage();
-    
-    // About section contributes 15% to overall completion
-    $aboutBonus = round($aboutCompletion * 0.15);
-    
-    return min(100, $completion + $aboutBonus);
-}
+    /**
+     * Check if business has secondary about image
+     */
+    public function getHasAboutImageSecondaryAttribute(): bool
+    {
+        return !empty($this->about_image_secondary) && Storage::disk('public')->exists($this->about_image_secondary);
+    }
 
-// Add this to the SIMPLE COMPLETION CALCULATION section
+    // Update metode yang ada
+    /**
+     * Get about section completion percentage
+     */
+    public function getAboutCompletionPercentage(): int
+    {
+        $criteria = [
+            !empty($this->full_story),           // 35%
+            $this->has_about_image,              // 20% 
+            $this->has_about_image_secondary,    // 15%
+            $this->highlights_count >= 3,        // 30%
+        ];
+
+        $weights = [35, 20, 15, 30];
+        $totalWeight = 0;
+
+        foreach ($criteria as $index => $completed) {
+            if ($completed) {
+                $totalWeight += $weights[$index];
+            }
+        }
+
+        return $totalWeight;
+    }
+
+    /**
+     * Check if business has complete about section
+     */
+    public function hasCompleteAboutSection(): bool
+    {
+        return !empty($this->full_story) &&
+            $this->has_about_image &&
+            $this->has_about_image_secondary &&
+            $this->highlights_count >= 3;
+    }
+
+    /**
+     * Get highlights for public website display
+     */
+    public function getPublicHighlights(int $limit = 6)
+    {
+        return $this->highlights()
+            ->ordered()
+            ->limit($limit)
+            ->get()
+            ->filter(function ($highlight) {
+                return $highlight->isComplete();
+            })
+            ->map(function ($highlight) {
+                return $highlight->getCardData();
+            });
+    }
+
+    /**
+     * Get business story summary (for public display)
+     */
+    public function getStoryExcerpt(int $wordLimit = 50): string
+    {
+        if (empty($this->full_story)) {
+            return '';
+        }
+
+        // Strip HTML tags and get plain text
+        $plainText = strip_tags($this->full_story);
+
+        // Get excerpt
+        $words = explode(' ', $plainText);
+        if (count($words) <= $wordLimit) {
+            return $plainText;
+        }
+
+        return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
+    }
+
+    /**
+     * Check if business about section is ready for public display
+     */
+    public function isAboutSectionPublicReady(): bool
+    {
+        return !empty($this->full_story) && $this->highlights_count >= 2;
+    }
+
+    // Update the completion calculation method to include about section
+
+    /**
+     * Calculate business completion including about section
+     */
+    public function calculateCompletionWithAbout(): int
+    {
+        $completion = $this->calculateCompletionWithTestimonials(); // Use existing method
+
+        // Add about section completion
+        $aboutCompletion = $this->getAboutCompletionPercentage();
+
+        // About section contributes 15% to overall completion
+        $aboutBonus = round($aboutCompletion * 0.15);
+
+        return min(100, $completion + $aboutBonus);
+    }
+
+    // Add this to the SIMPLE COMPLETION CALCULATION section
 // Update the getSimpleCompletionStatusAttribute method to include about section:
 
-/**
- * Simple completion status including about section (updated)
- */
-public function getSimpleCompletionStatusAttribute(): array
-{
-    $fields = [
-        'basic_info' => [
-            'label' => 'Informasi Dasar',
-            'completed' => !empty($this->business_name) && !empty($this->main_address) && !empty($this->main_operational_hours),
-            'weight' => 20
-        ],
-        'descriptions' => [
-            'label' => 'Deskripsi',
-            'completed' => !empty($this->short_description) && !empty($this->full_description),
-            'weight' => 10
-        ],
-        'logo' => [
-            'label' => 'Logo',
-            'completed' => !empty($this->logo_url),
-            'weight' => 10
-        ],
-        'location' => [
-            'label' => 'Lokasi',
-            'completed' => !empty($this->google_maps_link),
-            'weight' => 10
-        ],
-        'products' => [
-            'label' => 'Produk',
-            'completed' => $this->products()->count() >= 3,
-            'weight' => 15
-        ],
-        'galleries' => [
-            'label' => 'Galeri',
-            'completed' => $this->galleries()->count() >= 3,
-            'weight' => 10
-        ],
-        'testimonials' => [
-            'label' => 'Testimoni',
-            'completed' => $this->testimonials()->count() >= 2,
-            'weight' => 10
-        ],
-        'about_section' => [
-            'label' => 'Tentang Bisnis',
-            'completed' => !empty($this->full_story) && $this->highlights()->count() >= 3,
-            'weight' => 15
-        ]
-    ];
+    /**
+     * Simple completion status including about section (updated)
+     */
+    public function getSimpleCompletionStatusAttribute(): array
+    {
+        $fields = [
+            'basic_info' => [
+                'label' => 'Informasi Dasar',
+                'completed' => !empty($this->business_name) && !empty($this->main_address) && !empty($this->main_operational_hours),
+                'weight' => 20
+            ],
+            'descriptions' => [
+                'label' => 'Deskripsi',
+                'completed' => !empty($this->short_description) && !empty($this->full_description),
+                'weight' => 10
+            ],
+            'logo' => [
+                'label' => 'Logo',
+                'completed' => !empty($this->logo_url),
+                'weight' => 10
+            ],
+            'location' => [
+                'label' => 'Lokasi',
+                'completed' => !empty($this->google_maps_link),
+                'weight' => 10
+            ],
+            'products' => [
+                'label' => 'Produk',
+                'completed' => $this->products()->count() >= 3,
+                'weight' => 15
+            ],
+            'galleries' => [
+                'label' => 'Galeri',
+                'completed' => $this->galleries()->count() >= 3,
+                'weight' => 10
+            ],
+            'testimonials' => [
+                'label' => 'Testimoni',
+                'completed' => $this->testimonials()->count() >= 2,
+                'weight' => 10
+            ],
+            'about_section' => [
+                'label' => 'Tentang Bisnis',
+                'completed' => !empty($this->full_story) && $this->highlights()->count() >= 3,
+                'weight' => 15
+            ]
+        ];
 
-    $totalWeight = array_sum(array_column($fields, 'weight'));
-    $completedWeight = 0;
+        $totalWeight = array_sum(array_column($fields, 'weight'));
+        $completedWeight = 0;
 
-    foreach ($fields as $field) {
-        if ($field['completed']) {
-            $completedWeight += $field['weight'];
+        foreach ($fields as $field) {
+            if ($field['completed']) {
+                $completedWeight += $field['weight'];
+            }
+        }
+
+        $percentage = $totalWeight > 0 ? round(($completedWeight / $totalWeight) * 100) : 0;
+
+        return [
+            'fields' => $fields,
+            'total_weight' => $totalWeight,
+            'completed_weight' => $completedWeight,
+            'percentage' => $percentage,
+            'next_steps' => $this->getSimpleNextSteps($fields),
+        ];
+    }
+
+    // Update the getSimpleNextSteps method to include about section:
+
+    // Add scope for businesses with highlights
+
+    /**
+     * Scope for businesses with highlights
+     */
+    public function scopeWithHighlights($query)
+    {
+        return $query->has('highlights');
+    }
+
+    /**
+     * Scope for businesses with sufficient highlights
+     */
+    public function scopeWithSufficientHighlights($query, int $minCount = 3)
+    {
+        return $query->whereHas('highlights', null, '>=', $minCount);
+    }
+
+    /**
+     * Scope for businesses with complete about section
+     */
+    public function scopeWithCompleteAboutSection($query)
+    {
+        return $query->whereNotNull('full_story')
+            ->whereNotNull('about_image')
+            ->whereHas('highlights', null, '>=', 3);
+    }
+
+    // Add methods for about section data export
+
+    /**
+     * Get about section data for website generation
+     */
+    public function getAboutSectionData(): array
+    {
+        return [
+            'story' => $this->full_story,
+            'story_excerpt' => $this->getStoryExcerpt(),
+            'about_image' => $this->about_image_url,
+            'highlights' => $this->getPublicHighlights(),
+            'stats' => $this->highlight_stats,
+            'is_complete' => $this->hasCompleteAboutSection(),
+            'completion_percentage' => $this->getAboutCompletionPercentage()
+        ];
+    }
+
+    /**
+     * Get complete business showcase data including about section
+     */
+    public function getCompleteBusinessShowcaseAttribute(): array
+    {
+        return [
+            'business' => [
+                'name' => $this->business_name,
+                'description' => $this->short_description,
+                'logo' => $this->logo_url,
+                'hero_image' => $this->hero_image_url ?? $this->about_image_url,
+                'url' => $this->public_url,
+            ],
+            'stats' => [
+                'products_count' => $this->products_count,
+                'galleries_count' => $this->galleries_count,
+                'testimonials_count' => $this->testimonials_count,
+                'highlights_count' => $this->highlights_count,
+                'branches_count' => $this->branches_count ?? 0,
+                'completion_rate' => $this->calculateCompletionWithAbout(),
+            ],
+            'content' => [
+                'story' => $this->getAboutSectionData(),
+                'featured_products' => $this->featured_products->take(6)->map(function ($product) {
+                    return $product->getCardData();
+                }),
+                'galleries' => $this->latest_galleries->map(function ($gallery) {
+                    return $gallery->getSimpleData();
+                }),
+                'testimonials' => $this->getPublicTestimonials(3),
+                'highlights' => $this->getPublicHighlights(6),
+            ],
+            'media_summary' => $this->media_summary,
+            'is_ready_to_publish' => $this->isReadyToPublish(),
+        ];
+    }
+
+    /**
+     * Update main completion calculation method
+     */
+    public function updateProgressCompletion(): int
+    {
+        $completion = $this->calculateCompletionWithAbout();
+        $this->update(['progress_completion' => $completion]);
+
+        return $completion;
+    }
+    // Add these relationships to the existing Business.php model (in RELATIONSHIPS section)
+
+    /**
+     * Get the template configuration for the business.
+     */
+    public function businessTemplate(): HasOne
+    {
+        return $this->hasOne(BusinessTemplate::class, 'business_id');
+    }
+
+    /**
+     * Get the sections for the business.
+     */
+    public function businessSections(): HasMany
+    {
+        return $this->hasMany(BusinessSection::class, 'business_id');
+    }
+
+    // Add these methods in BUSINESS HELPER METHODS section
+
+    /**
+     * Get active template
+     */
+    public function getActiveTemplate()
+    {
+        return $this->businessTemplate ? $this->businessTemplate->template : null;
+    }
+
+    /**
+     * Check if business has template configured
+     */
+    public function hasTemplate(): bool
+    {
+        return $this->businessTemplate !== null;
+    }
+
+    /**
+     * Get active sections
+     */
+    public function getActiveSections(): array
+    {
+        return $this->businessSections()->where('is_active', true)->pluck('section')->toArray();
+    }
+
+    /**
+     * Check if specific section is active
+     */
+    public function isSectionActive(string $section): bool
+    {
+        return $this->businessSections()
+            ->where('section', $section)
+            ->where('is_active', true)
+            ->exists();
+    }
+
+    /**
+     * Get color palette
+     */
+    public function getColorPalette(): array
+    {
+        return $this->businessTemplate ? $this->businessTemplate->getColorPalette() : [
+            'primary' => '#3B82F6',
+            'secondary' => '#64748B',
+            'accent' => '#F59E0B'
+        ];
+    }
+
+    /**
+     * Initialize default template and sections
+     */
+    public function initializeDefaultTemplate(): void
+    {
+        if (!$this->hasTemplate()) {
+            // Get first active template
+            $defaultTemplate = \App\Models\Template::where('is_active', true)->first();
+
+            if ($defaultTemplate) {
+                \App\Models\BusinessTemplate::create([
+                    'business_id' => $this->id,
+                    'template_id' => $defaultTemplate->id,
+                    'color_palette' => [
+                        'primary' => '#3B82F6',
+                        'secondary' => '#64748B',
+                        'accent' => '#F59E0B'
+                    ]
+                ]);
+            }
+
+            // Create default sections
+            \App\Models\BusinessSection::createDefaultSections($this->id);
         }
     }
 
-    $percentage = $totalWeight > 0 ? round(($completedWeight / $totalWeight) * 100) : 0;
+    /**
+     * Get template completion status
+     */
+    public function getTemplateCompletionStatus(): array
+    {
+        $hasTemplate = $this->hasTemplate();
+        $hasHeroImage = !empty($this->hero_image_url);
+        $activeSectionsCount = $this->businessSections()->where('is_active', true)->count();
 
-    return [
-        'fields' => $fields,
-        'total_weight' => $totalWeight,
-        'completed_weight' => $completedWeight,
-        'percentage' => $percentage,
-        'next_steps' => $this->getSimpleNextSteps($fields),
-    ];
-}
-
-// Update the getSimpleNextSteps method to include about section:
-
-// Add scope for businesses with highlights
-
-/**
- * Scope for businesses with highlights
- */
-public function scopeWithHighlights($query)
-{
-    return $query->has('highlights');
-}
-
-/**
- * Scope for businesses with sufficient highlights
- */
-public function scopeWithSufficientHighlights($query, int $minCount = 3)
-{
-    return $query->whereHas('highlights', null, '>=', $minCount);
-}
-
-/**
- * Scope for businesses with complete about section
- */
-public function scopeWithCompleteAboutSection($query)
-{
-    return $query->whereNotNull('full_story')
-                 ->whereNotNull('about_image')
-                 ->whereHas('highlights', null, '>=', 3);
-}
-
-// Add methods for about section data export
-
-/**
- * Get about section data for website generation
- */
-public function getAboutSectionData(): array
-{
-    return [
-        'story' => $this->full_story,
-        'story_excerpt' => $this->getStoryExcerpt(),
-        'about_image' => $this->about_image_url,
-        'highlights' => $this->getPublicHighlights(),
-        'stats' => $this->highlight_stats,
-        'is_complete' => $this->hasCompleteAboutSection(),
-        'completion_percentage' => $this->getAboutCompletionPercentage()
-    ];
-}
-
-/**
- * Get complete business showcase data including about section
- */
-public function getCompleteBusinessShowcaseAttribute(): array
-{
-    return [
-        'business' => [
-            'name' => $this->business_name,
-            'description' => $this->short_description,
-            'logo' => $this->logo_url,
-            'hero_image' => $this->hero_image_url ?? $this->about_image_url,
-            'url' => $this->public_url,
-        ],
-        'stats' => [
-            'products_count' => $this->products_count,
-            'galleries_count' => $this->galleries_count,
-            'testimonials_count' => $this->testimonials_count,
-            'highlights_count' => $this->highlights_count,
-            'branches_count' => $this->branches_count ?? 0,
-            'completion_rate' => $this->calculateCompletionWithAbout(),
-        ],
-        'content' => [
-            'story' => $this->getAboutSectionData(),
-            'featured_products' => $this->featured_products->take(6)->map(function ($product) {
-                return $product->getCardData();
-            }),
-            'galleries' => $this->latest_galleries->map(function ($gallery) {
-                return $gallery->getSimpleData();
-            }),
-            'testimonials' => $this->getPublicTestimonials(3),
-            'highlights' => $this->getPublicHighlights(6),
-        ],
-        'media_summary' => $this->media_summary,
-        'is_ready_to_publish' => $this->isReadyToPublish(),
-    ];
-}
-
-/**
- * Update main completion calculation method
- */
-public function updateProgressCompletion(): int
-{
-    $completion = $this->calculateCompletionWithAbout();
-    $this->update(['progress_completion' => $completion]);
-
-    return $completion;
-}
-// Add these relationships to the existing Business.php model (in RELATIONSHIPS section)
-
-/**
- * Get the template configuration for the business.
- */
-public function businessTemplate(): HasOne
-{
-    return $this->hasOne(BusinessTemplate::class, 'business_id');
-}
-
-/**
- * Get the sections for the business.
- */
-public function businessSections(): HasMany
-{
-    return $this->hasMany(BusinessSection::class, 'business_id');
-}
-
-// Add these methods in BUSINESS HELPER METHODS section
-
-/**
- * Get active template
- */
-public function getActiveTemplate()
-{
-    return $this->businessTemplate ? $this->businessTemplate->template : null;
-}
-
-/**
- * Check if business has template configured
- */
-public function hasTemplate(): bool
-{
-    return $this->businessTemplate !== null;
-}
-
-/**
- * Get active sections
- */
-public function getActiveSections(): array
-{
-    return $this->businessSections()->where('is_active', true)->pluck('section')->toArray();
-}
-
-/**
- * Check if specific section is active
- */
-public function isSectionActive(string $section): bool
-{
-    return $this->businessSections()
-               ->where('section', $section)
-               ->where('is_active', true)
-               ->exists();
-}
-
-/**
- * Get color palette
- */
-public function getColorPalette(): array
-{
-    return $this->businessTemplate ? $this->businessTemplate->getColorPalette() : [
-        'primary' => '#3B82F6',
-        'secondary' => '#64748B', 
-        'accent' => '#F59E0B'
-    ];
-}
-
-/**
- * Initialize default template and sections
- */
-public function initializeDefaultTemplate(): void
-{
-    if (!$this->hasTemplate()) {
-        // Get first active template
-        $defaultTemplate = \App\Models\Template::where('is_active', true)->first();
-        
-        if ($defaultTemplate) {
-            \App\Models\BusinessTemplate::create([
-                'business_id' => $this->id,
-                'template_id' => $defaultTemplate->id,
-                'color_palette' => [
-                    'primary' => '#3B82F6',
-                    'secondary' => '#64748B',
-                    'accent' => '#F59E0B'
-                ]
-            ]);
-        }
-        
-        // Create default sections
-        \App\Models\BusinessSection::createDefaultSections($this->id);
+        return [
+            'has_template' => $hasTemplate,
+            'has_hero_image' => $hasHeroImage,
+            'active_sections_count' => $activeSectionsCount,
+            'is_complete' => $hasTemplate && $activeSectionsCount >= 3,
+            'completion_percentage' => $this->calculateTemplateCompletion()
+        ];
     }
-}
 
-/**
- * Get template completion status
- */
-public function getTemplateCompletionStatus(): array
-{
-    $hasTemplate = $this->hasTemplate();
-    $hasHeroImage = !empty($this->hero_image_url);
-    $activeSectionsCount = $this->businessSections()->where('is_active', true)->count();
-    
-    return [
-        'has_template' => $hasTemplate,
-        'has_hero_image' => $hasHeroImage,
-        'active_sections_count' => $activeSectionsCount,
-        'is_complete' => $hasTemplate && $activeSectionsCount >= 3,
-        'completion_percentage' => $this->calculateTemplateCompletion()
-    ];
-}
+    /**
+     * Calculate template completion percentage
+     */
+    public function calculateTemplateCompletion(): int
+    {
+        $score = 0;
 
-/**
- * Calculate template completion percentage
- */
-public function calculateTemplateCompletion(): int
-{
-    $score = 0;
-    
-    if ($this->hasTemplate()) $score += 40;
-    if (!empty($this->hero_image_url)) $score += 30;
-    
-    $activeSections = $this->businessSections()->where('is_active', true)->count();
-    if ($activeSections >= 3) $score += 30;
-    
-    return $score;
-}
+        if ($this->hasTemplate())
+            $score += 40;
+        if (!empty($this->hero_image_url))
+            $score += 30;
 
-/**
- * Update business completion including template
- */
-public function calculateCompletionWithTemplate(): int
-{
-    $baseCompletion = $this->calculateCompletionWithAbout(); // Use existing method
-    
-    // Add template completion bonus (max 10%)
-    $templateCompletion = $this->calculateTemplateCompletion();
-    $templateBonus = round($templateCompletion * 0.1);
-    
-    return min(100, $baseCompletion + $templateBonus);
-}
+        $activeSections = $this->businessSections()->where('is_active', true)->count();
+        if ($activeSections >= 3)
+            $score += 30;
+
+        return $score;
+    }
+
+    /**
+     * Update business completion including template
+     */
+    public function calculateCompletionWithTemplate(): int
+    {
+        $baseCompletion = $this->calculateCompletionWithAbout(); // Use existing method
+
+        // Add template completion bonus (max 10%)
+        $templateCompletion = $this->calculateTemplateCompletion();
+        $templateBonus = round($templateCompletion * 0.1);
+
+        return min(100, $baseCompletion + $templateBonus);
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(BusinessContact::class, 'business_id');
+    }
+
+    /**
+     * Get active contacts, ordered by display order
+     */
+    public function getActiveContactsAttribute()
+    {
+        return $this->contacts()
+            ->active()
+            ->ordered()
+            ->get();
+    }
+
+    /**
+     * Get contacts of a specific type
+     */
+    public function getContactsByType($type)
+    {
+        return $this->contacts()
+            ->active()
+            ->where('contact_type', $type)
+            ->ordered()
+            ->get();
+    }
+
+    /**
+     * Check if business has specific contact type
+     */
+    public function hasContactType($type): bool
+    {
+        return $this->contacts()
+            ->active()
+            ->where('contact_type', $type)
+            ->exists();
+    }
 }

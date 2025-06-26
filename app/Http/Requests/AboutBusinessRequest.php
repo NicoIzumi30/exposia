@@ -30,6 +30,12 @@ class AboutBusinessRequest extends FormRequest
                 'image',
                 'mimes:jpeg,jpg,png,webp',
                 'max:2048', // 2MB
+            ],
+            'about_image_secondary' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,jpg,png,webp',
+                'max:2048', // 2MB
             ]
         ];
     }
@@ -46,6 +52,10 @@ class AboutBusinessRequest extends FormRequest
             'about_image.image' => 'File harus berupa gambar.',
             'about_image.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WEBP.',
             'about_image.max' => 'Ukuran gambar maksimal 2MB.',
+
+            'about_image_secondary.image' => 'File gambar kedua harus berupa gambar.',
+            'about_image_secondary.mimes' => 'Format gambar kedua harus JPG, JPEG, PNG, atau WEBP.',
+            'about_image_secondary.max' => 'Ukuran gambar kedua maksimal 2MB.',
         ];
     }
 
@@ -56,7 +66,8 @@ class AboutBusinessRequest extends FormRequest
     {
         return [
             'full_story' => 'cerita bisnis',
-            'about_image' => 'gambar tentang bisnis'
+            'about_image' => 'gambar tentang bisnis',
+            'about_image_secondary' => 'gambar kedua tentang bisnis'
         ];
     }
 
@@ -103,7 +114,7 @@ class AboutBusinessRequest extends FormRequest
 
         // Trim whitespace
         $content = trim($content);
-        
+
         // If content is empty after trimming, return null
         if (empty($content)) {
             return null;
@@ -111,13 +122,13 @@ class AboutBusinessRequest extends FormRequest
 
         // Remove empty paragraphs that CKEditor sometimes creates
         $content = preg_replace('/<p[^>]*>(\s|&nbsp;)*<\/p>/', '', $content);
-        
+
         // Clean up multiple line breaks
         $content = preg_replace('/(<br\s*\/?>){3,}/', '<br><br>', $content);
-        
+
         // Trim again after cleaning
         $content = trim($content);
-        
+
         return empty($content) ? null : $content;
     }
 
@@ -127,12 +138,12 @@ class AboutBusinessRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validated = parent::validated($key, $default);
-        
+
         // Additional processing for full_story
         if (isset($validated['full_story'])) {
             $validated['full_story'] = $this->cleanHtmlContent($validated['full_story']);
         }
-        
+
         return $key ? ($validated[$key] ?? $default) : $validated;
     }
 
@@ -154,7 +165,7 @@ class AboutBusinessRequest extends FormRequest
         }
 
         $file = $this->file('about_image');
-        
+
         return [
             'original_name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
@@ -170,7 +181,7 @@ class AboutBusinessRequest extends FormRequest
     public function hasMeaningfulStory(): bool
     {
         $story = $this->input('full_story');
-        
+
         if (empty($story)) {
             return false;
         }
@@ -178,7 +189,7 @@ class AboutBusinessRequest extends FormRequest
         // Strip HTML tags and check if there's actual content
         $plainText = strip_tags($story);
         $plainText = trim(preg_replace('/\s+/', ' ', $plainText));
-        
+
         return strlen($plainText) >= 10; // At least 10 characters of meaningful content
     }
 
@@ -188,14 +199,14 @@ class AboutBusinessRequest extends FormRequest
     public function getStoryWordCount(): int
     {
         $story = $this->input('full_story');
-        
+
         if (empty($story)) {
             return 0;
         }
 
         $plainText = strip_tags($story);
         $words = preg_split('/\s+/', trim($plainText), -1, PREG_SPLIT_NO_EMPTY);
-        
+
         return count($words);
     }
 
@@ -205,12 +216,16 @@ class AboutBusinessRequest extends FormRequest
     public function getStoryCharCount(): int
     {
         $story = $this->input('full_story');
-        
+
         if (empty($story)) {
             return 0;
         }
 
         $plainText = strip_tags($story);
         return strlen(trim($plainText));
+    }
+    public function hasSecondaryImageUpload(): bool
+    {
+        return $this->hasFile('about_image_secondary') && $this->file('about_image_secondary')->isValid();
     }
 }
