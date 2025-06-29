@@ -11,7 +11,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 Route::get('/report/create', [ReportController::class, 'create'])->name('report.create');
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
 Route::get('/report/confirmation/{report}', [ReportController::class, 'confirmation'])->name('report.confirmation');
