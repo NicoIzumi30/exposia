@@ -48,11 +48,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('delete/{type}/{id}', [ContentController::class, 'delete'])->name('delete');
     });
     
-    // Reports & Moderation
-    Route::resource('reports', ReportController::class);
-    Route::post('reports/{report}/resolve', [ReportController::class, 'resolve'])->name('reports.resolve');
-    Route::post('reports/{report}/reject', [ReportController::class, 'reject'])->name('reports.reject');
-    
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/{report}', [ReportController::class, 'show'])->name('show');
+        Route::get('/{report}/resolve', [ReportController::class, 'showResolveForm'])->name('showResolveForm');
+        Route::post('/{report}/resolve', [ReportController::class, 'resolve'])->name('resolve');
+        Route::post('/{report}/reject', [ReportController::class, 'reject'])->name('reject');
+    });
     // Statistics & Analytics
     Route::prefix('statistics')->name('statistics.')->group(function () {
         Route::get('/', [StatisticController::class, 'index'])->name('index');

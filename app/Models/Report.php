@@ -14,11 +14,13 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'business_id',
+        'report_code',
         'report_type',
         'report_content',
+        'website_url',
+        'evidence_image',
         'status',
         'admin_notes',
-        'handled_by',
         'resolved_at',
     ];
 
@@ -34,10 +36,5 @@ class Report extends Model
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
-    }
-
-    public function handledBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'handled_by');
     }
 }

@@ -121,7 +121,6 @@
 
     <!-- Theme initialization -->
     <script>
-        // PENTING: Set theme sebelum page load untuk mencegah flash
         (function() {
             const theme = localStorage.getItem('theme') ||
                 (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
