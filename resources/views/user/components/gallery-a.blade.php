@@ -1,37 +1,39 @@
 <!-- SECTION: GALLERY -->
 <section id="gallery" class="bg-color-bg-mid">
     @if (!empty($data['images']) && count($data['images']) > 0)
-        <div class="relative container mx-auto grid grid-cols-4 grid-rows-4 gap-4 px-6 py-16">
+        <!-- Image Blocks -->
+        @php
+            $imageCount = count($data['images'] ?? []);
+
+            $gridRows = match (true) {
+                $imageCount <= 1 => 1,
+                $imageCount <= 3 => 2,
+                $imageCount <= 7 => 3,
+                default => 4,
+            };
+
+            $positions = [
+                0 => ['col' => 4, 'row' => 1],
+                1 => ['col' => 4, 'row' => 2],
+                2 => ['col' => 3, 'row' => 2],
+                3 => ['col' => 4, 'row' => 3],
+                4 => ['col' => 3, 'row' => 3],
+                5 => ['col' => 2, 'row' => 3],
+                6 => ['col' => 4, 'row' => 4],
+                7 => ['col' => 3, 'row' => 4],
+                8 => ['col' => 2, 'row' => 4],
+                9 => ['col' => 1, 'row' => 4],
+            ];
+        @endphp
+
+        <div class="relative container mx-auto grid grid-cols-4 grid-rows-[{{ $gridRows }}] gap-4 px-6 py-16">
             <!-- Title Block -->
             <div data-aos="fade-right" data-aos-delay="300" class="col-start-1 col-end-3 row-start-1 row-end-3 h-48 p-6">
                 <h1 class="mb-2 text-2xl font-bold">Galeri Kami</h1>
                 <p class="">Kumpulan momen, proses kreatif, dan perusahaan</p>
             </div>
 
-            <!-- Image Blocks -->
-            @php
-                $imageCount = count($data['images'] ?? []);
 
-                $gridRows = match (true) {
-                    $imageCount <= 1 => 1,
-                    $imageCount <= 3 => 2,
-                    $imageCount <= 7 => 3,
-                    default => 4,
-                };
-
-                $positions = [
-                    0 => ['col' => 4, 'row' => 1],
-                    1 => ['col' => 4, 'row' => 2],
-                    2 => ['col' => 3, 'row' => 2],
-                    3 => ['col' => 4, 'row' => 3],
-                    4 => ['col' => 3, 'row' => 3],
-                    5 => ['col' => 2, 'row' => 3],
-                    6 => ['col' => 4, 'row' => 4],
-                    7 => ['col' => 3, 'row' => 4],
-                    8 => ['col' => 2, 'row' => 4],
-                    9 => ['col' => 1, 'row' => 4],
-                ];
-            @endphp
 
             @foreach ($positions as $i => $pos)
                 @if (!empty($data['images'][$i]))

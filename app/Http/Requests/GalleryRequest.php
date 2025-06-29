@@ -76,7 +76,7 @@ class GalleryRequest extends FormRequest
             if ($this->has('gallery_images')) {
                 $currentCount = $business->galleries()->count();
                 $newImagesCount = count($this->file('gallery_images', []));
-                $maxGalleryImages = 8; // Total maksimal 8 foto
+                $maxGalleryImages = 10; // Total maksimal 8 foto
 
                 if (($currentCount + $newImagesCount) > $maxGalleryImages) {
                     $remaining = $maxGalleryImages - $currentCount;

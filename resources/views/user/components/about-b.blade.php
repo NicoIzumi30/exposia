@@ -5,22 +5,23 @@
             Tentang Kami
         </h1>
         <div class="flex flex-col items-start space-x-0 lg:flex-row lg:space-x-10">
-            <div class="flex flex-col items-center justify-between gap-12 lg:max-w-[50%] xl:items-start w-full">
+            <div
+                class="flex flex-col items-center justify-between gap-12 xl:items-start w-full {{ empty($data['highlights']) ? '' : 'lg:max-w-[50%]' }}">
                 <!-- Text Section -->
-                <p data-aos="fade-up" data-aos-delay="300" class="text-center text-base sm:text-lg xl:text-left">
+                <div data-aos="fade-up" data-aos-delay="300" class="text-center text-base sm:text-lg xl:text-left">
                     {!! $data['description'] ?? 'No Data' !!}
-                </p>
+                </div>
                 <!-- Image Stack -->
                 <div
                     class="relative mx-auto mb-10 flex h-[18rem] w-full max-w-xl justify-center lg:mb-0 lg:justify-start">
                     <div class="relative mx-auto h-full w-[25rem]">
                         <!-- Bottom Image -->
-                        <div data-aos="fade-up" data-aos-delay="300" class="absolute bottom-0 left-0 z-10">
+                        <div data-aos="fade-up" data-aos-delay="200" class="absolute bottom-0 left-0 z-10">
                             <img src="{{ $data['img-2'] }}" alt="Image 2"
                                 class="border-color-bg-mid hover-scale h-36 w-48 rounded-xl border-[10px] object-cover" />
                         </div>
                         <!-- Top Image -->
-                        <div data-aos="fade-up" data-aos-delay="200" class="absolute top-0 left-10 z-0">
+                        <div data-aos="fade-up" data-aos-delay="100" class="absolute top-0 left-10 z-0">
                             <img src="{{ $data['img-1'] }}" alt="Image 1"
                                 class="hover-lift h-60 w-80 rounded-xl object-cover" />
                         </div>

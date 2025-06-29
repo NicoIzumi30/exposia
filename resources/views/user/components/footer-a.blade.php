@@ -29,7 +29,7 @@
                 <div class="mb-4 flex items-start space-x-2">
                     <span class="material-icons">location_on</span>
                     <div>
-                        <a href="" class="font-semibold">{{ $branch['name'] }}</a>
+                        <a href="{{ $branch['address_link'] }}" class="font-semibold">{{ $branch['name'] }}</a>
                         <ul class="text-sm">
                             <li><a href="{{ $branch['address_link'] }}">{{ $branch['address'] }}</a></li>
                             <li>{{ $branch['opening_time'] }}</li>

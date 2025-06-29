@@ -49,11 +49,10 @@ class PublicController extends Controller
     // }
     public function show($slug)
     {
-        $business = Business::where('public_url', 'like', "%/{$slug}")
-            ->first();
-        if ($business->publish_status == 0) {
-            return abort(404);
-        }
+        $business = auth()->user()->business;
+        // Add class to <p> tags if not present
+        $businessFullStory = preg_replace('/<p(?![^>]*class=)/i', '<p class="text-justify"', $business->full_story);
+
         // Check if the business has a template
         if (!$business->businessTemplate) {
             return redirect()->route('user.templates.index')
@@ -76,7 +75,7 @@ class PublicController extends Controller
         $heroData = [
             'title' => $business->business_name ?? 'No Title',
             'description' => $business->short_description ?? 'No Description',
-            'img-1' => $business->hero_image_url ? asset($business->hero_image_url) : asset('img/no-image.jpg'),
+            'img-1' => $business->hero_image_url ? Storage::url($business->hero_image_url) : asset('img/no-image.jpg'),
             'img-2' => $business->hero_image_secondary_url ? Storage::url($business->hero_image_secondary_url) : asset('img/no-image.jpg'),
         ];
 
@@ -84,36 +83,18 @@ class PublicController extends Controller
         $highlights = $business->highlights()->limit(6)->get();
         // $highlights = $business->highlights->keyBy('section');
 
-        $highlightsArray = $highlights->mapWithKeys(function ($item) {
-            return [
-                $item->section => [
-                    'icon' => $item->icon,
-                    'title' => $item->title,
-                    'description' => $item->description,
-                ]
-            ];
-        })->toArray();
-
-        // dd($highlightsArray);
-
-        $highlights = BusinessHighlight::where('business_id', $business->id)->get();
-
         $aboutData = [
-            'description' => $business->full_story ?? 'No Text',
+            'description' => $businessFullStory ?? 'No Text',
             'img-1' => $business->about_image_url ? asset($business->about_image_url) : asset('img/no-image.jpg'),
             'img-2' => $business->about_image_secondary_url ? asset($business->about_image_secondary_url) : asset('img/no-image.jpg'),
 
-            'pros-icon-1' => $highlights['0']['icon'] ?? 'fas fa-question',
-            'pros-title-1' => $highlights['0']['title'] ?? 'Title missing',
-            'pros-description-1' => $highlights['0']['description'] ?? 'Description missing',
-
-            'pros-icon-2' => $highlights['1']['icon'] ?? 'fas fa-question',
-            'pros-title-2' => $highlights['1']['title'] ?? 'Title missing',
-            'pros-description-2' => $highlights['1']['description'] ?? 'Description missing',
-
-            'pros-icon-3' => $highlights['2']['icon'] ?? 'fas fa-question',
-            'pros-title-3' => $highlights['2']['title'] ?? 'Title missing',
-            'pros-description-3' => $highlights['2']['description'] ?? 'Description missing',
+            'highlights' => $highlights->map(function ($item) {
+                return [
+                    'icon' => $item->icon ?? 'fas fa-question',
+                    'title' => $item->title ?? 'Title missing',
+                    'description' => $item->description ?? 'Description missing',
+                ];
+            })->toArray(),
         ];
 
         // Product Data
@@ -151,12 +132,11 @@ class PublicController extends Controller
             'contacts' => $business->contacts->map(function ($item) {
                 $type = $item->contact_type;
                 $meta = BusinessContact::$availableTypes[$type] ?? BusinessContact::$availableTypes['custom'];
-
                 return [
-                    'type' => $type,
+                    'type' => $item['contact_type'],
                     'name' => $meta['name'],
-                    'title' => $meta['title'],
-                    'description' => $meta['description'],
+                    'title' => $item['contact_title'],
+                    'description' => $item['contact_description'],
                     'icon' => $meta['icon'],
                     'url' => $meta['prefix'] . ltrim($item->contact_value, '/'),
                 ];
@@ -165,7 +145,7 @@ class PublicController extends Controller
 
         // Footer Data
         $footerData = [
-            'description' => $business->full_story,
+            'description' => $businessFullStory,
             'branches' => $business->branches->map(function ($branch) {
                 return [
                     'name' => $branch->branch_name,
@@ -177,7 +157,7 @@ class PublicController extends Controller
             })->toArray(),
         ];
 
-        return view('public.show', compact(
+        return view('user.templates.preview', compact(
             'sectionVariants',
             'colorPalette',
             'navbarData',

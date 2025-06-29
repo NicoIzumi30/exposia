@@ -17,7 +17,7 @@ class GalleryController extends Controller
     /**
      * Maximum images per business
      */
-    const MAX_GALLERY_IMAGES = 8;
+    const MAX_GALLERY_IMAGES = 10;
 
     /**
      * Display gallery management page.
@@ -26,7 +26,7 @@ class GalleryController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -39,12 +39,12 @@ class GalleryController extends Controller
             return redirect()->route('user.business.index')
                 ->with('warning', 'Silakan lengkapi data usaha terlebih dahulu sebelum mengelola galeri.');
         }
-        
+
         // Get galleries with pagination
         $galleries = $business->galleries()
             ->orderBy('created_at', 'desc')
             ->paginate(20);
-        
+
         // Simple gallery stats
         $galleryStats = [
             'total' => $business->galleries()->count(),
@@ -69,7 +69,7 @@ class GalleryController extends Controller
                 ]
             ]);
         }
-        
+
         return view('user.gallery.index', compact('user', 'business', 'galleries', 'galleryStats'));
     }
 
@@ -80,7 +80,7 @@ class GalleryController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        
+
         if (!$business) {
             return response()->json([
                 'success' => false,
@@ -92,7 +92,7 @@ class GalleryController extends Controller
         $currentCount = $business->galleries()->count();
         $images = $request->file('gallery_images', []);
         $newImagesCount = count($images);
-        
+
         if (($currentCount + $newImagesCount) > self::MAX_GALLERY_IMAGES) {
             $remaining = self::MAX_GALLERY_IMAGES - $currentCount;
             return response()->json([
@@ -113,7 +113,7 @@ class GalleryController extends Controller
             // Check if it's actually an image
             $mimeType = $image->getMimeType();
             $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-            
+
             if (!in_array($mimeType, $allowedTypes)) {
                 return response()->json([
                     'success' => false,
@@ -132,25 +132,25 @@ class GalleryController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $uploadedImages = [];
 
             // Process each uploaded image
             foreach ($images as $index => $image) {
                 // Generate unique filename
                 $filename = generate_gallery_filename(
-                    $image->getClientOriginalName(), 
+                    $image->getClientOriginalName(),
                     $business->id
                 );
-                
+
                 // Store image
                 $imagePath = $image->storeAs('gallery-images', $filename, 'public');
-                
+
                 // Optimize image if needed
                 if (function_exists('optimize_gallery_image')) {
                     optimize_gallery_image($imagePath);
                 }
-                
+
                 // Create gallery record (minimal data)
                 $galleryImage = Gallery::create([
                     'business_id' => $business->id,
@@ -158,7 +158,7 @@ class GalleryController extends Controller
                 ]);
 
                 $uploadedImages[] = $galleryImage;
-                
+
                 Log::info('Gallery image created:', [
                     'id' => $galleryImage->id,
                     'path' => $imagePath
@@ -187,10 +187,9 @@ class GalleryController extends Controller
                     'can_upload' => $business->galleries()->count() < self::MAX_GALLERY_IMAGES,
                 ]
             ]);
-
         } catch (ValidationException $e) {
             DB::rollBack();
-            
+
             // Cleanup uploaded files on validation error
             foreach ($uploadedImages as $image) {
                 if (method_exists($image, 'deleteImageFile')) {
@@ -198,19 +197,18 @@ class GalleryController extends Controller
                 }
                 $image->delete();
             }
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak valid.',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gallery upload error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             // Cleanup uploaded files on error
             foreach ($uploadedImages as $image) {
                 if (method_exists($image, 'deleteImageFile')) {
@@ -218,7 +216,7 @@ class GalleryController extends Controller
                 }
                 $image->delete();
             }
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengupload gambar: ' . $e->getMessage(),
@@ -233,7 +231,7 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         $user = Auth::user();
-        
+
         // Check ownership
         if ($gallery->business_id !== $user->business?->id) {
             return response()->json([
@@ -244,7 +242,7 @@ class GalleryController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $business = $gallery->business;
 
             // Delete image and file (file deletion handled in model event)
@@ -268,11 +266,10 @@ class GalleryController extends Controller
                     'can_upload' => $business->galleries()->count() < self::MAX_GALLERY_IMAGES,
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gallery deletion error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus gambar galeri. Silakan coba lagi.',

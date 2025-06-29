@@ -5,13 +5,15 @@
             Tentang Kami
         </h1>
         <div class="mx-auto mb-12 flex max-w-5xl flex-col space-y-10 text-center lg:flex-row lg:space-y-0 lg:space-x-10">
-            <div data-aos="zoom-in" data-aos-delay="300"
-                class="mx-auto h-[250px] w-full shrink-0 overflow-hidden rounded-xl sm:h-[350px] sm:w-[500px]">
-                <img src="{{ $data['img-1'] }}" alt="" class="hover-lift h-full w-full object-cover" />
+            <div class="hover-lift mx-auto h-fit rounded-xl">
+                <div data-aos="zoom-in" data-aos-delay="100"
+                    class="mx-auto h-[250px] w-full shrink-0 overflow-hidden rounded-xl sm:h-[350px] sm:w-[500px]">
+                    <img src="{{ $data['img-1'] ?? 'No Data' }}" alt="" class=" h-full w-full object-cover" />
+                </div>
             </div>
-            <p data-aos="fade-up" data-aos-delay="100" class="text-center text-justify text-2xl lg:text-justify">
+            <div data-aos="fade-up" data-aos-delay="300" class="text-center text-justify text-2xl lg:text-justify">
                 {!! $data['description'] ?? 'No Data' !!}
-            </p>
+            </div>
         </div>
 
         <!-- Keunggulan -->

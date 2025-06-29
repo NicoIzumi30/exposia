@@ -14,9 +14,12 @@
     <!-- Material Icons CDN -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=gpp_maybe" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
     <!-- Local Styling -->
     <style>
@@ -269,8 +272,13 @@
             <img src="{{ asset('img/logo-full-dark.svg') }}" alt="" class="h-10 block dark:hidden">
             <img src="{{ asset('img/logo-full-light.svg') }}" alt="" class="h-10 hidden dark:block">
             <ul class="flex space-x-2 sm:space-x-4">
+                <a href="{{ route('report.create') }}"
+                    class="hidden sm:inline-flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-accent-400 dark:hover:text-accent-400 text-sm font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                    <span class="material-icons-outlined text-sm mr-2">report</span>
+                    Laporkan Website
+                </a>
                 <button id="theme-toggle"
-                    class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+                    class="py-1 px-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
                     <i id="theme-icon" class="fas fa-moon text-gray-600 dark:text-gray-300"></i>
                 </button>
                 <li class=""><a href="{{ route('login') }}"
@@ -410,9 +418,6 @@
                 </div>
                 <div class="">
                     <img src="{{ asset('img/Hero-3.png') }}" alt="Hero Image" class="rounded-2xl mx-auto" />
-                </div>
-                <div class="">
-                    <img src="{{ asset('img/Hero-4.png') }}" alt="Hero Image" class="rounded-2xl mx-auto" />
                 </div>
             </div>
         </div>
@@ -638,61 +643,20 @@
     <!-- Footer -->
     <footer class=" text-gray-900 dark:text-white">
         <div class="max-w-7xl mx-auto px-6 py-16">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mb-12">
-                <div>
-                    <h3 class="text-2xl font-semibold text-accent-400 mb-4">
-                        EXPOSIA</h3>
-                    <p class="text-gray-900 dark:text-white mb-4">
-                        Platform terbaik untuk UMKM membuat landing page profesional tanpa coding. Mudah, cepat, dan
-                        tampil memukau!
-                    </p>
-                    <div class="flex gap-3">
-                        <a href="#"
-                            class="w-10 h-10 dark:bg-gray-800 flex items-center justify-center rounded-lg bg-white border border-gray-200 dark:border-gray-700 hover:bg-yellow-500 transition">📧</a>
-                        <a href="#"
-                            class="w-10 h-10 dark:bg-gray-800 flex items-center justify-center rounded-lg bg-white border border-gray-200 dark:border-gray-700 hover:bg-yellow-500 transition">📱</a>
-                        <a href="#"
-                            class="w-10 h-10 dark:bg-gray-800 flex items-center justify-center rounded-lg bg-white border border-gray-200 dark:border-gray-700 hover:bg-yellow-500 transition">🌐</a>
-                        <a href="#"
-                            class="w-10 h-10 dark:bg-gray-800 flex items-center justify-center rounded-lg bg-white border border-gray-200 dark:border-gray-700 hover:bg-yellow-500 transition">💬</a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-accent-400 font-semibold mb-4">Produk</h3>
-                    <ul class="space-y-2 text-gray-900 dark:text-white">
-                        <li><a href="#fitur" class="hover:text-accent-400 transition">Fitur Unggulan</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Template Gallery</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Tutorial</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Demo</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-accent-400 font-semibold mb-4">Perusahaan</h3>
-                    <ul class="space-y-2 text-gray-900 dark:text-white">
-                        <li><a href="#tentang" class="hover:text-accent-400 transition">Tentang Kami</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Karir</a></li>
-                        <li><a href="#" class="hover:text-accent-400 transition">Partner</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-accent-400 font-semibold mb-4">Hubungi Kami</h3>
-                    <div class="text-gray-900 dark:text-white space-y-2">
-                        <p>📧 hello@exposia.id</p>
-                        <p>📱 +62 812-3456-7890</p>
-                        <p>📍 Jakarta, Indonesia</p>
-                        <p>🕐 Senin - Jumat, 9:00 - 18:00</p>
-                    </div>
-                </div>
-            </div>
-
             <div
-                class="border-t border-white pt-6 flex flex-col md:flex-row items-center justify-between text-gray-900 dark:text-white text-sm">
+                class="pt-6 flex flex-col md:flex-row items-center justify-between text-gray-900 dark:text-white text-sm">
                 <p>&copy; 2025 EXPOSIA. Semua hak cipta dilindungi.</p>
-                <div class="flex gap-4 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-accent-400 transition">Kebijakan Privasi</a>
-                    <a href="#" class="hover:text-accent-400 transition">Syarat & Ketentuan</a>
-                    <a href="#" class="hover:text-accent-400 transition">Cookie Policy</a>
+
+                <div class="flex gap-3">
+                    <a href="#" class="w-10 h-10 flex items-center justify-center transition">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 flex items-center justify-center transition">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 flex items-center justify-center transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
             </div>
         </div>

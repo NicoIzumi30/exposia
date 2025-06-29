@@ -31,7 +31,7 @@
                 extend: {
                     colors: {
                         "color-accent": '@yield('color-accent')', // '#012C4E' 
-                        "color-bg-light": '@yield('color-highlight')', // 'white'
+                        "color-bg-light": '@yield('color-highlight')', // '#FFFFFF'
                         "color-bg-mid": '@yield('color-primary')', // '#EAEFEF'
                         "color-bg-dark": '@yield('color-secondary')', // '#D9D9D9'
 

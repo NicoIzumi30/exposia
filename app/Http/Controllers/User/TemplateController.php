@@ -189,7 +189,7 @@ class TemplateController extends Controller
 
             // Store new hero image (mengikuti pola yang sama dengan upload logo)
             $heroImagePath = $request->file('hero_image')->store('business-hero', 'public');
-            
+
             // Update business
             $business->update([
                 'hero_image_url' => $heroImagePath
@@ -429,25 +429,13 @@ class TemplateController extends Controller
         $heroData = [
             'title' => $business->business_name ?? 'No Title',
             'description' => $business->short_description ?? 'No Description',
-            'img-1' => $business->hero_image_url ? asset($business->hero_image_url) : asset('img/no-image.jpg'),
+            'img-1' => $business->hero_image_url ? Storage::url($business->hero_image_url) : asset('img/no-image.jpg'),
             'img-2' => $business->hero_image_secondary_url ? Storage::url($business->hero_image_secondary_url) : asset('img/no-image.jpg'),
         ];
 
         // About Data
         $highlights = $business->highlights()->limit(6)->get();
         // $highlights = $business->highlights->keyBy('section');
-
-        // $highlightsArray = $highlights->mapWithKeys(function ($item) {
-        //     return [
-        //         $item->section => [
-        //             'icon' => $item->icon,
-        //             'title' => $item->title,
-        //             'description' => $item->description,
-        //         ]
-        //     ];
-        // })->toArray();
-
-        // $highlights = BusinessHighlight::where('business_id', $business->id)->get();
 
         $aboutData = [
             'description' => $businessFullStory ?? 'No Text',
