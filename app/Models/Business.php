@@ -948,7 +948,7 @@ class Business extends Model
             return $this->main_gallery_image->image_url;
         }
 
-        return asset('images/placeholder-business.jpg');
+        return "";
     }
 
     /**
@@ -1115,7 +1115,7 @@ class Business extends Model
     }
 
     // Add these methods to your existing Business.php model
-// (Add them in the RELATIONSHIPS section)
+    // (Add them in the RELATIONSHIPS section)
 
     /**
      * Get the testimonials for the business.
@@ -1236,7 +1236,7 @@ class Business extends Model
     }
 
     // Add this to the SIMPLE COMPLETION CALCULATION section
-// Update the getSimpleCompletionStatusAttribute method to include testimonials:
+    // Update the getSimpleCompletionStatusAttribute method to include testimonials:
 
     /**
      * Simple completion status including testimonials (updated)
@@ -1303,7 +1303,7 @@ class Business extends Model
 
 
     // Add these methods to your existing Business.php model
-// (Add them in the RELATIONSHIPS section)
+    // (Add them in the RELATIONSHIPS section)
 
     /**
      * Get the highlights for the business.
@@ -1519,7 +1519,7 @@ class Business extends Model
     }
 
     // Add this to the SIMPLE COMPLETION CALCULATION section
-// Update the getSimpleCompletionStatusAttribute method to include about section:
+    // Update the getSimpleCompletionStatusAttribute method to include about section:
 
     /**
      * Simple completion status including about section (updated)

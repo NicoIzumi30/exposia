@@ -4,10 +4,15 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TemplateUpdateRequest;
+use App\Models\Product;
 use App\Models\Business;
+use App\Models\BusinessContact;
+use App\Models\BusinessHighlight;
 use App\Models\BusinessSection;
 use App\Models\BusinessTemplate;
+use App\Models\Gallery;
 use App\Models\Template;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,6 +21,7 @@ class TemplateController extends Controller
     /**
      * Display the template customization page
      */
+
     public function index()
     {
         $business = auth()->user()->business;
@@ -82,7 +88,6 @@ class TemplateController extends Controller
                 'success' => true,
                 'message' => 'Template dan style berhasil diperbarui'
             ]);
-
         } catch (\Exception $e) {
             \DB::rollBack();
 
@@ -142,7 +147,6 @@ class TemplateController extends Controller
                 'success' => true,
                 'message' => 'Warna berhasil diperbarui'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -199,7 +203,6 @@ class TemplateController extends Controller
                 'message' => 'Gambar hero berhasil diperbarui',
                 'image_url' => Storage::url($heroImagePath)
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Hero Image Upload Error', [
                 'message' => $e->getMessage(),
@@ -244,7 +247,6 @@ class TemplateController extends Controller
                 'message' => $message,
                 'is_active' => $businessSection->is_active
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -297,7 +299,6 @@ class TemplateController extends Controller
                 'message' => 'Gambar hero kedua berhasil diperbarui',
                 'image_url' => Storage::url($heroSecondaryImagePath)
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Secondary Hero Image Upload Error', [
                 'message' => $e->getMessage(),
@@ -341,7 +342,6 @@ class TemplateController extends Controller
                 'success' => true,
                 'message' => 'Gambar hero kedua berhasil dihapus'
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Secondary Hero Image Removal Error', [
                 'message' => $e->getMessage()
@@ -391,7 +391,6 @@ class TemplateController extends Controller
                 'message' => "Style untuk {$businessSection->getSectionName()} berhasil diperbarui",
                 'display_name' => $businessSection->getFullDisplayName()
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -403,9 +402,12 @@ class TemplateController extends Controller
     /**
      * Preview the business website
      */
+
     public function preview()
     {
         $business = auth()->user()->business;
+        // Add class to <p> tags if not present
+        $businessFullStory = preg_replace('/<p(?![^>]*class=)/i', '<p class="text-justify"', $business->full_story);
 
         // Check if the business has a template
         if (!$business->businessTemplate) {
@@ -413,43 +415,127 @@ class TemplateController extends Controller
                 ->with('error', 'Harap pilih template terlebih dahulu');
         }
 
-        // Get template, sections, and other data needed for preview
-        $template = $business->businessTemplate->template;
+        // Get Selected Section
         $sections = $business->businessSections()->where('is_active', true)->get();
+        $sectionVariants = $sections->pluck('style_variant', 'section')->toArray();
+
+        // Get Selected Color Palette
         $colorPalette = $business->getColorPalette();
 
-        // Get business data for preview
-        $businessData = [
-            'name' => $business->business_name,
+        // Navbar Data
+        $navbarData = [
             'logo' => $business->getLogoUrl(),
-            'description' => $business->short_description,
-            'address' => $business->main_address,
-            'hours' => $business->main_operational_hours,
-            'maps_link' => $business->google_maps_link,
-            'hero_image' => $business->hero_image_url ? Storage::url($business->hero_image_url) : null,
-            'hero_image_secondary' => $business->hero_image_secondary_url ? Storage::url($business->hero_image_secondary_url) : null,
-            'about_image' => $business->about_image_url,
-            'story' => $business->full_story,
         ];
 
-        // Get content data
-        $products = $business->products()->limit(8)->get();
-        $galleries = $business->galleries()->limit(8)->get();
-        $testimonials = $business->testimonials()->limit(4)->get();
+        // Hero Data
+        $heroData = [
+            'title' => $business->business_name ?? 'No Title',
+            'description' => $business->short_description ?? 'No Description',
+            'img-1' => $business->hero_image_url ? asset($business->hero_image_url) : asset('img/no-image.jpg'),
+            'img-2' => $business->hero_image_secondary_url ? Storage::url($business->hero_image_secondary_url) : asset('img/no-image.jpg'),
+        ];
+
+        // About Data
         $highlights = $business->highlights()->limit(6)->get();
-        $branches = $business->branches()->limit(3)->get();
+        // $highlights = $business->highlights->keyBy('section');
+
+        // $highlightsArray = $highlights->mapWithKeys(function ($item) {
+        //     return [
+        //         $item->section => [
+        //             'icon' => $item->icon,
+        //             'title' => $item->title,
+        //             'description' => $item->description,
+        //         ]
+        //     ];
+        // })->toArray();
+
+        // $highlights = BusinessHighlight::where('business_id', $business->id)->get();
+
+        $aboutData = [
+            'description' => $businessFullStory ?? 'No Text',
+            'img-1' => $business->about_image_url ? asset($business->about_image_url) : asset('img/no-image.jpg'),
+            'img-2' => $business->about_image_secondary_url ? asset($business->about_image_secondary_url) : asset('img/no-image.jpg'),
+
+            'highlights' => $highlights->map(function ($item) {
+                return [
+                    'icon' => $item->icon ?? 'fas fa-question',
+                    'title' => $item->title ?? 'Title missing',
+                    'description' => $item->description ?? 'Description missing',
+                ];
+            })->toArray(),
+        ];
+
+        // Product Data
+        $productData = [
+            'products' => $business->products->map(function ($product) {
+                return [
+                    'title' => $product->product_name,
+                    'description' => $product->product_description,
+                    'price' => $product->product_price,
+                    'img' => $product->product_image ? Storage::url($product->product_image) : asset('img/no-image.jpg'),
+                ];
+            })->toArray(),
+        ];
+
+        // Gallery Data
+        $galleryData = [
+            'images' => $business->galleries->map(function ($gallery) {
+                return $gallery->gallery_image ? Storage::url($gallery->gallery_image) : asset('img/no-image.jpg');
+            })->toArray(),
+        ];
+
+        // Testimonial Data
+        $testimonialData = [
+            'testimonies' => $business->testimonials->map(function ($testimonial) {
+                return [
+                    'text' => $testimonial->testimonial_content,
+                    'name' => $testimonial->testimonial_name,
+                    'img' => $testimonial->testimonial_image ? Storage::url($testimonial->testimonial_image) : asset('img/empty-profile-pic.jpg'),
+                ];
+            })->toArray(),
+        ];
+
+        // Contact Data
+        $contactData = [
+            'contacts' => $business->contacts->map(function ($item) {
+                $type = $item->contact_type;
+                $meta = BusinessContact::$availableTypes[$type] ?? BusinessContact::$availableTypes['custom'];
+                return [
+                    'type' => $item['contact_type'],
+                    'name' => $meta['name'],
+                    'title' => $item['contact_title'],
+                    'description' => $item['contact_description'],
+                    'icon' => $meta['icon'],
+                    'url' => $meta['prefix'] . ltrim($item->contact_value, '/'),
+                ];
+            })->toArray(),
+        ];
+
+        // Footer Data
+        $footerData = [
+            'description' => $businessFullStory,
+            'branches' => $business->branches->map(function ($branch) {
+                return [
+                    'name' => $branch->branch_name,
+                    'address' => $branch->branch_address,
+                    'address_link' => $branch->branch_google_maps_link,
+                    'opening_time' => $branch->branch_operational_hours,
+                    'phone_number' => $branch->branch_phone,
+                ];
+            })->toArray(),
+        ];
 
         return view('user.templates.preview', compact(
-            'business',
-            'template',
-            'sections',
+            'sectionVariants',
             'colorPalette',
-            'businessData',
-            'products',
-            'galleries',
-            'testimonials',
-            'highlights',
-            'branches'
+            'navbarData',
+            'heroData',
+            'aboutData',
+            'productData',
+            'galleryData',
+            'testimonialData',
+            'contactData',
+            'footerData'
         ));
     }
 }

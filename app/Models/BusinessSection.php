@@ -27,7 +27,7 @@ class BusinessSection extends Model
             'name' => 'Navigation Bar',
             'variants' => [
                 'A' => 'Navbar Minimalis',
-                'B' => 'Navbar dengan Logo Besar', 
+                'B' => 'Navbar dengan Logo Besar',
                 'C' => 'Navbar dengan Menu Dropdown'
             ]
         ],
@@ -79,14 +79,20 @@ class BusinessSection extends Model
                 'C' => 'Quote Style'
             ]
         ],
+        'kontak' => [
+            'name' => 'Kontak',
+            'variants' => [
+                'A' => 'Kontak Minimalis',
+                'B' => 'Kontak dengan Kolom',
+                'C' => 'Kontak dengan Social Media'
+            ]
+        ],
         'footer' => [
             'name' => 'Footer',
             'variants' => [
                 'A' => 'Footer Minimalis',
-                'B' => 'Footer dengan Kolom',
-                'C' => 'Footer dengan Social Media'
             ]
-        ]
+        ],
     ];
 
     // Relationships
@@ -137,7 +143,7 @@ class BusinessSection extends Model
     {
         foreach (self::$availableSections as $section => $config) {
             $defaultVariant = array_key_first($config['variants']); // First variant as default
-            
+
             self::updateOrCreate(
                 ['business_id' => $businessId, 'section' => $section],
                 [
@@ -151,9 +157,9 @@ class BusinessSection extends Model
     public static function toggleSection($businessId, $section)
     {
         $businessSection = self::where('business_id', $businessId)
-                              ->where('section', $section)
-                              ->first();
-        
+            ->where('section', $section)
+            ->first();
+
         if ($businessSection) {
             $businessSection->is_active = !$businessSection->is_active;
             $businessSection->save();
@@ -165,9 +171,9 @@ class BusinessSection extends Model
     public static function updateSectionStyle($businessId, $section, $styleVariant)
     {
         $businessSection = self::where('business_id', $businessId)
-                              ->where('section', $section)
-                              ->first();
-        
+            ->where('section', $section)
+            ->first();
+
         if ($businessSection) {
             $businessSection->style_variant = $styleVariant;
             $businessSection->save();

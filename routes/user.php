@@ -143,5 +143,5 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
           Route::delete('/{contact}', [ContactController::class, 'destroy'])->name('destroy');
           Route::post('/order', [ContactController::class, 'updateOrder'])->name('order');
           Route::post('/{contact}/toggle', [ContactController::class, 'toggleActive'])->name('toggle');
-      });
+     });
 });
