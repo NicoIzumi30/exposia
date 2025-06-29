@@ -939,16 +939,7 @@ class Business extends Model
      */
     public function getHeroImageUrlAttribute(): string
     {
-        // Priority: logo_url > main_gallery_image > fallback
-        if (!empty($this->logo_url)) {
-            return $this->getLogoUrl();
-        }
-
-        if ($this->main_gallery_image) {
-            return $this->main_gallery_image->image_url;
-        }
-
-        return "";
+       return $this->attributes['hero_image_url'];
     }
 
     /**

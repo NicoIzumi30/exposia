@@ -295,7 +295,7 @@
                         <div class="text-center">
                             <div
                                 class="aspect-video bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
-                                <img src="{{ asset($business->hero_image_url) }}" alt="Current Hero"
+                                <img src="{{ asset('storage/'.$business->hero_image_url) }}" alt="Current Hero"
                                     class="w-full h-full object-cover">
                             </div>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Gambar hero saat ini</p>

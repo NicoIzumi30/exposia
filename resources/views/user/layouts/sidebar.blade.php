@@ -4,12 +4,12 @@
     
     <!-- Sidebar Header -->
     <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
-                <i class="fas fa-store text-white text-sm"></i>
-            </div>
-            <h1 class="text-xl font-bold text-gray-900 dark:text-white">Exposia</h1>
-        </div>
+    <img src="{{ asset('img/logo-full-dark.svg') }}" 
+        class="w-40 block dark:hidden" 
+        alt="Logo Dark">
+    <img src="{{ asset('img/logo-full-light.svg') }}" 
+        class="w-40 hidden dark:block" 
+        alt="Logo Light">
         <button id="close-sidebar" 
                 class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
             <i class="fas fa-times text-lg"></i>

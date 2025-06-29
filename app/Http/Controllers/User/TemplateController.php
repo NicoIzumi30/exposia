@@ -189,15 +189,13 @@ class TemplateController extends Controller
 
             // Store new hero image (mengikuti pola yang sama dengan upload logo)
             $heroImagePath = $request->file('hero_image')->store('business-hero', 'public');
-
+            
             // Update business
             $business->update([
                 'hero_image_url' => $heroImagePath
             ]);
-
-            // Update completion status
             $business->updateProgressCompletion();
-
+            // dd($business->hero_image_url);
             return response()->json([
                 'success' => true,
                 'message' => 'Gambar hero berhasil diperbarui',
