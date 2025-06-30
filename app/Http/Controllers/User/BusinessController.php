@@ -29,7 +29,7 @@ class BusinessController extends Controller
                 'short_description' => '',
                 'full_description' => '',
                 'progress_completion' => 0,
-                'publish_status' => false // false = draft, true = published
+                'publish_status' => false // 
             ]);
         }
         

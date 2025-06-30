@@ -61,10 +61,7 @@ class Business extends Model
     /**
      * Get the user that owns the business.
      */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     /**
      * Get the branches for the business.
@@ -74,7 +71,10 @@ class Business extends Model
         return $this->hasMany(Branch::class, 'business_id');
     }
 
-
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the template for the business.

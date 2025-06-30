@@ -113,9 +113,6 @@
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                     Aktivitas Terkini
                 </h2>
-                <a href="{{ route('admin.activity-logs.index') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                    Lihat semua
-                </a>
             </div>
 
             @if($recentActivities->count() > 0)

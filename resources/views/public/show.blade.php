@@ -1,3 +1,4 @@
+
 @extends('user.layouts.templates')
 
 {{-- Color Variants --}}
@@ -70,8 +71,7 @@
     </div>
 
     @php
-        $rawNumber = auth()->user()->phone;
-
+        $rawNumber = $phoneNumber;
         // Convert leading 0 to 62
         $waNumber = preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $rawNumber));
     @endphp

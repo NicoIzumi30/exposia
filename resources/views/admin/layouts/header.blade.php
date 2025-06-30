@@ -74,12 +74,6 @@
                             <i class="fas fa-user-cog mr-3 text-gray-400 dark:text-gray-500"></i>
                             Pengaturan Akun
                         </a>
-                        
-                        <a href="{{ route('admin.activity-logs.index') }}" 
-                           class="dropdown-item flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
-                            <i class="fas fa-history mr-3 text-gray-400 dark:text-gray-500"></i>
-                            Log Aktivitas
-                        </a>
                     </div>
 
                     <!-- Divider -->

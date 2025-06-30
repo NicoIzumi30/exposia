@@ -75,25 +75,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('account', [SettingController::class, 'account'])->name('account');
         Route::post('account', [SettingController::class, 'updateAccount'])->name('account.update');
     });
-    
-    // Admin Management
-    Route::resource('admins', AdminController::class);
-    Route::post('admins/{admin}/activate', [AdminController::class, 'activate'])->name('admins.activate');
-    Route::post('admins/{admin}/deactivate', [AdminController::class, 'deactivate'])->name('admins.deactivate');
-    
-    // Activity Logs
-    Route::prefix('activity-logs')->name('activity-logs.')->group(function () {
-        Route::get('/', [ActivityLogController::class, 'index'])->name('index');
-        Route::get('actions', [ActivityLogController::class, 'actions'])->name('actions');
-        Route::get('audit-trail', [ActivityLogController::class, 'auditTrail'])->name('audit-trail');
-        Route::get('export', [ActivityLogController::class, 'export'])->name('export');
-    });
-    
-    // Help
-    Route::prefix('help')->name('help.')->group(function () {
-        Route::get('/', [HelpController::class, 'index'])->name('index');
-        Route::get('faq', [HelpController::class, 'faq'])->name('faq');
-        Route::resource('messages', HelpController::class)->only(['index', 'show', 'destroy']);
-        Route::post('messages/{message}/reply', [HelpController::class, 'reply'])->name('messages.reply');
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/account', [App\Http\Controllers\Admin\SettingController::class, 'account'])->name('account');
+        Route::put('/account/profile', [App\Http\Controllers\Admin\SettingController::class, 'updateProfile'])->name('update-profile');
+        Route::put('/account/password', [App\Http\Controllers\Admin\SettingController::class, 'updatePassword'])->name('update-password');
+        Route::post('/account/logout-devices', [App\Http\Controllers\Admin\SettingController::class, 'logoutAllDevices'])->name('logout-all-devices');
     });
 });

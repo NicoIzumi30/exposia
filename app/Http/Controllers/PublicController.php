@@ -49,8 +49,14 @@ class PublicController extends Controller
     // }
     public function show($slug)
     {
-        $business = auth()->user()->business;
-        // Add class to <p> tags if not present
+        $business = Business::where('public_url', 'like', "%/{$slug}")->with('user')->where('publish_status', true)->first();
+
+        if (!$business) {
+            return response()->view('errors.404', [
+                'title' => 'Website Tidak Ditemukan',
+                'message' => 'Website yang Anda cari tidak tersedia.'
+            ], 404);
+        }
         $businessFullStory = preg_replace('/<p(?![^>]*class=)/i', '<p class="text-justify"', $business->full_story);
 
         // Check if the business has a template
@@ -148,16 +154,16 @@ class PublicController extends Controller
             'description' => $businessFullStory,
             'branches' => $business->branches->map(function ($branch) {
                 return [
-                    'name' => $branch->branch_name,
-                    'address' => $branch->branch_address,
-                    'address_link' => $branch->branch_google_maps_link,
-                    'opening_time' => $branch->branch_operational_hours,
-                    'phone_number' => $branch->branch_phone,
+                    'name' => $branch->branch_name ?? 'No Name',
+                    'address' => $branch->branch_address ?? 'No Address',
+                    'address_link' => $branch->branch_google_maps_link ?? '#',
+                    'opening_time' => $branch->branch_operational_hours ?? 'No Opening Time',
+                    'phone_number' => $branch->branch_phone ?? 'No Phone Number',
                 ];
             })->toArray(),
         ];
-
-        return view('user.templates.preview', compact(
+        $phoneNumber = $business;
+        return view('public.show', compact(
             'sectionVariants',
             'colorPalette',
             'navbarData',
@@ -167,7 +173,8 @@ class PublicController extends Controller
             'galleryData',
             'testimonialData',
             'contactData',
-            'footerData'
+            'footerData',
+            'phoneNumber'
         ));
     }
     /**

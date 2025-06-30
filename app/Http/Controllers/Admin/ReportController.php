@@ -154,7 +154,7 @@ class ReportController extends Controller
             } elseif ($validated['action_taken'] === 'unpublish_business' && $report->business_id) {
                 $business = Business::find($report->business_id);
                 if ($business) {
-                    $business->update(['publish_status' => 'draft']);
+                    $business->update(['publish_status' => false]);
                 }
             }
             
