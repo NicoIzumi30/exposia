@@ -47,14 +47,6 @@ class BusinessSection extends Model
                 'C' => 'About Center Layout'
             ]
         ],
-        'branches' => [
-            'name' => 'Cabang',
-            'variants' => [
-                'A' => 'List View dengan Maps',
-                'B' => 'Card Grid Layout',
-                'C' => 'Tabs per Cabang'
-            ]
-        ],
         'produk' => [
             'name' => 'Produk',
             'variants' => [
@@ -85,12 +77,6 @@ class BusinessSection extends Model
                 'A' => 'Kontak Minimalis',
                 'B' => 'Kontak dengan Kolom',
                 'C' => 'Kontak dengan Social Media'
-            ]
-        ],
-        'footer' => [
-            'name' => 'Footer',
-            'variants' => [
-                'A' => 'Footer Minimalis',
             ]
         ],
     ];

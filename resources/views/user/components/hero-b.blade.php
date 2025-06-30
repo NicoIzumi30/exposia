@@ -1,13 +1,13 @@
     <!-- SECTION: HERO -->
-    <section id="hero" class="bg-color-bg-light">
+    <section id="hero" class="bg-color-bg-dark">
         <div
             class="container mx-auto flex min-h-screen flex-col items-center justify-center gap-20 px-6 py-16 lg:flex-row lg:justify-between">
             <!-- Left Text -->
             <div data-aos="fade-up" data-aos-duration="1000" class="max-w-xl text-center lg:text-left">
-                <h1 class="mb-4 text-4xl font-bold">
+                <h1 class="mb-4 text-4xl font-bold lg:text-6xl">
                     {{ $data['title'] ?? 'No Data' }}
                 </h1>
-                <p class="mb-6">
+                <p class="mb-6 lg:text-3xl">
                     {{ $data['description'] ?? 'No Data' }}
                 </p>
             </div>

@@ -3,10 +3,10 @@
     class="container mx-auto flex min-h-screen flex-col items-center justify-center px-6 py-12 lg:flex-row lg:justify-between lg:space-x-10">
     <!-- Left Text -->
     <div data-aos="fade-up" data-aos-duration="1000" class="mb-10 max-w-xl text-center lg:mb-0 lg:text-left">
-        <h1 class="mb-4 text-4xl font-bold">
+        <h1 class="mb-4 text-4xl font-bold lg:text-6xl">
             {{ $data['title'] ?? 'No Data' }}
         </h1>
-        <p class="mb-6">
+        <p class="mb-6 lg:text-3xl">
             {{ $data['description'] ?? 'No Data' }}
         </p>
         <a href="#product"

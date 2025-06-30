@@ -3,7 +3,7 @@
     <div class="container mx-auto flex items-center justify-between">
         <div class="">
             <a href="#">
-                <img src="{{ $data['logo'] }}" alt="logo" class="h-10" />
+                <img src="{{ $data['logo'] }}" alt="logo" class="h-16" />
             </a>
         </div>
 

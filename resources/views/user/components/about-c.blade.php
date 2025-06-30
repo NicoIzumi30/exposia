@@ -5,10 +5,19 @@
             Tentang Kami
         </h1>
         <div class="mx-auto mb-12 flex max-w-5xl flex-col space-y-10 text-center lg:flex-row lg:space-y-0 lg:space-x-10">
-            <div class="hover-lift mx-auto h-fit rounded-xl">
-                <div data-aos="zoom-in" data-aos-delay="100"
-                    class="mx-auto h-[250px] w-full shrink-0 overflow-hidden rounded-xl sm:h-[350px] sm:w-[500px]">
-                    <img src="{{ $data['img-1'] ?? 'No Data' }}" alt="" class=" h-full w-full object-cover" />
+            <!-- Image Stack -->
+            <div class="relative mx-auto mb-10 flex h-[18rem] w-full max-w-xl justify-center lg:mb-0 lg:justify-start">
+                <div class="relative mx-auto h-full w-[25rem]">
+                    <!-- Bottom Image -->
+                    <div data-aos="fade-up" data-aos-delay="200" class="absolute bottom-0 right-0 z-10">
+                        <img src="{{ $data['img-2'] }}" alt="Image 2"
+                            class="border-color-bg-mid hover-scale h-36 w-48 rounded-xl border-[10px] object-cover" />
+                    </div>
+                    <!-- Top Image -->
+                    <div data-aos="fade-up" data-aos-delay="100" class="absolute top-0 right-10 z-0">
+                        <img src="{{ $data['img-1'] }}" alt="Image 1"
+                            class="hover-lift h-60 w-80 rounded-xl object-cover" />
+                    </div>
                 </div>
             </div>
             <div data-aos="fade-up" data-aos-delay="300" class="text-center text-justify text-2xl lg:text-justify">

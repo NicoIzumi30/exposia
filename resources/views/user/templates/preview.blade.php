@@ -59,9 +59,7 @@
     @endif
 
     {{-- FOOTER --}}
-    @if (isset($sectionVariants['kontak']))
-        @includeIf('user.components.footer-a', ['data' => $footerData])
-    @endif
+    @includeIf('user.components.footer-a', ['data' => $footerData])
 
 
     <!-- Floating Button -->

@@ -15,7 +15,7 @@
 
         <div class="flex flex-1 justify-center">
             <a href="#">
-                <img src="{{ $data['logo'] }}" alt="logo" class="h-10" />
+                <img src="{{ $data['logo'] }}" alt="logo" class="h-16" />
             </a>
         </div>
 

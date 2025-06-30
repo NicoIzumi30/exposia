@@ -120,7 +120,7 @@
                         <label
                             class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-blue-500"></i>
-                            Warna Utama
+                            Background
                         </label>
                         <div class="flex items-center gap-3 flex-1">
                             <input type="color" id="primary-color"
@@ -137,7 +137,7 @@
                         <label
                             class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-gray-500"></i>
-                            Warna Sekunder
+                            Background Gelap
                         </label>
                         <div class="flex items-center gap-3 flex-1">
                             <input type="color" id="secondary-color"
@@ -154,7 +154,7 @@
                         <label
                             class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 sm:w-32">
                             <i class="fas fa-circle mr-2 text-purple-500"></i>
-                            Warna Highlight
+                            Background Terang
                         </label>
                         <div class="flex items-center gap-3 flex-1">
                             <input type="color" id="highlight-color"
@@ -295,7 +295,7 @@
                         <div class="text-center">
                             <div
                                 class="aspect-video bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
-                                <img src="{{ asset('storage/'.$business->hero_image_url) }}" alt="Current Hero"
+                                <img src="{{ asset('storage/' . $business->hero_image_url) }}" alt="Current Hero"
                                     class="w-full h-full object-cover">
                             </div>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Gambar hero saat ini</p>
