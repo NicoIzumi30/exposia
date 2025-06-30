@@ -939,7 +939,7 @@ class Business extends Model
      */
     public function getHeroImageUrlAttribute(): string
     {
-       return $this->attributes['hero_image_url'];
+       return $this->attributes['hero_image_url'] ?? "";
     }
 
     /**

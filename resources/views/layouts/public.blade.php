@@ -84,22 +84,6 @@
         }
     </script>
 
-    <!-- Theme initialization -->
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme') ||
-                (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.body.classList.add('dark');
-            } else {
-                document.documentElement.classList.add('light');
-                document.body.classList.add('light');
-            }
-        })();
-    </script>
-
     <style>
         body {
             background-color: #f9fafb;
@@ -509,5 +493,10 @@
             }
         }
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        new ThemeManager();
+    });
+</script>
 </body>
 </html>
