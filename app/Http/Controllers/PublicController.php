@@ -56,7 +56,7 @@ class PublicController extends Controller
                 'title' => 'Website Tidak Ditemukan',
                 'message' => 'Website yang Anda cari tidak tersedia.'
             ], 404);
-        }
+        }   
         $businessFullStory = preg_replace('/<p(?![^>]*class=)/i', '<p class="text-justify"', $business->full_story);
 
         // Check if the business has a template

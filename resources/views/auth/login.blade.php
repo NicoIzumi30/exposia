@@ -194,7 +194,7 @@
                             <i class="fas fa-envelope mr-2 text-primary-500 dark:text-accent-400"></i>
                             Email Address
                         </label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary-500 dark:focus:border-accent-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-accent-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 hover:border-gray-400 dark:hover:border-gray-500 @error('email') border-red-500 dark:border-red-400 @enderror" placeholder="Enter your email address" autocomplete="email" />
+                        <input id="email" name="email" type="email" value="{{ old('email','demo@exposia.com') }}" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary-500 dark:focus:border-accent-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-accent-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 hover:border-gray-400 dark:hover:border-gray-500 @error('email') border-red-500 dark:border-red-400 @enderror" placeholder="Enter your email address" autocomplete="email" />
                         @error('email')
                         <div class="text-red-500 dark:text-red-400 text-sm mt-1">{{ $message }}</div>
                         @enderror
@@ -207,7 +207,7 @@
                             Password
                         </label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" required class="w-full px-4 py-3 pr-12 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary-500 dark:focus:border-accent-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-accent-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 hover:border-gray-400 dark:hover:border-gray-500 @error('password') border-red-500 dark:border-red-400 @enderror" placeholder="Enter your password" autocomplete="current-password" />
+                            <input id="password" name="password" type="password" value="password" required class="w-full px-4 py-3 pr-12 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary-500 dark:focus:border-accent-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-accent-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 hover:border-gray-400 dark:hover:border-gray-500 @error('password') border-red-500 dark:border-red-400 @enderror" placeholder="Enter your password" autocomplete="current-password" />
                             <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-400 transition-colors duration-200 focus:outline-none" onclick="togglePasswordVisibility()">
                                 <i id="password-icon" class="fas fa-eye"></i>
                             </button>
@@ -217,23 +217,14 @@
                         @enderror
                     </div>
 
-                    <!-- Remember Me -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="remember" class="w-4 h-4 text-primary-500 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-accent-400 dark:ring-offset-gray-900 focus:ring-2 dark:bg-gray-800 dark:border-gray-600" />
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Remember me</span>
-                        </label>
-
-                        <a href="#" class="text-sm text-primary-500 dark:text-accent-400 hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 rounded">
-                            Forgot password?
-                        </a>
-                    </div>
-
                     <!-- Sign In Button -->
                     <button type="submit" class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" id="login-btn">
                         <i class="fas fa-sign-in-alt"></i>
                         <span>Sign In</span>
                     </button>
+                    <div class="text-center">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Gunakan default account untuk kejelasan fitur nya</p>
+                    </div>
                 </form>
 
                 <!-- Divider -->
