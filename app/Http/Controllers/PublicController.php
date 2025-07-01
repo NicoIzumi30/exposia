@@ -162,7 +162,6 @@ class PublicController extends Controller
                 ];
             })->toArray(),
         ];
-        $phoneNumber = $business;
         return view('public.show', compact(
             'sectionVariants',
             'colorPalette',
@@ -174,7 +173,7 @@ class PublicController extends Controller
             'testimonialData',
             'contactData',
             'footerData',
-            'phoneNumber'
+            'business'
         ));
     }
     /**
