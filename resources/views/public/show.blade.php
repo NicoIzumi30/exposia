@@ -19,21 +19,32 @@
     <meta property="og:description" content="{{ $business->short_description ?? $business->full_description ?? 'Temukan produk dan layanan terbaik dari ' . $business->business_name . '. Hubungi kami sekarang!' }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="{{ $business->business_name }}">
-    <meta property="og:image" content="{{ asset('storage/'.$business->logo_url) ?? asset('storage/'.$business->hero_image_url) ?? asset('img/default-og.jpg') }}">
+    <meta property="og:image" content="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
+    <meta property="og:image:secure_url" content="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="{{ $business->business_name }} - Logo">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:locale" content="id_ID">
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $business->business_name }} - {{ $business->short_description ?? 'Solusi Terbaik untuk Kebutuhan Anda' }}">
     <meta name="twitter:description" content="{{ $business->short_description ?? $business->full_description ?? 'Temukan produk dan layanan terbaik dari ' . $business->business_name . '. Hubungi kami sekarang!' }}">
-    <meta name="twitter:image" content="{{ asset('storage/'.$business->logo_url) ?? asset('storage/'.$business->hero_image_url) ?? asset('img/default-og.jpg') }}">
+    <meta name="twitter:image" content="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
     <meta name="twitter:image:alt" content="{{ $business->business_name }} - Logo">
     
-    @if(asset('storage/'.$business->logo_url))
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/'.$business->logo_url) }}">
-    <link rel="apple-touch-icon" href="{{ asset('storage/'.$business->logo_url) }}">
+    <!-- WhatsApp Specific Meta Tags -->
+    <meta property="whatsapp:image" content="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
+    <meta property="whatsapp:title" content="{{ $business->business_name }}">
+    <meta property="whatsapp:description" content="{{ Str::limit($business->short_description ?? $business->full_description ?? 'Temukan produk dan layanan terbaik dari ' . $business->business_name, 150) }}">
+    
+    <!-- Additional Image Meta for Better Preview -->
+    <link rel="image_src" href="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
+    <meta name="thumbnail" content="{{ $business->logo_url ? asset('storage/' . $business->logo_url) : ($business->hero_image_url ? asset('storage/' . $business->hero_image_url) : asset('img/default-og.jpg')) }}">
+    
+    @if($business->logo_url)
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $business->logo_url) }}">
+    <link rel="apple-touch-icon" href="{{ asset('storage/' . $business->logo_url) }}">
     @endif
     
     <script type="application/ld+json">
@@ -42,9 +53,9 @@
         "@type": "LocalBusiness",
         "name": "{{ $business->business_name }}",
         "description": "{{ $business->short_description ?? $business->full_description ?? 'Bisnis terpercaya yang menyediakan produk dan layanan berkualitas' }}",
-        @if(asset('storage/'.$business->logo_url))
-        "logo": "{{ asset('storage/'.$business->logo_url) }}",
-        "image": "{{ asset('storage/'.$business->logo_url) }}",
+        @if($business->logo_url)
+        "logo": "{{ $business->logo_url }}",
+        "image": "{{ $business->logo_url }}",
         @endif
         @if($business->main_address)
         "address": {
@@ -462,6 +473,16 @@
         // ===== INITIALIZE ON DOM LOAD =====
         document.addEventListener('DOMContentLoaded', function() {
             initializeNavbarB();
+            
+            // Preload important images for better WhatsApp preview
+            const preloadImages = () => {
+                const ogImage = document.querySelector('meta[property="og:image"]')?.getAttribute('content');
+                if (ogImage) {
+                    const img = new Image();
+                    img.src = ogImage;
+                }
+            };
+            preloadImages();
         });
     </script>
 
