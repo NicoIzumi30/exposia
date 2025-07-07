@@ -7,65 +7,65 @@
 <!-- Page Header -->
 <div class="flex justify-between items-center mb-8">
     <div>
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
             Kontak Bisnis
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
+        <p class="text-gray-600 mt-2">
             Tambahkan kontak bisnis Anda untuk memudahkan pelanggan menghubungi Anda
         </p>
     </div>
-    <button onclick="openContactModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+    <button onclick="openContactModal()" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
         <i class="fas fa-plus mr-2"></i>Tambah Kontak
     </button>
 </div>
 
 <!-- Contact List -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
     <div class="flex items-center mb-6">
-        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+        <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-3">
             <i class="fas fa-address-book text-white"></i>
         </div>
-        <h2 class="text-xl font-semibold">Daftar Kontak</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Daftar Kontak</h2>
     </div>
 
     @if($contacts->count() > 0)
     <!-- Contact Cards with Drag & Drop -->
     <div class="space-y-4" id="contactsList">
         @foreach($contacts as $contact)
-        <div class="contact-card bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border {{ $contact->is_active ? '' : 'opacity-60' }}" 
+        <div class="contact-card bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-all duration-200 {{ $contact->is_active ? '' : 'opacity-60' }}" 
              data-contact-id="{{ $contact->id }}">
             <div class="flex items-start">
-                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-10 h-10 bg-gray-700 rounded-lg flex text-white items-center justify-center mr-3">
                     {!! $contact->icon_html !!}
                 </div>
                 <div class="flex-grow">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $contact->contact_title }}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $contact->contact_description }}</p>
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                            <h3 class="font-semibold text-gray-900">{{ $contact->contact_title }}</h3>
+                            <p class="text-sm text-gray-600">{{ $contact->contact_description }}</p>
+                            <div class="text-xs text-gray-500 mt-1">
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded">
                                     {{ $availableTypes[$contact->contact_type]['name'] ?? $contact->contact_type }}
                                 </span>
-                                <a href="{{ $contact->contact_url }}" target="_blank" class="ml-3 text-blue-500 hover:underline">
+                                <a href="{{ $contact->contact_url }}" target="_blank" class="ml-3 text-gray-600 hover:text-gray-800 hover:underline transition-colors duration-200">
                                     {{ $contact->contact_value }}
                                 </a>
                             </div>
                         </div>
                         <div class="flex items-center space-x-2">
                             <button onclick="toggleContactActive('{{ $contact->id }}', {{ $contact->is_active ? 'false' : 'true' }})" 
-                                    class="p-2 rounded-lg text-gray-500 hover:text-{{ $contact->is_active ? 'red' : 'green' }}-500 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    class="p-2 rounded-lg text-gray-500 hover:text-{{ $contact->is_active ? 'red' : 'green' }}-500 hover:bg-gray-100 transition-colors duration-200">
                                 <i class="fas fa-{{ $contact->is_active ? 'eye-slash' : 'eye' }}"></i>
                             </button>
                             <button onclick="editContact('{{ $contact->id }}')" 
-                                    class="p-2 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    class="p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button onclick="deleteContact('{{ $contact->id }}', '{{ $contact->contact_title }}')" 
-                                    class="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    class="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors duration-200">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <div class="cursor-move text-gray-400 hover:text-gray-600 p-2 handle">
+                            <div class="cursor-move text-gray-400 hover:text-gray-600 p-2 handle transition-colors duration-200">
                                 <i class="fas fa-grip-vertical"></i>
                             </div>
                         </div>
@@ -77,15 +77,15 @@
     </div>
     @else
     <!-- Empty State -->
-    <div class="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
-        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div class="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="fas fa-address-book text-2xl text-gray-400"></i>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Belum Ada Kontak</h3>
-        <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Kontak</h3>
+        <p class="text-gray-600 max-w-md mx-auto mb-6">
             Tambahkan kontak bisnis seperti WhatsApp, Instagram, atau Shopee untuk memudahkan pelanggan menghubungi bisnis Anda.
         </p>
-        <button onclick="openContactModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+        <button onclick="openContactModal()" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors duration-200">
             <i class="fas fa-plus mr-2"></i>Tambah Kontak Pertama
         </button>
     </div>
@@ -93,14 +93,14 @@
 </div>
 
 <!-- Tips Card -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-6">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
     <div class="flex items-center mb-4">
-        <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
+        <div class="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center mr-3">
             <i class="fas fa-lightbulb text-white"></i>
         </div>
-        <h2 class="text-xl font-semibold">Tips</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Tips</h2>
     </div>
-    <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+    <ul class="space-y-2 text-gray-600">
         <li class="flex items-start">
             <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
             <span>Tambahkan kontak WhatsApp bisnis Anda untuk memudahkan komunikasi langsung dengan pelanggan</span>
@@ -123,15 +123,15 @@
 <!-- Contact Modal -->
 <div id="contactModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75" aria-hidden="true" onclick="closeContactModal()"></div>
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" onclick="closeContactModal()"></div>
 
-        <div class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
+        <div class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
             <!-- Modal Header -->
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="contactModalTitle">
+                <h3 class="text-lg font-semibold text-gray-900" id="contactModalTitle">
                     Tambah Kontak Baru
                 </h3>
-                <button onclick="closeContactModal()" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <button onclick="closeContactModal()" class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -143,65 +143,65 @@
 
                 <!-- Contact Type -->
                 <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        <i class="fas fa-tag mr-2 text-blue-500"></i>
+                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-tag mr-2 text-gray-600"></i>
                         Jenis Kontak <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <select id="contactType" name="contact_type" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                    <select id="contactType" name="contact_type" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200">
                         <option value="">Pilih Jenis Kontak</option>
                         @foreach($availableTypes as $type => $config)
                         <option value="{{ $type }}">{{ $config['name'] }}</option>
                         @endforeach
                     </select>
-                    <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                    <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                 </div>
 
                 <!-- Contact Title -->
                 <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        <i class="fas fa-heading mr-2 text-blue-500"></i>
+                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-heading mr-2 text-gray-600"></i>
                         Judul Kontak <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <input type="text" id="contactTitle" name="contact_title" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Misalnya: Kunjungi Shopee Kami">
-                    <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                    <input type="text" id="contactTitle" name="contact_title" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Misalnya: Kunjungi Shopee Kami">
+                    <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                 </div>
 
                 <!-- Contact Description -->
                 <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        <i class="fas fa-align-left mr-2 text-blue-500"></i>
+                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-align-left mr-2 text-gray-600"></i>
                         Deskripsi Kontak
                     </label>
-                    <input type="text" id="contactDescription" name="contact_description" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Misalnya: Lihat produk lain">
-                    <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                    <input type="text" id="contactDescription" name="contact_description" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Misalnya: Lihat produk lain">
+                    <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                 </div>
 
                 <!-- Contact Value -->
                 <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        <i class="fas fa-link mr-2 text-blue-500"></i>
+                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-link mr-2 text-gray-600"></i>
                         URL/Username/Nomor Telepon <span class="text-red-500 ml-1">*</span>
                     </label>
                     <div class="relative">
-                        <span id="valuePrefix" class="absolute left-0 top-0 px-4 py-3 text-gray-500 dark:text-gray-400"></span>
-                        <input type="text" id="contactValue" name="contact_value" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="">
+                        <span id="valuePrefix" class="absolute left-0 top-0 px-4 py-3 text-gray-500"></span>
+                        <input type="text" id="contactValue" name="contact_value" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="">
                     </div>
-                    <p id="valueHelper" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Masukkan URL lengkap atau username sesuai jenis kontak</p>
-                    <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                    <p id="valueHelper" class="text-xs text-gray-500 mt-1">Masukkan URL lengkap atau username sesuai jenis kontak</p>
+                    <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                 </div>
 
                 <!-- Is Active -->
                 <div class="flex items-center space-x-2">
-                    <input type="checkbox" id="isActive" name="is_active" value="1" checked class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="isActive" class="text-gray-700 dark:text-gray-300">Aktif</label>
+                    <input type="checkbox" id="isActive" name="is_active" value="1" checked class="w-4 h-4 text-gray-800 border-gray-300 rounded focus:ring-gray-500">
+                    <label for="isActive" class="text-gray-700">Aktif</label>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button type="submit" id="contactSubmitBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                <div class="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                    <button type="submit" id="contactSubmitBtn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
                         <i class="fas fa-save mr-2"></i>Simpan Kontak
                     </button>
-                    <button type="button" onclick="closeContactModal()" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded-lg">
+                    <button type="button" onclick="closeContactModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200">
                         Batal
                     </button>
                 </div>
@@ -227,7 +227,7 @@
             new Sortable(contactsList, {
                 handle: '.handle',
                 animation: 150,
-                ghostClass: 'bg-blue-50',
+                ghostClass: 'bg-gray-50',
                 onEnd: function() {
                     updateContactsOrder();
                 }
@@ -546,7 +546,7 @@
         
         document.querySelectorAll('.border-red-500').forEach(el => {
             el.classList.remove('border-red-500');
-            el.classList.add('border-gray-300', 'dark:border-gray-600');
+            el.classList.add('border-gray-300');
         });
     }
     
@@ -554,7 +554,7 @@
         for (const field in errors) {
             const inputField = document.getElementById(field.replace('_', ''));
             if (inputField) {
-                inputField.classList.remove('border-gray-300', 'dark:border-gray-600');
+                inputField.classList.remove('border-gray-300');
                 inputField.classList.add('border-red-500');
                 
                 const errorElement = inputField.parentElement.querySelector('.error-message') || 

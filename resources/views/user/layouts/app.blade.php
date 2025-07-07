@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -28,15 +28,28 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            500: '#012c4e',
-                            600: '#011f37',
-                            700: '#001529'
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
                         },
                         accent: {
-                            400: '#fcab1b',
-                            500: '#f59e0b',
-                            600: '#d97706'
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
                         }
                     },
                     animation: {
@@ -119,20 +132,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            @apply bg-gray-100 dark: bg-gray-800;
+            background: #f1f5f9;
         }
 
         ::-webkit-scrollbar-thumb {
-            @apply bg-gray-300 dark: bg-gray-600 rounded-full;
+            background: #cbd5e1;
+            border-radius: 6px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            @apply bg-gray-400 dark: bg-gray-500;
-        }
-
-        /* Dark Mode */
-        .dark {
-            color-scheme: dark;
+            background: #94a3b8;
         }
 
         *,
@@ -163,8 +172,9 @@
 
         /* Navigation active state */
         .nav-item.active {
-            @apply bg-blue-50 dark: bg-blue-900/20 text-blue-600 dark:text-blue-400;
-            border-right: 2px solid theme('colors.blue.500');
+            background: #f8fafc;
+            color: #0f172a;
+            border-right: 2px solid #0f172a;
         }
 
         /* Card hover effects */
@@ -175,10 +185,6 @@
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark .card-hover:hover {
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
         }
 
         /* Toast Notifications */
@@ -219,7 +225,7 @@
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -283,29 +289,12 @@
     </style>
 
     @stack('styles')
-
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme') ||
-                (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.body.classList.add('dark');
-            } else {
-                document.documentElement.classList.add('light');
-                document.body.classList.add('light');
-            }
-
-            console.log('Initial theme set:', theme);
-        })();
-    </script>
 </head>
 
-<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300 font-sans">
+<body class="h-full bg-gray-50 transition-colors duration-300 font-sans">
     <div class="min-h-screen flex">
         <div id="sidebar-overlay"
-            class="fixed inset-0 bg-black/50 dark:bg-black/70 z-40 lg:hidden hidden backdrop-blur-sm transition-all duration-300">
+            class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden backdrop-blur-sm transition-all duration-300">
         </div>
 
         <!-- Sidebar -->
@@ -336,8 +325,8 @@
                 text: "Aksi ini tidak dapat dibatalkan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
+                confirmButtonColor: '#0f172a',
+                cancelButtonColor: '#94a3b8',
                 confirmButtonText: 'Ya, Lanjutkan!',
                 cancelButtonText: 'Batal'
             };
@@ -355,20 +344,19 @@
                 }
             });
         };
+
         window.showToast = function(message, type = 'info', duration = 5000, options = {}) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
 
-            // Generate unique ID
             const toastId = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
             toast.id = toastId;
 
-            // Toast configuration
             const bgColors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
+                success: 'bg-green-600',
+                error: 'bg-red-600',
+                warning: 'bg-yellow-600',
+                info: 'bg-gray-800'
             };
 
             const icons = {
@@ -413,7 +401,6 @@
                 toast.classList.remove('translate-x-full');
                 toast.classList.add('translate-x-0');
 
-                // Start progress bar animation if enabled
                 if (showProgress) {
                     const progressBar = toast.querySelector('.toast-progress > div');
                     if (progressBar) {
@@ -460,8 +447,8 @@
                 container.innerHTML = '';
             }, 300);
         };
+
         window.showServerMessages = function() {
-            // Check for Laravel flash messages
             @if (session('success'))
                 showToast("{{ session('success') }}", 'success');
             @endif
@@ -478,7 +465,6 @@
                 showToast("{{ session('info') }}", 'info');
             @endif
 
-            // Check for validation errors
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     showToast("{{ $error }}", 'error', 7000);
@@ -517,14 +503,12 @@
                     });
                 }
 
-                // Handle window resize
                 window.addEventListener('resize', () => {
                     if (window.innerWidth >= 1024) {
                         this.closeSidebar();
                     }
                 });
 
-                // Handle escape key
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && this.sidebarOpen) {
                         this.closeSidebar();
@@ -554,74 +538,6 @@
                     overlay.classList.add('hidden');
                     document.body.style.overflow = '';
                 }
-            }
-        }
-
-        class ThemeManager {
-            constructor() {
-                this.currentTheme = this.getStoredTheme();
-                this.init();
-            }
-
-            getStoredTheme() {
-                const stored = localStorage.getItem('theme');
-                if (stored) return stored;
-
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    return 'dark';
-                }
-
-                return 'light';
-            }
-
-            init() {
-                this.setTheme(this.currentTheme);
-
-                const themeToggle = document.getElementById('theme-toggle');
-                if (themeToggle) {
-                    themeToggle.addEventListener('click', () => this.toggleTheme());
-                }
-            }
-
-            setTheme(theme) {
-                this.currentTheme = theme;
-                const html = document.documentElement;
-                const body = document.body;
-                const themeIcon = document.getElementById('theme-icon');
-
-                // Remove existing theme classes
-                html.classList.remove('dark', 'light');
-                body.classList.remove('dark', 'light');
-
-                // Add new theme class
-                if (theme === 'dark') {
-                    html.classList.add('dark');
-                    body.classList.add('dark');
-
-                    if (themeIcon) {
-                        themeIcon.className = 'fas fa-sun text-yellow-400';
-                    }
-                } else {
-                    html.classList.add('light');
-                    body.classList.add('light');
-
-                    if (themeIcon) {
-                        themeIcon.className = 'fas fa-moon text-gray-600 dark:text-gray-300';
-                    }
-                }
-
-                localStorage.setItem('theme', theme);
-                window.dispatchEvent(new CustomEvent('themeChanged', {
-                    detail: {
-                        theme
-                    }
-                }));
-            }
-
-            toggleTheme() {
-                const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
-                this.setTheme(newTheme);
-                showToast(newTheme === 'dark' ? 'Mode gelap diaktifkan' : 'Mode terang diaktifkan', 'info', 2000);
             }
         }
 
@@ -675,14 +591,12 @@
             }
         }
 
-        // Copy to clipboard with toast notification
         window.copyToClipboard = function(text, message = 'Teks berhasil disalin!') {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(function() {
                     showToast(message, 'success', 3000);
                 }, function(err) {
                     console.error('Could not copy text: ', err);
-                    // Fallback method
                     const textArea = document.createElement("textarea");
                     textArea.value = text;
                     textArea.style.position = "fixed";
@@ -700,7 +614,6 @@
                     textArea.remove();
                 });
             } else {
-                // Fallback for older browsers
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
                 textArea.style.position = "fixed";
@@ -719,13 +632,9 @@
             }
         };
 
-
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize managers
-            window.themeManager = new ThemeManager();
             window.sidebarManager = new SidebarManager();
 
-            // Close dropdown when clicking outside
             document.addEventListener('click', (event) => {
                 const profileDropdown = document.getElementById('profile-dropdown');
                 const profileButton = document.getElementById('user-profile-button');
@@ -737,9 +646,7 @@
                 }
             });
 
-            // Show server messages
             showServerMessages();
-
         });
     </script>
 </body>

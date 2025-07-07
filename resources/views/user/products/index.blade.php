@@ -8,17 +8,17 @@
 <!-- Page Header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between animate-fade-in mb-8">
     <div>
-        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
             Produk & Layanan
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2 transition-colors duration-300">
+        <p class="text-gray-600 mt-2 transition-colors duration-300">
             Kelola produk dan layanan yang Anda tawarkan
         </p>
     </div>
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
         <!-- Search -->
         <div class="relative hidden sm:block">
-            <input type="text" id="searchProducts" placeholder="Cari produk..." class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <input type="text" id="searchProducts" placeholder="Cari produk..." class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200">
             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 hidden" id="search-hint">
                 ESC untuk reset
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Add Product Button -->
-        <button onclick="openProductModal()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center space-x-2">
+        <button onclick="openProductModal()" class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-2">
             <i class="fas fa-plus"></i>
             <span>Tambah Produk</span>
         </button>
@@ -34,10 +34,10 @@
 </div>
 
 <!-- Bulk Actions (Hidden by default) -->
-<div id="bulkActions" class="hidden bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+<div id="bulkActions" class="hidden bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center space-x-3 mb-3 sm:mb-0">
-            <span class="text-sm font-medium text-blue-800 dark:text-blue-200">
+            <span class="text-sm font-medium text-gray-800">
                 <span id="selectedCount">0</span> produk dipilih
             </span>
         </div>
@@ -61,7 +61,7 @@
 <!-- Mobile Search -->
 <div class="sm:hidden mb-6">
     <div class="relative">
-        <input type="text" id="searchProductsMobile" placeholder="Cari produk..." class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+        <input type="text" id="searchProductsMobile" placeholder="Cari produk..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200">
         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
     </div>
 </div>
@@ -74,9 +74,9 @@
         <!-- Products Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productsContainer">
             @foreach($products as $product)
-            <div class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up" data-product-id="{{ $product->id }}">
+            <div class="product-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up" data-product-id="{{ $product->id }}">
                 <!-- Product Image -->
-                <div class="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                <div class="relative aspect-square bg-gray-100 overflow-hidden">
                     @if($product->product_image)
                     <img src="{{ Storage::url($product->product_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover">
                     @else
@@ -95,15 +95,10 @@
                     </div>
                     @endif
 
-                    <!-- Selection Checkbox -->
-                    <div class="absolute top-3 right-3">
-                        <input type="checkbox" class="product-checkbox w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2" value="{{ $product->id }}" onchange="handleSelection()">
-                    </div>
-
                     <!-- Quick Actions Overlay -->
                     <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                         <div class="flex space-x-2">
-                            <button onclick="editProduct('{{ $product->id }}')" class="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200">
+                            <button onclick="editProduct('{{ $product->id }}')" class="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button onclick="togglePin('{{ $product->id }}')" class="p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-200">
@@ -120,18 +115,18 @@
 
                 <!-- Product Info -->
                 <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
                         {{ $product->product_name }}
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">
                         {{ $product->product_description }}
                     </p>
                     <div class="flex items-center justify-between">
-                        <span class="text-lg font-bold text-blue-600 dark:text-blue-400">
+                        <span class="text-lg font-bold text-gray-800">
                             {{ $product->product_price ? format_currency($product->product_price) : 'Hubungi Kami' }}
                         </span>
                         <div class="flex space-x-1">
-                            <button onclick="editProduct('{{ $product->id }}')" class="p-2 text-gray-500 hover:text-blue-600 transition-colors duration-200">
+                            <button onclick="editProduct('{{ $product->id }}')" class="p-2 text-gray-500 hover:text-gray-800 transition-colors duration-200">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button onclick="deleteProduct('{{ $product->id }}', '{{ $product->product_name }}')" class="p-2 text-gray-500 hover:text-red-600 transition-colors duration-200">
@@ -153,15 +148,15 @@
 
         @else
         <!-- Empty State -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center animate-slide-up">
-            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center animate-slide-up">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-box text-3xl text-gray-400"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Belum Ada Produk</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Produk</h3>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
                 Tambahkan produk atau layanan pertama Anda untuk mulai menjual online.
             </p>
-            <button onclick="openProductModal()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+            <button onclick="openProductModal()" class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Produk Pertama
             </button>
@@ -172,67 +167,67 @@
     <!-- Right Sidebar - Stats & Tips -->
     <div class="lg:col-span-1 space-y-6">
         <!-- Product Stats -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-slide-up">
             <div class="flex items-center mb-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-3">
                     <i class="fas fa-chart-bar text-white"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Statistik Produk</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Statistik Produk</h3>
                 </div>
             </div>
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">Total Produk</span>
-                    <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $productStats['total'] }}</span>
+                    <span class="text-gray-600">Total Produk</span>
+                    <span class="text-2xl font-bold text-gray-800">{{ $productStats['total'] }}</span>
                 </div>
                 @if($productStats['total'] > 0)
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">Produk Unggulan</span>
-                    <span class="text-lg font-semibold text-red-600 dark:text-red-400">{{ $productStats['pinned'] }}</span>
+                    <span class="text-gray-600">Produk Unggulan</span>
+                    <span class="text-lg font-semibold text-red-600">{{ $productStats['pinned'] }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">Dengan Gambar</span>
-                    <span class="text-lg font-semibold text-green-600 dark:text-green-400">{{ $productStats['with_images'] }}</span>
+                    <span class="text-gray-600">Dengan Gambar</span>
+                    <span class="text-lg font-semibold text-green-600">{{ $productStats['with_images'] }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">Link WhatsApp</span>
-                    <span class="text-lg font-semibold text-purple-600 dark:text-purple-400">{{ $productStats['with_wa_links'] }}</span>
+                    <span class="text-gray-600">Link WhatsApp</span>
+                    <span class="text-lg font-semibold text-gray-700">{{ $productStats['with_wa_links'] }}</span>
                 </div>
                 @endif
             </div>
         </div>
 
         <!-- Tips -->
-        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-6 animate-slide-up">
+        <div class="bg-gray-50 rounded-xl border border-gray-200 p-6 animate-slide-up">
             <div class="flex items-center mb-4">
-                <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center mr-3">
                     <i class="fas fa-lightbulb text-white text-sm"></i>
                 </div>
-                <h4 class="font-semibold text-amber-800 dark:text-amber-200">Tips Produk</h4>
+                <h4 class="font-semibold text-gray-800">Tips Produk</h4>
             </div>
-            <ul class="space-y-2 text-sm text-amber-700 dark:text-amber-300">
+            <ul class="space-y-2 text-sm text-gray-700">
                 <li class="flex items-start space-x-2">
-                    <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                    <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                     <span>Gunakan foto produk berkualitas tinggi</span>
                 </li>
                 <li class="flex items-start space-x-2">
-                    <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                    <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                     <span>Tulis deskripsi yang menarik dan informatif</span>
                 </li>
                 <li class="flex items-start space-x-2">
-                    <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                    <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                     <span>Pin produk terbaik di bagian atas</span>
                 </li>
                 <li class="flex items-start space-x-2">
-                    <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                    <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                     <span>Tambahkan link WhatsApp untuk order mudah</span>
                 </li>
             </ul>
         </div>
 
         <!-- Back to Dashboard -->
-        <a href="{{ route('user.dashboard') }}" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-center flex items-center justify-center space-x-2">
+        <a href="{{ route('user.dashboard') }}" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-center flex items-center justify-center space-x-2">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Dashboard</span>
         </a>
@@ -242,15 +237,15 @@
 <!-- Product Modal -->
 <div id="productModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75" aria-hidden="true" onclick="closeProductModal()"></div>
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" onclick="closeProductModal()"></div>
 
-        <div class="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
+        <div class="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
             <!-- Modal Header -->
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="modalTitle">
+                <h3 class="text-lg font-semibold text-gray-900" id="modalTitle">
                     Tambah Produk Baru
                 </h3>
-                <button onclick="closeProductModal()" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <button onclick="closeProductModal()" class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -264,52 +259,52 @@
                 <div class="space-y-6">
                     <!-- Product Name -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-tag mr-2 text-blue-500"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-tag mr-2 text-gray-600"></i>
                             Nama Produk <span class="text-red-500 ml-1">*</span>
                         </label>
-                        <input type="text" id="productName" name="product_name" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Masukkan nama produk">
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <input type="text" id="productName" name="product_name" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Masukkan nama produk">
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
 
                     <!-- Product Description -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-align-left mr-2 text-blue-500"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-align-left mr-2 text-gray-600"></i>
                             Deskripsi Produk <span class="text-red-500 ml-1">*</span>
                         </label>
-                        <textarea id="productDescription" name="product_description" rows="4" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Jelaskan detail produk, manfaat, dan keunggulannya"></textarea>
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <textarea id="productDescription" name="product_description" rows="4" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Jelaskan detail produk, manfaat, dan keunggulannya"></textarea>
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
 
                     <!-- Product Price -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-money-bill-wave mr-2 text-blue-500"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-money-bill-wave mr-2 text-gray-600"></i>
                             Harga <span class="text-red-500 ml-1">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
-                            <input type="number" id="productPrice" name="product_price" required min="0" step="1000" class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="0">
+                            <input type="number" id="productPrice" name="product_price" required min="0" step="1000" class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="0">
                         </div>
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
 
                     <!-- WhatsApp Link -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
                             <i class="fab fa-whatsapp mr-2 text-green-500"></i>
                             Nomor WhatsApp
                         </label>
-                        <input type="text" id="productWaLink" name="product_wa_link" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="08123456789">
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Nomor untuk order langsung via WhatsApp</p>
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <input type="text" id="productWaLink" name="product_wa_link" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="08123456789">
+                        <p class="mt-1 text-xs text-gray-500">Nomor untuk order langsung via WhatsApp</p>
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
 
                     <!-- Pin Product -->
                     <div class="flex items-center">
-                        <input type="checkbox" id="isPinned" name="is_pinned" class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="isPinned" class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <input type="checkbox" id="isPinned" name="is_pinned" class="w-5 h-5 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 focus:ring-2">
+                        <label for="isPinned" class="ml-3 text-sm font-medium text-gray-700">
                             <i class="fas fa-thumbtack mr-2 text-red-500"></i>
                             Jadikan produk unggulan (akan ditampilkan di atas)
                         </label>
@@ -320,71 +315,71 @@
                 <div class="space-y-6">
                     <!-- Product Image Upload -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-image mr-2 text-blue-500"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-image mr-2 text-gray-600"></i>
                             Foto Produk
                         </label>
 
                         <!-- Current Image Display -->
                         <div id="currentImageContainer" class="hidden mb-4">
                             <div class="text-center">
-                                <div class="w-48 h-48 mx-auto bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
+                                <div class="w-48 h-48 mx-auto bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-lg">
                                     <img id="currentImage" src="" alt="Current Product Image" class="w-full h-full object-cover">
                                 </div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Foto saat ini</p>
+                                <p class="text-sm text-gray-600 mt-2">Foto saat ini</p>
                             </div>
                         </div>
 
                         <!-- Image Upload Area -->
-                        <div class="image-upload-dropzone relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer group" id="imageDropzone">
+                        <div class="image-upload-dropzone relative border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-500 transition-all duration-300 cursor-pointer group" id="imageDropzone">
                             <input type="file" id="productImage" name="product_image" accept="image/*" class="hidden">
 
                             <div class="upload-placeholder" id="imageUploadPlaceholder">
-                                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors duration-300">
-                                    <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300"></i>
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
+                                    <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-gray-600 transition-colors duration-300"></i>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                                <p class="text-sm font-medium text-gray-900 mb-2">
                                     Upload foto produk
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG max 2MB</p>
+                                <p class="text-xs text-gray-500">PNG, JPG max 2MB</p>
                             </div>
 
                             <!-- Upload Progress -->
                             <div class="upload-progress hidden" id="imageUploadProgress">
                                 <div class="w-16 h-16 mx-auto mb-4">
-                                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+                                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-800"></div>
                                 </div>
-                                <p class="text-sm font-medium text-blue-600 dark:text-blue-400">Uploading...</p>
+                                <p class="text-sm font-medium text-gray-800">Uploading...</p>
                             </div>
                         </div>
 
                         <!-- Image Preview -->
                         <div class="image-preview-container hidden mt-4" id="imagePreviewContainer">
                             <div class="relative">
-                                <img id="imagePreview" src="" alt="Product Preview" class="w-full h-48 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700">
+                                <img id="imagePreview" src="" alt="Product Preview" class="w-full h-48 object-cover rounded-xl border-2 border-gray-200 bg-white">
                                 <button type="button" class="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors duration-200" onclick="removeImage()">
                                     <i class="fas fa-times text-sm"></i>
                                 </button>
                             </div>
-                            <div class="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                            <div class="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
                                 <div class="flex items-center">
                                     <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                    <span class="text-sm text-green-700 dark:text-green-400 font-medium">Foto siap diupload</span>
+                                    <span class="text-sm text-green-700 font-medium">Foto siap diupload</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="lg:col-span-2 flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <button type="submit" id="submitBtn" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2">
+                <div class="lg:col-span-2 flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                    <button type="submit" id="submitBtn" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2">
                         <i class="fas fa-save"></i>
                         <span>Simpan Produk</span>
                     </button>
-                    <button type="button" onclick="closeProductModal()" class="flex-1 sm:flex-none bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 sm:flex-none bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         Batal
                     </button>
                 </div>
@@ -591,15 +586,15 @@
             searchInfo.id = 'search-results-info';
             searchInfo.className = 'lg:col-span-4 mb-6';
             searchInfo.innerHTML = `
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center space-x-3 mb-3 sm:mb-0">
-                        <i class="fas fa-search text-blue-600 dark:text-blue-400"></i>
-                        <span class="text-sm font-medium text-blue-800 dark:text-blue-200">
+                        <i class="fas fa-search text-gray-600"></i>
+                        <span class="text-sm font-medium text-gray-800">
                             Ditemukan ${count} produk untuk "${query}"
                         </span>
                     </div>
-                    <button onclick="resetSearch()" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium">
+                    <button onclick="resetSearch()" class="text-sm text-gray-600 hover:text-gray-800 font-medium">
                         <i class="fas fa-times mr-1"></i>
                         Hapus Pencarian
                     </button>
@@ -613,15 +608,15 @@
     function getEmptySearchHTML(query) {
         return `
         <div class="col-span-full">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
-                <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-search text-3xl text-gray-400"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Tidak Ada Hasil</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Tidak Ada Hasil</h3>
+                <p class="text-gray-600 mb-6">
                     Tidak ditemukan produk yang sesuai dengan pencarian "<strong>${query}</strong>"
                 </p>
-                <button onclick="resetSearch()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200">
+                <button onclick="resetSearch()" class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali ke Semua Produk
                 </button>
@@ -635,19 +630,19 @@
         const pinnedBadge = product.is_pinned ? `<div class="absolute top-3 left-3"><span class="bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center"><i class="fas fa-thumbtack mr-1"></i>Pinned</span></div>` : '';
         const waButton = product.product_wa_link ? `<button onclick="generateWhatsAppOrder('${product.id}')" class="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200"><i class="fab fa-whatsapp"></i></button>` : '';
         return `
-        <div class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up" data-product-id="${product.id}">
-            <div class="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
+        <div class="product-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up" data-product-id="${product.id}">
+            <div class="relative aspect-square bg-gray-100 overflow-hidden">
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.product_name}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-4xl text-gray-400"></i></div>`}
                 ${pinnedBadge}
-                <div class="absolute top-3 right-3"><input type="checkbox" class="product-checkbox w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2" value="${product.id}" onchange="handleSelection()"></div>
-                <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"><div class="flex space-x-2"><button onclick="editProduct('${product.id}')" class="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200"><i class="fas fa-edit"></i></button><button onclick="togglePin('${product.id}')" class="p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-200"><i class="fas fa-thumbtack"></i></button>${waButton}</div></div>
+                <div class="absolute top-3 right-3"><input type="checkbox" class="product-checkbox w-5 h-5 text-gray-600 bg-white border-gray-300 rounded focus:ring-gray-500 focus:ring-2" value="${product.id}" onchange="handleSelection()"></div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"><div class="flex space-x-2"><button onclick="editProduct('${product.id}')" class="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"><i class="fas fa-edit"></i></button><button onclick="togglePin('${product.id}')" class="p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-200"><i class="fas fa-thumbtack"></i></button>${waButton}</div></div>
             </div>
             <div class="p-4">
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">${product.product_name}</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">${product.product_description}</p>
+                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">${product.product_name}</h3>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.product_description}</p>
                 <div class="flex items-center justify-between">
-                    <span class="text-lg font-bold text-blue-600 dark:text-blue-400">${product.product_price ? formatCurrency(product.product_price) : 'Hubungi Kami'}</span>
-                    <div class="flex space-x-1"><button onclick="editProduct('${product.id}')" class="p-2 text-gray-500 hover:text-blue-600 transition-colors duration-200"><i class="fas fa-edit"></i></button><button onclick="deleteProduct('${product.id}', '${product.product_name}')" class="p-2 text-gray-500 hover:text-red-600 transition-colors duration-200"><i class="fas fa-trash"></i></button></div>
+                    <span class="text-lg font-bold text-gray-800">${product.product_price ? formatCurrency(product.product_price) : 'Hubungi Kami'}</span>
+                    <div class="flex space-x-1"><button onclick="editProduct('${product.id}')" class="p-2 text-gray-500 hover:text-gray-800 transition-colors duration-200"><i class="fas fa-edit"></i></button><button onclick="deleteProduct('${product.id}', '${product.product_name}')" class="p-2 text-gray-500 hover:text-red-600 transition-colors duration-200"><i class="fas fa-trash"></i></button></div>
                 </div>
             </div>
         </div>`;
@@ -663,7 +658,7 @@
                 if (show && !loader) {
                     const loaderElement = document.createElement('div');
                     loaderElement.className = 'search-loader absolute right-3 top-1/2 transform -translate-y-1/2';
-                    loaderElement.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>';
+                    loaderElement.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-800"></div>';
                     parent.appendChild(loaderElement);
                 } else if (!show && loader) {
                     loader.remove();
@@ -873,17 +868,17 @@
         });
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropzone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+            dropzone.classList.add('border-gray-500', 'bg-gray-50');
         });
         dropzone.addEventListener('dragleave', (e) => {
             e.preventDefault();
             if (!dropzone.contains(e.relatedTarget)) {
-                dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+                dropzone.classList.remove('border-gray-500', 'bg-gray-50');
             }
         });
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+            dropzone.classList.remove('border-gray-500', 'bg-gray-50');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 const file = files[0];
@@ -1172,12 +1167,8 @@
     }
 
     .image-upload-dropzone.drag-over {
-        border-color: rgb(59 130 246);
-        background-color: rgb(239 246 255);
-    }
-
-    .dark .image-upload-dropzone.drag-over {
-        background-color: rgb(30 58 138 / 0.2);
+        border-color: rgb(107 114 128);
+        background-color: rgb(249 250 251);
     }
 
     .loading {

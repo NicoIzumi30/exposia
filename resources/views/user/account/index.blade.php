@@ -5,13 +5,13 @@
 @section('page-title', 'Akun Saya')
 
 @section('content')
-<div class=" mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-6 animate-fade-in text-center lg:text-left">
-        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
             Akun Saya
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1 transition-colors duration-300">
+        <p class="text-gray-600 mt-1 transition-colors duration-300">
             Kelola informasi akun dan keamanan
         </p>
     </div>
@@ -23,16 +23,16 @@
         <div class="space-y-6">
 
             <!-- Profile Information Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-slide-up">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-slide-up">
                 <!-- Card Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-3">
                             <i class="fas fa-user text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi Akun</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Perbarui informasi profil Anda</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Informasi Akun</h2>
+                            <p class="text-sm text-gray-600">Perbarui informasi profil Anda</p>
                         </div>
                     </div>
                 </div>
@@ -44,41 +44,41 @@
                         @method('PUT')
 
                         <!-- User Avatar Section -->
-                        <div class="flex flex-col items-center pb-4 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
+                        <div class="flex flex-col items-center pb-4 border-b border-gray-200">
+                            <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mb-3">
                                 <span class="text-white text-2xl font-bold">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </span>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</p>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ auth()->user()->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ auth()->user()->email }}</p>
                         </div>
 
                         <!-- Name Field -->
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-user mr-2 text-blue-500"></i>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-gray-600"></i>
                                 Nama Lengkap
                             </label>
-                            <input type="text" name="name" id="name" value="{{ auth()->user()->name }}" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200 @error('name') border-red-500 dark:border-red-500 @enderror">
+                            <input type="text" name="name" id="name" value="{{ auth()->user()->name }}" required class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800/20 focus:border-gray-800 transition-colors duration-200 @error('name') border-red-500 @enderror">
                             @error('name')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Email Field -->
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-envelope mr-2 text-gray-500"></i>
                                 Email
                             </label>
                             <div class="relative">
-                                <input type="email" name="email" id="email" value="{{ auth()->user()->email }}" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-not-allowed" disabled>
+                                <input type="email" name="email" id="email" value="{{ auth()->user()->email }}" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-not-allowed" disabled>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-4">
-                                    <i class="fas fa-lock text-gray-400 dark:text-gray-500"></i>
+                                    <i class="fas fa-lock text-gray-400"></i>
                                 </div>
                             </div>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                            <p class="mt-1 text-xs text-gray-500 flex items-center">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Email tidak dapat diubah
                             </p>
@@ -86,23 +86,23 @@
 
                         <!-- Phone Field -->
                         <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-phone mr-2 text-green-500"></i>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-phone mr-2 text-gray-600"></i>
                                 Nomor Telepon
                             </label>
-                            <input type="tel" name="phone" id="phone" value="{{ auth()->user()->phone }}" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200 @error('phone') border-red-500 dark:border-red-500 @enderror">
+                            <input type="tel" name="phone" id="phone" value="{{ auth()->user()->phone }}" required class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800/20 focus:border-gray-800 transition-colors duration-200 @error('phone') border-red-500 @enderror">
                             @error('phone')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                            <p class="mt-1 text-xs text-gray-500 flex items-center">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Format: 08xxxxxxxxxx (tanpa spasi)
                             </p>
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <button type="submit" id="profile-submit-btn" class="w-full px-5 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-[1.02] transition-all duration-200">
+                        <div class="pt-4 border-t border-gray-200">
+                            <button type="submit" id="profile-submit-btn" class="w-full px-5 py-3 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-lg shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200">
                                 <span class="btn-text">
                                     <i class="fas fa-save mr-2"></i>
                                     Simpan Perubahan
@@ -122,16 +122,16 @@
         <div class="space-y-6">
 
             <!-- Change Password Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-slide-up">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-slide-up">
                 <!-- Card Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-3">
                             <i class="fas fa-lock text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Ubah Password</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Perbarui password akun Anda</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Ubah Password</h2>
+                            <p class="text-sm text-gray-600">Perbarui password akun Anda</p>
                         </div>
                     </div>
                 </div>
@@ -144,37 +144,37 @@
 
                         <!-- Current Password -->
                         <div>
-                            <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-key mr-2 text-gray-500"></i>
                                 Password Saat Ini
                             </label>
                             <div class="relative">
-                                <input type="password" name="current_password" id="current_password" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 transition-colors duration-200 @error('current_password') border-red-500 dark:border-red-500 @enderror">
-                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none transition-colors duration-200" data-target="current_password">
+                                <input type="password" name="current_password" id="current_password" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800/20 focus:border-gray-800 transition-colors duration-200 @error('current_password') border-red-500 @enderror">
+                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-500 focus:outline-none transition-colors duration-200" data-target="current_password">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
                             @error('current_password')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- New Password -->
                         <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-shield-alt mr-2 text-purple-500"></i>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-shield-alt mr-2 text-gray-600"></i>
                                 Password Baru
                             </label>
                             <div class="relative">
-                                <input type="password" name="password" id="password" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 transition-colors duration-200 @error('password') border-red-500 dark:border-red-500 @enderror">
-                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none transition-colors duration-200" data-target="password">
+                                <input type="password" name="password" id="password" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800/20 focus:border-gray-800 transition-colors duration-200 @error('password') border-red-500 @enderror">
+                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-500 focus:outline-none transition-colors duration-200" data-target="password">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
                             @error('password')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                            <p class="mt-1 text-xs text-gray-500 flex items-center">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Minimal 8 karakter, kombinasi huruf dan angka
                             </p>
@@ -182,21 +182,21 @@
 
                         <!-- Confirm New Password -->
                         <div>
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-check-circle mr-2 text-gray-600"></i>
                                 Konfirmasi Password Baru
                             </label>
                             <div class="relative">
-                                <input type="password" name="password_confirmation" id="password_confirmation" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 transition-colors duration-200">
-                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none transition-colors duration-200" data-target="password_confirmation">
+                                <input type="password" name="password_confirmation" id="password_confirmation" required class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800/20 focus:border-gray-800 transition-colors duration-200">
+                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-500 focus:outline-none transition-colors duration-200" data-target="password_confirmation">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <button type="submit" id="password-submit-btn" class="w-full px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-lg shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-[1.02] transition-all duration-200">
+                        <div class="pt-4 border-t border-gray-200">
+                            <button type="submit" id="password-submit-btn" class="w-full px-5 py-3 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-lg shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200">
                                 <span class="btn-text">
                                     <i class="fas fa-key mr-2"></i>
                                     Ubah Password
@@ -212,16 +212,16 @@
             </div>
 
             <!-- Account Security Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden animate-slide-up">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-slide-up">
                 <!-- Card Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-3">
+                        <div class="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center mr-3">
                             <i class="fas fa-shield-alt text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Keamanan Akun</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Pengaturan keamanan dan verifikasi</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Keamanan Akun</h2>
+                            <p class="text-sm text-gray-600">Pengaturan keamanan dan verifikasi</p>
                         </div>
                     </div>
                 </div>
@@ -230,16 +230,16 @@
                 <div class="p-6 space-y-4">
 
                     <!-- Email Verification Status -->
-                    <div class="p-4 rounded-lg {{ auth()->user()->email_verified_at ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' }}">
+                    <div class="p-4 rounded-lg {{ auth()->user()->email_verified_at ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200' }}">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
-                                <i class="fas {{ auth()->user()->email_verified_at ? 'fa-check-circle text-green-600 dark:text-green-400' : 'fa-exclamation-triangle text-yellow-600 dark:text-yellow-400' }} text-lg"></i>
+                                <i class="fas {{ auth()->user()->email_verified_at ? 'fa-check-circle text-green-600' : 'fa-exclamation-triangle text-yellow-600' }} text-lg"></i>
                             </div>
                             <div class="ml-3 flex-1">
-                                <h3 class="text-sm font-semibold {{ auth()->user()->email_verified_at ? 'text-green-800 dark:text-green-300' : 'text-yellow-800 dark:text-yellow-300' }}">
+                                <h3 class="text-sm font-semibold {{ auth()->user()->email_verified_at ? 'text-green-800' : 'text-yellow-800' }}">
                                     Status Verifikasi Email
                                 </h3>
-                                <p class="text-sm {{ auth()->user()->email_verified_at ? 'text-green-700 dark:text-green-400' : 'text-yellow-700 dark:text-yellow-400' }} mt-1">
+                                <p class="text-sm {{ auth()->user()->email_verified_at ? 'text-green-700' : 'text-yellow-700' }} mt-1">
                                     @if(auth()->user()->email_verified_at)
                                     Email terverifikasi pada {{ auth()->user()->email_verified_at->format('d M Y H:i') }}
                                     @else
@@ -251,7 +251,7 @@
                                 <div class="mt-3">
                                     <form action="{{ route('verification.send') }}" method="POST" class="inline" id="verification-form">
                                         @csrf
-                                        <button type="submit" id="verification-submit-btn" class="text-sm px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-[1.02] transition-all duration-200">
+                                        <button type="submit" id="verification-submit-btn" class="text-sm px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200">
                                             <span class="btn-text">
                                                 <i class="fas fa-paper-plane mr-1"></i>
                                                 Kirim Ulang Verifikasi
@@ -270,24 +270,24 @@
 
                     <!-- Account Info -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                        <div class="p-3 rounded-lg bg-gray-50">
                             <div class="flex items-center">
-                                <i class="fas fa-calendar-alt text-blue-500 mr-2"></i>
+                                <i class="fas fa-calendar-alt text-gray-600 mr-2"></i>
                                 <div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Bergabung sejak</p>
-                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <p class="text-xs text-gray-500">Bergabung sejak</p>
+                                    <p class="text-sm font-medium text-gray-700">
                                         {{ auth()->user()->created_at->format('d M Y') }}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                        <div class="p-3 rounded-lg bg-gray-50">
                             <div class="flex items-center">
-                                <i class="fas fa-clock text-green-500 mr-2"></i>
+                                <i class="fas fa-clock text-gray-600 mr-2"></i>
                                 <div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Terakhir diperbarui</p>
-                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <p class="text-xs text-gray-500">Terakhir diperbarui</p>
+                                    <p class="text-sm font-medium text-gray-700">
                                         {{ auth()->user()->updated_at->format('d M Y') }}
                                     </p>
                                 </div>
@@ -296,20 +296,20 @@
                     </div>
 
                     <!-- Logout All Devices -->
-                    <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600">
+                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-sign-out-alt text-gray-500 dark:text-gray-400 text-lg"></i>
+                                <i class="fas fa-sign-out-alt text-gray-500 text-lg"></i>
                             </div>
                             <div class="ml-3 flex-1">
-                                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-300">Logout dari Semua Perangkat</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                <h3 class="text-sm font-semibold text-gray-800">Logout dari Semua Perangkat</h3>
+                                <p class="text-sm text-gray-600 mt-1">
                                     Keluar dari akun Anda di semua perangkat lain yang mungkin sedang login.
                                 </p>
                                 <div class="mt-3">
                                     <form action="{{ route('user.account.logout-all-devices') }}" method="POST" class="inline" id="logout-devices-form">
                                         @csrf
-                                        <button type="submit" id="logout-devices-btn" class="text-sm px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-[1.02] transition-all duration-200">
+                                        <button type="submit" id="logout-devices-btn" class="text-sm px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200">
                                             <span class="btn-text">
                                                 <i class="fas fa-power-off mr-1"></i>
                                                 Logout Semua Perangkat
@@ -351,7 +351,6 @@
             transform: rotate(360deg);
         }
     }
-
 </style>
 @endpush
 @push('scripts')
@@ -377,10 +376,10 @@
             Object.keys(errors).forEach(field => {
                 const input = form.querySelector(`[name="${field}"]`);
                 if (input) {
-                    input.classList.add('border-red-500', 'dark:border-red-500');
+                    input.classList.add('border-red-500');
                     const parent = input.closest('div');
                     const errorMsg = document.createElement('p');
-                    errorMsg.className = 'mt-1 text-sm text-red-600 dark:text-red-400';
+                    errorMsg.className = 'mt-1 text-sm text-red-600';
                     errorMsg.textContent = errors[field][0];
                     parent.appendChild(errorMsg);
                 }
@@ -388,8 +387,8 @@
         }
 
         function clearErrors() {
-            document.querySelectorAll('.text-red-600, .text-red-400').forEach(msg => msg.remove());
-            document.querySelectorAll('input.border-red-500').forEach(input => input.classList.remove('border-red-500', 'dark:border-red-500'));
+            document.querySelectorAll('.text-red-600').forEach(msg => msg.remove());
+            document.querySelectorAll('input.border-red-500').forEach(input => input.classList.remove('border-red-500'));
         }
 
         function getCsrfToken() {
@@ -527,9 +526,9 @@
             document.querySelectorAll('input').forEach(input => {
                 input.addEventListener('input', function() {
                     if (this.classList.contains('border-red-500')) {
-                        this.classList.remove('border-red-500', 'dark:border-red-500');
+                        this.classList.remove('border-red-500');
                         const parent = this.closest('div');
-                        const errorMsg = parent.querySelector('.text-red-600, .text-red-400');
+                        const errorMsg = parent.querySelector('.text-red-600');
                         if (errorMsg) errorMsg.remove();
                     }
                 });
@@ -543,6 +542,5 @@
         initPasswordToggle();
         initInputEvents();
     });
-
 </script>
 @endpush

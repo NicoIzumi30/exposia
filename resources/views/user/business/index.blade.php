@@ -8,24 +8,24 @@
 <!-- Page Header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between animate-fade-in mb-8">
     <div>
-        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
             Data Usaha
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2 transition-colors duration-300">
+        <p class="text-gray-600 mt-2 transition-colors duration-300">
             Kelola informasi lengkap tentang bisnis Anda
         </p>
     </div>
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
         <!-- Progress Completion Badge -->
-        <div class="flex items-center space-x-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700">
-            <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
-            <span class="text-sm font-medium text-gray-900 dark:text-white">
+        <div class="flex items-center space-x-2 bg-white px-4 py-2 rounded-xl border border-gray-200">
+            <div class="w-3 h-3 bg-gray-800 rounded-full"></div>
+            <span class="text-sm font-medium text-gray-900">
                 {{ $business->progress_completion ?? 0 }}% Lengkap
             </span>
         </div>
         @if($business->public_url && $business->publish_status)
         <a href="{{ $business->public_url }}" target="_blank"
-           class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center space-x-2">
+           class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-2">
             <i class="fas fa-external-link-alt"></i>
             <span>Lihat Website</span>
         </a>
@@ -42,73 +42,73 @@
         <!-- Left Column - Main Business Information -->
         <div class="lg:col-span-2 space-y-8">
             <!-- Basic Business Information -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-6 animate-slide-up">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-4">
                         <i class="fas fa-building text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi Dasar</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Data utama tentang bisnis Anda</p>
+                        <h2 class="text-lg font-semibold text-gray-900">Informasi Dasar</h2>
+                        <p class="text-sm text-gray-600">Data utama tentang bisnis Anda</p>
                     </div>
                 </div>
 
                 <div class="space-y-6">
                     <!-- Business Name -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                            <i class="fas fa-store mr-2 text-blue-500 dark:text-blue-400"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                            <i class="fas fa-store mr-2 text-gray-600"></i>
                             Nama Usaha <span class="text-red-500 ml-1">*</span>
                         </label>
                         <input type="text" name="business_name" value="{{ old('business_name', $business->business_name) }}" required
-                               class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('business_name') border-red-500 @enderror"
+                               class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('business_name') border-red-500 @enderror"
                                placeholder="Masukkan nama usaha Anda"
                                id="business-name">
                         @error('business_name')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Address -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                            <i class="fas fa-map-marker-alt mr-2 text-blue-500 dark:text-blue-400"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-600"></i>
                             Alamat Utama <span class="text-red-500 ml-1">*</span>
                         </label>
                         <textarea name="main_address" rows="3" required
-                                  class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('main_address') border-red-500 @enderror"
+                                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('main_address') border-red-500 @enderror"
                                   placeholder="Masukkan alamat lengkap usaha Anda">{{ old('main_address', $business->main_address) }}</textarea>
                         @error('main_address')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Operational Hours -->
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                                <i class="fas fa-clock mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                                <i class="fas fa-clock mr-2 text-gray-600"></i>
                                 Jam Operasional <span class="text-red-500 ml-1">*</span>
                             </label>
                             <input type="text" name="main_operational_hours" value="{{ old('main_operational_hours', $business->main_operational_hours) }}" required
-                                   class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('main_operational_hours') border-red-500 @enderror"
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('main_operational_hours') border-red-500 @enderror"
                                    placeholder="Contoh: Senin-Sabtu 08:00-17:00">
                             @error('main_operational_hours')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Google Maps Link -->
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                                <i class="fas fa-map mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                                <i class="fas fa-map mr-2 text-gray-600"></i>
                                 Link Google Maps
                             </label>
                             <input type="url" name="google_maps_link" value="{{ old('google_maps_link', $business->google_maps_link) }}"
-                                   class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('google_maps_link') border-red-500 @enderror"
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('google_maps_link') border-red-500 @enderror"
                                    placeholder="https://maps.google.com/...">
                             @error('google_maps_link')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -116,33 +116,33 @@
             </div>
 
             <!-- Descriptions -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-6 animate-slide-up">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-4">
                         <i class="fas fa-align-left text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Deskripsi Usaha</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Ceritakan tentang bisnis Anda</p>
+                        <h2 class="text-lg font-semibold text-gray-900">Deskripsi Usaha</h2>
+                        <p class="text-sm text-gray-600">Ceritakan tentang bisnis Anda</p>
                     </div>
                 </div>
 
                 <div class="space-y-6">
                     <!-- Short Description -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                            <i class="fas fa-quote-left mr-2 text-blue-500 dark:text-blue-400"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                            <i class="fas fa-quote-left mr-2 text-gray-600"></i>
                             Deskripsi Singkat <span class="text-red-500 ml-1">*</span>
                         </label>
                         <textarea name="short_description" rows="2" maxlength="160" required
-                                  class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('short_description') border-red-500 @enderror"
+                                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200 transform focus:-translate-y-0.5 @error('short_description') border-red-500 @enderror"
                                   placeholder="Deskripsi singkat tentang usaha Anda (maksimal 160 karakter)"
                                   id="short-description">{{ old('short_description', $business->short_description) }}</textarea>
                         <div class="flex justify-between items-center mt-1">
                             @error('short_description')
-                            <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="text-sm text-red-600">{{ $message }}</p>
                             @else
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Akan ditampilkan sebagai snippet di search engine</p>
+                            <p class="text-xs text-gray-500">Akan ditampilkan sebagai snippet di search engine</p>
                             @enderror
                             <span class="text-xs text-gray-400" id="short-desc-count">0/160</span>
                         </div>
@@ -150,13 +150,13 @@
 
                     <!-- Full Description with Rich Text Editor -->
                     <div>
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                            <i class="fas fa-file-alt mr-2 text-blue-500 dark:text-blue-400"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-2 transition-colors duration-300">
+                            <i class="fas fa-file-alt mr-2 text-gray-600"></i>
                             Deskripsi Lengkap <span class="text-red-500 ml-1">*</span>
                         </label>
                         <textarea name="full_description" id="full-description-editor" class="hidden">{{ old('full_description', $business->full_description) }}</textarea>
                         @error('full_description')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -166,14 +166,14 @@
         <!-- Right Column - Logo Upload & Actions -->
         <div class="lg:col-span-1 space-y-8">
             <!-- Logo Upload -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up sticky">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-6 animate-slide-up sticky">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center mr-4">
                         <i class="fas fa-image text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Logo Usaha</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Upload logo bisnis Anda</p>
+                        <h2 class="text-lg font-semibold text-gray-900">Logo Usaha</h2>
+                        <p class="text-sm text-gray-600">Upload logo bisnis Anda</p>
                     </div>
                 </div>
 
@@ -181,88 +181,88 @@
                 @if($business->logo_url)
                 <div class="current-logo mb-6">
                     <div class="text-center">
-                        <div class="w-32 h-32 mx-auto bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden shadow-lg">
+                        <div class="w-32 h-32 mx-auto bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-lg">
                             <img src="{{ Storage::url($business->logo_url) }}" alt="Current Logo" class="w-full h-full object-contain">
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Logo saat ini</p>
+                        <p class="text-sm text-gray-600 mt-2">Logo saat ini</p>
                     </div>
                 </div>
                 @endif
 
                 <!-- Logo Upload Area -->
-                <div class="logo-upload-dropzone relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer group" id="logo-dropzone">
+                <div class="logo-upload-dropzone relative border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-500 transition-all duration-300 cursor-pointer group" id="logo-dropzone">
                     <input type="file" id="business-logo" name="logo" accept="image/*" class="hidden">
 
                     <div class="upload-placeholder" id="logo-upload-placeholder">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors duration-300">
-                            <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300"></i>
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-gray-600 transition-colors duration-300"></i>
                         </div>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        <p class="text-sm font-medium text-gray-900 mb-2">
                             {{ $business->logo_url ? 'Ganti logo' : 'Upload logo' }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG max 2MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG max 2MB</p>
                     </div>
 
                     <!-- Upload Progress -->
                     <div class="upload-progress hidden" id="logo-upload-progress">
                         <div class="w-16 h-16 mx-auto mb-4">
-                            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+                            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-800"></div>
                         </div>
-                        <p class="text-sm font-medium text-blue-600 dark:text-blue-400">Uploading...</p>
+                        <p class="text-sm font-medium text-gray-800">Uploading...</p>
                     </div>
                 </div>
 
                 <!-- Logo Preview -->
                 <div class="logo-preview-container hidden mt-4" id="logo-preview-container">
                     <div class="relative">
-                        <img id="logo-preview" src="" alt="Logo Preview" class="w-full h-32 object-contain rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <img id="logo-preview" src="" alt="Logo Preview" class="w-full h-32 object-contain rounded-xl border-2 border-gray-200 bg-white">
                         <button type="button" class="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors duration-200" onclick="removeLogo()">
                             <i class="fas fa-times text-sm"></i>
                         </button>
                     </div>
-                    <div class="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div class="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
                         <div class="flex items-center">
                             <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                            <span class="text-sm text-green-700 dark:text-green-400 font-medium">Logo ready to upload</span>
+                            <span class="text-sm text-green-700 font-medium">Logo ready to upload</span>
                         </div>
                     </div>
                 </div>
 
                 @error('logo')
-                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Website URL Section -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-6 animate-slide-up">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center mr-4">
                         <i class="fas fa-globe text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">URL Website</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Atur alamat website Anda</p>
+                        <h2 class="text-lg font-semibold text-gray-900">URL Website</h2>
+                        <p class="text-sm text-gray-600">Atur alamat website Anda</p>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     @if($business->public_url && $business->publish_status)
-                    <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div class="p-3 bg-green-50 rounded-lg border border-green-200">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-green-800 dark:text-green-200">Website URL:</p>
-                                <a href="{{ $business->public_url }}" target="_blank" class="text-sm text-green-600 dark:text-green-400 hover:underline break-all">
+                                <p class="text-sm font-medium text-green-800">Website URL:</p>
+                                <a href="{{ $business->public_url }}" target="_blank" class="text-sm text-green-600 hover:underline break-all">
                                     {{ $business->public_url }}
                                 </a>
                             </div>
-                            <button type="button" onclick="generateQrCode()" class="p-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200">
+                            <button type="button" onclick="generateQrCode()" class="p-2 text-green-600 hover:text-green-800">
                                 <i class="fas fa-qrcode"></i>
                             </button>
                         </div>
                     </div>
                     @else
-                    <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                    <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <p class="text-sm text-yellow-800">
                             <i class="fas fa-info-circle mr-1"></i>
                             URL website akan dibuat otomatis setelah publikasi
                         </p>
@@ -273,12 +273,12 @@
 
             <!-- Form Actions -->
             <div class="flex flex-col gap-4 animate-slide-up">
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                <button type="submit" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                     <i class="fas fa-save"></i>
                     <span>Simpan Perubahan</span>
                 </button>
                 
-                <a href="{{ route('user.dashboard') }}" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-center flex items-center justify-center space-x-2">
+                <a href="{{ route('user.dashboard') }}" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-center flex items-center justify-center space-x-2">
                     <i class="fas fa-arrow-left"></i>
                     <span>Kembali ke Dashboard</span>
                 </a>
@@ -380,19 +380,19 @@ function initializeLogoUpload() {
     // Drag and drop events
     dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropzone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        dropzone.classList.add('border-gray-500', 'bg-gray-50');
     });
 
     dropzone.addEventListener('dragleave', (e) => {
         e.preventDefault();
         if (!dropzone.contains(e.relatedTarget)) {
-            dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+            dropzone.classList.remove('border-gray-500', 'bg-gray-50');
         }
     });
 
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropzone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        dropzone.classList.remove('border-gray-500', 'bg-gray-50');
 
         const files = e.dataTransfer.files;
         if (files.length > 0) {
@@ -531,7 +531,7 @@ document.getElementById('business-form').addEventListener('submit', function(e) 
 @push('styles')
 <style>
 .drag-over {
-    @apply border-blue-500 bg-blue-50 dark:bg-blue-900/20;
+    @apply border-gray-500 bg-gray-50;
 }
 
 .upload-success {
@@ -544,32 +544,32 @@ document.getElementById('business-form').addEventListener('submit', function(e) 
     100% { transform: scale(1); }
 }
 
-/* CKEditor dark mode adjustments */
+/* CKEditor adjustments */
 .ck-editor__editable_inline {
     min-height: 200px;
 }
 
-.dark .ck.ck-editor {
-    border-color: rgb(75 85 99);
+.ck.ck-editor {
+    border-color: rgb(209 213 219);
 }
 
-.dark .ck.ck-editor__editable_inline {
-    background-color: rgb(55 65 81);
-    color: rgb(243 244 246);
-    border-color: rgb(75 85 99);
+.ck.ck-editor__editable_inline {
+    background-color: rgb(255 255 255);
+    color: rgb(17 24 39);
+    border-color: rgb(209 213 219);
 }
 
-.dark .ck.ck-toolbar {
-    background-color: rgb(75 85 99);
-    border-color: rgb(75 85 99);
+.ck.ck-toolbar {
+    background-color: rgb(249 250 251);
+    border-color: rgb(209 213 219);
 }
 
-.dark .ck.ck-button {
-    color: rgb(209 213 219);
+.ck.ck-button {
+    color: rgb(75 85 99);
 }
 
-.dark .ck.ck-button:hover {
-    background-color: rgb(55 65 81);
+.ck.ck-button:hover {
+    background-color: rgb(243 244 246);
 }
 </style>
 @endpush

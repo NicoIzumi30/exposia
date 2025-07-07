@@ -8,27 +8,27 @@
 <!-- Page Header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between animate-fade-in mb-8">
     <div>
-        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
             AI Konten Generator
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2 transition-colors duration-300">
+        <p class="text-gray-600 mt-2 transition-colors duration-300">
             Buat deskripsi profesional, headline menarik, dan konten SEO-friendly dengan bantuan AI
         </p>
     </div>
 </div>
 
 <!-- Tabs Container -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <!-- Tabs Navigation -->
-    <div class="border-b border-gray-200 dark:border-gray-700">
+    <div class="border-b border-gray-200">
         <div class="flex">
-            <button id="tab-business-description" class="tab-button active py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-blue-500 focus:outline-none">
+            <button id="tab-business-description" class="tab-button active py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-gray-500 focus:outline-none">
                 Deskripsi Bisnis
             </button>
-            <button id="tab-product-description" class="tab-button py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-blue-500 focus:outline-none">
+            <button id="tab-product-description" class="tab-button py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-gray-500 focus:outline-none">
                 Deskripsi Produk
             </button>
-            <button id="tab-headline" class="tab-button py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-blue-500 focus:outline-none">
+            <button id="tab-headline" class="tab-button py-4 px-6 text-sm font-medium border-b-2 border-transparent hover:border-gray-500 focus:outline-none">
                 Headline & Tagline
             </button>
         </div>
@@ -42,73 +42,73 @@
                 <!-- Input Form -->
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-building text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi Bisnis</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Masukkan detail untuk membuat deskripsi</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Informasi Bisnis</h2>
+                            <p class="text-sm text-gray-600">Masukkan detail untuk membuat deskripsi</p>
                         </div>
                     </div>
 
                     <form id="business-description-form" class="space-y-4">
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-store mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-store mr-2 text-gray-600"></i>
                                 Nama Bisnis <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="business_name" value="{{ $business->business_name ?? '' }}" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Batik Nusantara">
+                            <input type="text" name="business_name" value="{{ $business->business_name ?? '' }}" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Batik Nusantara">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-tags mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-tags mr-2 text-gray-600"></i>
                                 Jenis Bisnis <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="business_type" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kerajinan Batik / Katering Makanan">
+                            <input type="text" name="business_type" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kerajinan Batik / Katering Makanan">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-map-marker-alt mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-map-marker-alt mr-2 text-gray-600"></i>
                                 Lokasi <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="location" value="Yogyakarta" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Yogyakarta / Jakarta Selatan">
+                            <input type="text" name="location" value="Yogyakarta" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Yogyakarta / Jakarta Selatan">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-shopping-bag mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-shopping-bag mr-2 text-gray-600"></i>
                                 Produk/Layanan Utama <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <textarea name="main_products" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Batik cap tradisional, Batik tulis premium, Kain batik meteran"></textarea>
+                            <textarea name="main_products" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Batik cap tradisional, Batik tulis premium, Kain batik meteran"></textarea>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-award mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-award mr-2 text-gray-600"></i>
                                 Keunggulan Bisnis <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <textarea name="strengths" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Menggunakan pewarna alami, Motif eksklusif, Pengalaman 15 tahun"></textarea>
+                            <textarea name="strengths" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Menggunakan pewarna alami, Motif eksklusif, Pengalaman 15 tahun"></textarea>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-users mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-users mr-2 text-gray-600"></i>
                                 Target Pasar <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="target_market" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pecinta batik, Kolektor, Wisatawan domestik">
+                            <input type="text" name="target_market" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pecinta batik, Kolektor, Wisatawan domestik">
                         </div>
 
                         <div class="flex items-center mt-2 mb-4">
-                            <input type="checkbox" id="use-structured-format-business" name="use_structured_format" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="use-structured-format-business" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                            <input type="checkbox" id="use-structured-format-business" name="use_structured_format" class="h-4 w-4 text-gray-800 border-gray-300 rounded focus:ring-gray-500">
+                            <label for="use-structured-format-business" class="ml-2 text-sm text-gray-700">
                                 Gunakan format terstruktur (JSON)
                             </label>
                         </div>
 
                         <div class="pt-4">
-                            <button type="submit" id="generate-business-description-btn" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button type="submit" id="generate-business-description-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-robot"></i>
                                 <span>Buat Deskripsi dengan AI</span>
                             </button>
@@ -119,20 +119,20 @@
                 <!-- Result Area -->
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-file-alt text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Hasil Deskripsi</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Deskripsi yang dihasilkan oleh AI</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Hasil Deskripsi</h2>
+                            <p class="text-sm text-gray-600">Deskripsi yang dihasilkan oleh AI</p>
                         </div>
                     </div>
 
                     <!-- Loading Indicator -->
                     <div id="business-description-loading" class="hidden">
                         <div class="flex flex-col items-center justify-center py-12">
-                            <div class="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
-                            <p class="text-gray-600 dark:text-gray-400 text-center">
+                            <div class="w-16 h-16 border-4 border-t-gray-600 border-r-transparent border-b-gray-600 border-l-transparent rounded-full animate-spin mb-4"></div>
+                            <p class="text-gray-600 text-center">
                                 Sedang membuat deskripsi bisnis Anda...<br>
                                 <span class="text-sm">Mohon tunggu beberapa saat</span>
                             </p>
@@ -142,57 +142,57 @@
                     <!-- Result Content -->
                     <div id="business-description-result" class="hidden space-y-6">
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-quote-left mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-quote-left mr-2 text-gray-600"></i>
                                 Deskripsi Singkat <span class="text-xs text-gray-500 ml-2">(Meta Description)</span>
                             </label>
                             <div class="relative">
-                                <textarea id="short-description-result" rows="3" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"></textarea>
-                                <button onclick="copyToClipboard('short-description-result')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <textarea id="short-description-result" rows="3" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200"></textarea>
+                                <button onclick="copyToClipboard('short-description-result')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
                             <div class="flex justify-between items-center mt-1">
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Ideal untuk SEO dan preview di Google</p>
+                                <p class="text-xs text-gray-500">Ideal untuk SEO dan preview di Google</p>
                                 <span class="text-xs text-gray-400" id="short-desc-count">0/160</span>
                             </div>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-file-alt mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-file-alt mr-2 text-gray-600"></i>
                                 Deskripsi Lengkap <span class="text-xs text-gray-500 ml-2">(About Us)</span>
                             </label>
                             <div class="relative">
-                                <textarea id="full-description-result" rows="10" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"></textarea>
-                                <button onclick="copyToClipboard('full-description-result')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <textarea id="full-description-result" rows="10" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200"></textarea>
+                                <button onclick="copyToClipboard('full-description-result')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
                         </div>
 
                         <div class="flex space-x-4 pt-4">
-                            <button id="save-business-description-btn" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button id="save-business-description-btn" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-save"></i>
                                 <span>Simpan ke Profil Bisnis</span>
                             </button>
-                            <button id="regenerate-business-description-btn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center">
+                            <button id="regenerate-business-description-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 flex items-center justify-center">
                                 <i class="fas fa-redo"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- Initial State -->
-                    <div id="business-description-initial" class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <div id="business-description-initial" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                             <i class="fas fa-robot text-2xl text-gray-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Buat Deskripsi Bisnis dengan AI</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Buat Deskripsi Bisnis dengan AI</h3>
+                        <p class="text-gray-600 mb-6">
                             Isi informasi bisnis dan klik tombol "Buat Deskripsi dengan AI"
                             untuk membuat deskripsi profesional secara otomatis.
                         </p>
-                        <div class="text-xs text-gray-500 dark:text-gray-500 flex items-center justify-center">
+                        <div class="text-xs text-gray-500 flex items-center justify-center">
                             <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
                             <span>Tips: Semakin detail informasi yang dimasukkan, semakin baik hasilnya</span>
                         </div>
@@ -207,22 +207,22 @@
                 <!-- Input Form -->
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-box text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi Produk</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Masukkan detail untuk membuat deskripsi produk</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Informasi Produk</h2>
+                            <p class="text-sm text-gray-600">Masukkan detail untuk membuat deskripsi produk</p>
                         </div>
                     </div>
 
                     <form id="product-description-form" class="space-y-4">
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-tag mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-tag mr-2 text-gray-600"></i>
                                 Pilih Produk <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <select id="product_id" name="product_id" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200">
+                            <select id="product_id" name="product_id" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200">
                                 <option value="">-- Pilih Produk --</option>
                                 @foreach($products as $product)
                                 <option value="{{ $product->id }}" data-name="{{ $product->product_name }}" data-price="{{ format_currency($product->product_price) }}">{{ $product->product_name }}</option>
@@ -231,14 +231,14 @@
                         </div>
 
                         <!-- Product Info Display -->
-                        <div id="product-info-display" class="hidden mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div id="product-info-display" class="hidden mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
                             <div class="flex items-center">
-                                <div class="mr-4 w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-box text-blue-500 dark:text-blue-400"></i>
+                                <div class="mr-4 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-box text-gray-600"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-medium text-gray-900 dark:text-white" id="product-name-display"></h3>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" id="product-price-display"></p>
+                                    <h3 class="font-medium text-gray-900" id="product-name-display"></h3>
+                                    <p class="text-sm text-gray-600" id="product-price-display"></p>
                                 </div>
                             </div>
                         </div>
@@ -248,46 +248,46 @@
                         <input type="hidden" name="price" id="product_price">
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-layer-group mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-layer-group mr-2 text-gray-600"></i>
                                 Kategori <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="category" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Fashion / Kerajinan / Makanan">
+                            <input type="text" name="category" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Fashion / Kerajinan / Makanan">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-list-ul mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-list-ul mr-2 text-gray-600"></i>
                                 Fitur Utama <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <textarea name="features" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kain katun premium, Pewarna alami, Ukuran 2x1 meter"></textarea>
+                            <textarea name="features" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kain katun premium, Pewarna alami, Ukuran 2x1 meter"></textarea>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-heart mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-heart mr-2 text-gray-600"></i>
                                 Manfaat Produk <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <textarea name="benefits" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Nyaman dipakai, Tahan lama, Eksklusif"></textarea>
+                            <textarea name="benefits" rows="2" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Nyaman dipakai, Tahan lama, Eksklusif"></textarea>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-user-tag mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user-tag mr-2 text-gray-600"></i>
                                 Target Pengguna <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <input type="text" name="target_user" required class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pria dewasa / Pecinta fashion / Kolektor">
+                            <input type="text" name="target_user" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pria dewasa / Pecinta fashion / Kolektor">
                         </div>
 
                         <div class="flex items-center mt-2 mb-4">
-                            <input type="checkbox" id="use-structured-format-product" name="use_structured_format" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="use-structured-format-product" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                            <input type="checkbox" id="use-structured-format-product" name="use_structured_format" class="h-4 w-4 text-gray-800 border-gray-300 rounded focus:ring-gray-500">
+                            <label for="use-structured-format-product" class="ml-2 text-sm text-gray-700">
                                 Gunakan format terstruktur (JSON)
                             </label>
                         </div>
 
                         <div class="pt-4">
-                            <button type="submit" id="generate-product-description-btn" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button type="submit" id="generate-product-description-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-robot"></i>
                                 <span>Buat Deskripsi Produk dengan AI</span>
                             </button>
@@ -299,18 +299,18 @@
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                            <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-4">
                                 <i class="fas fa-file-alt text-white"></i>
                             </div>
                             <div>
-                                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Deskripsi Produk</h2>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Hasil dari AI Generator</p>
+                                <h2 class="text-lg font-semibold text-gray-900">Deskripsi Produk</h2>
+                                <p class="text-sm text-gray-600">Hasil dari AI Generator</p>
                             </div>
                         </div>
 
                         <!-- Product Selector for Saving -->
                         <div class="relative hidden">
-                            <select id="product-selector" class="px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200">
+                            <select id="product-selector" class="px-4 py-2 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:outline-none transition-all duration-200">
                                 <option value="">-- Pilih Produk --</option>
                                 @foreach($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->product_name }}</option>
@@ -322,8 +322,8 @@
                     <!-- Loading Indicator -->
                     <div id="product-description-loading" class="hidden">
                         <div class="flex flex-col items-center justify-center py-12">
-                            <div class="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
-                            <p class="text-gray-600 dark:text-gray-400 text-center">
+                            <div class="w-16 h-16 border-4 border-t-gray-600 border-r-transparent border-b-gray-600 border-l-transparent rounded-full animate-spin mb-4"></div>
+                            <p class="text-gray-600 text-center">
                                 Sedang membuat deskripsi produk...<br>
                                 <span class="text-sm">Mohon tunggu beberapa saat</span>
                             </p>
@@ -333,13 +333,13 @@
                     <!-- Result Content -->
                     <div id="product-description-result" class="hidden space-y-6">
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-file-alt mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-file-alt mr-2 text-gray-600"></i>
                                 Deskripsi Produk <span class="text-xs text-gray-500 ml-2">(Untuk halaman produk)</span>
                             </label>
                             <div class="relative">
-                                <textarea id="product-description-result-text" rows="12" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"></textarea>
-                                <button onclick="copyToClipboard('product-description-result-text')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <textarea id="product-description-result-text" rows="12" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200"></textarea>
+                                <button onclick="copyToClipboard('product-description-result-text')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
@@ -347,50 +347,50 @@
 
                         <!-- Key Features Section (for structured format) -->
                         <div id="product-key-features-section" class="hidden">
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-list mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-list mr-2 text-gray-600"></i>
                                 Fitur Utama
                             </label>
-                            <div id="product-key-features" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                            <div id="product-key-features" class="p-4 bg-gray-50 rounded-xl">
                                 <!-- Key features will be inserted here -->
                             </div>
                         </div>
 
                         <!-- Meta Description (for structured format) -->
                         <div id="product-meta-description-section" class="hidden">
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-search mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-search mr-2 text-gray-600"></i>
                                 Meta Description <span class="text-xs text-gray-500 ml-2">(Untuk SEO)</span>
                             </label>
                             <div class="relative">
-                                <textarea id="product-meta-description" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200"></textarea>
-                                <button onclick="copyToClipboard('product-meta-description')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <textarea id="product-meta-description" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200"></textarea>
+                                <button onclick="copyToClipboard('product-meta-description')" class="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
                         </div>
 
                         <div class="flex space-x-4 pt-4">
-                            <button id="save-product-description-btn" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button id="save-product-description-btn" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-save"></i>
                                 <span>Simpan ke Produk</span>
                             </button>
-                            <button id="regenerate-product-description-btn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center">
+                            <button id="regenerate-product-description-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 flex items-center justify-center">
                                 <i class="fas fa-redo"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- Initial State -->
-                    <div id="product-description-initial" class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <div id="product-description-initial" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                             <i class="fas fa-shopping-bag text-2xl text-gray-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Buat Deskripsi Produk dengan AI</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Buat Deskripsi Produk dengan AI</h3>
+                        <p class="text-gray-600 mb-6">
                             Pilih produk yang sudah ada dan isi informasi tambahan untuk membuat deskripsi produk yang menarik dan persuasif.
                         </p>
-                        <div class="text-xs text-gray-500 dark:text-gray-500 flex items-center justify-center">
+                        <div class="text-xs text-gray-500 flex items-center justify-center">
                             <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
                             <span>Tips: Sebutkan manfaat utama dan keunikan produk Anda</span>
                         </div>
@@ -405,22 +405,22 @@
                 <!-- Input Form -->
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-heading text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi untuk Headline</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Tambahan informasi untuk membuat headline menarik</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Informasi untuk Headline</h2>
+                            <p class="text-sm text-gray-600">Tambahan informasi untuk membuat headline menarik</p>
                         </div>
                     </div>
 
                     <!-- Info box showing that business data is being used -->
-                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
                         <div class="flex items-start space-x-3">
-                            <i class="fas fa-info-circle text-blue-500 dark:text-blue-400 mt-0.5"></i>
+                            <i class="fas fa-info-circle text-gray-600 mt-0.5"></i>
                             <div>
-                                <h4 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">Headline dibuat berdasarkan data bisnis Anda</h4>
-                                <p class="text-xs text-blue-600 dark:text-blue-300">
+                                <h4 class="text-sm font-medium text-gray-800 mb-1">Headline dibuat berdasarkan data bisnis Anda</h4>
+                                <p class="text-xs text-gray-600">
                                     Sistem akan menggunakan data bisnis yang sudah Anda isi di profil bisnis Anda, seperti nama bisnis, deskripsi singkat, dan deskripsi lengkap.
                                 </p>
                             </div>
@@ -428,23 +428,23 @@
                     </div>
 
                     <!-- Business data summary box -->
-                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Data Bisnis yang Digunakan:</h3>
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Data Bisnis yang Digunakan:</h3>
                         <div class="space-y-2 text-sm">
                             <div class="flex items-start">
-                                <span class="text-gray-600 dark:text-gray-400 min-w-28">Nama Bisnis:</span>
-                                <span class="text-gray-900 dark:text-white ml-2 font-medium">{{ $business->business_name ?? 'Belum diisi' }}</span>
+                                <span class="text-gray-600 min-w-28">Nama Bisnis:</span>
+                                <span class="text-gray-900 ml-2 font-medium">{{ $business->business_name ?? 'Belum diisi' }}</span>
                             </div>
                             @if($business && $business->short_description)
                             <div class="flex items-start">
-                                <span class="text-gray-600 dark:text-gray-400 min-w-28">Deskripsi Singkat:</span>
-                                <span class="text-gray-900 dark:text-white ml-2">{{ \Illuminate\Support\Str::limit($business->short_description, 50) }}</span>
+                                <span class="text-gray-600 min-w-28">Deskripsi Singkat:</span>
+                                <span class="text-gray-900 ml-2">{{ \Illuminate\Support\Str::limit($business->short_description, 50) }}</span>
                             </div>
                             @endif
                             @if($business && $business->full_description)
                             <div class="flex items-start">
-                                <span class="text-gray-600 dark:text-gray-400 min-w-28">Deskripsi Lengkap:</span>
-                                <span class="text-gray-900 dark:text-white ml-2">{{ \Illuminate\Support\Str::limit($business->full_description, 100) }}</span>
+                                <span class="text-gray-600 min-w-28">Deskripsi Lengkap:</span>
+                                <span class="text-gray-900 ml-2">{{ \Illuminate\Support\Str::limit($business->full_description, 100) }}</span>
                             </div>
                             @endif
                         </div>
@@ -452,40 +452,39 @@
 
                     <form id="headline-form" class="space-y-4">
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-tags mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-tags mr-2 text-gray-600"></i>
                                 Jenis Bisnis <span class="text-xs text-gray-500 ml-1">(Opsional)</span>
                             </label>
-                            <input type="text" name="business_type" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kerajinan Batik / Katering Makanan">
+                            <input type="text" name="business_type" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kerajinan Batik / Katering Makanan">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-users mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-users mr-2 text-gray-600"></i>
                                 Target Pasar <span class="text-xs text-gray-500 ml-1">(Opsional)</span>
                             </label>
-                            <input type="text" name="target_market" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pecinta batik, Kolektor, Wisatawan domestik">
+                            <input type="text" name="target_market" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Pecinta batik, Kolektor, Wisatawan domestik">
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-heart mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-heart mr-2 text-gray-600"></i>
                                 Nilai Utama Bisnis <span class="text-xs text-gray-500 ml-1">(Opsional)</span>
                             </label>
-                            <textarea name="core_values" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kualitas premium, Pelayanan ramah, Keberlanjutan"></textarea>
+                            <textarea name="core_values" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Kualitas premium, Pelayanan ramah, Keberlanjutan"></textarea>
                         </div>
 
                         <div>
-                            <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-award mr-2 text-blue-500 dark:text-blue-400"></i>
+                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-award mr-2 text-gray-600"></i>
                                 Keunggulan Bisnis <span class="text-xs text-gray-500 ml-1">(Opsional)</span>
                             </label>
-                            <textarea name="strengths" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Menggunakan pewarna alami, Motif eksklusif, Pengalaman 15 tahun"></textarea>
+                            <textarea name="strengths" rows="2" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:border-gray-800 focus:ring-2 focus:ring-gray-800/20 focus:outline-none transition-all duration-200" placeholder="Contoh: Menggunakan pewarna alami, Motif eksklusif, Pengalaman 15 tahun"></textarea>
                         </div>
 
-
                         <div class="pt-4">
-                            <button type="submit" id="generate-headline-btn" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button type="submit" id="generate-headline-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-robot"></i>
                                 <span>Buat Headline dengan AI</span>
                             </button>
@@ -495,20 +494,20 @@
                 <!-- Result Area -->
                 <div class="space-y-6 animate-slide-up">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-bullhorn text-white"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Hasil Headline</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Headline & tagline yang dihasilkan oleh AI</p>
+                            <h2 class="text-lg font-semibold text-gray-900">Hasil Headline</h2>
+                            <p class="text-sm text-gray-600">Headline & tagline yang dihasilkan oleh AI</p>
                         </div>
                     </div>
 
                     <!-- Loading Indicator -->
                     <div id="headline-loading" class="hidden">
                         <div class="flex flex-col items-center justify-center py-12">
-                            <div class="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
-                            <p class="text-gray-600 dark:text-gray-400 text-center">
+                            <div class="w-16 h-16 border-4 border-t-gray-600 border-r-transparent border-b-gray-600 border-l-transparent rounded-full animate-spin mb-4"></div>
+                            <p class="text-gray-600 text-center">
                                 Sedang membuat headline menarik...<br>
                                 <span class="text-sm">Mohon tunggu beberapa saat</span>
                             </p>
@@ -524,7 +523,7 @@
                         </div>
 
                         <div class="flex space-x-4 pt-4">
-                            <button id="regenerate-headline-btn" class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                            <button id="regenerate-headline-btn" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-sync-alt"></i>
                                 <span>Buat Headline Baru</span>
                             </button>
@@ -532,16 +531,16 @@
                     </div>
 
                     <!-- Initial State -->
-                    <div id="headline-initial" class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <div id="headline-initial" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                             <i class="fas fa-heading text-2xl text-gray-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Buat Headline & Tagline dengan AI</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Buat Headline & Tagline dengan AI</h3>
+                        <p class="text-gray-600 mb-6">
                             Isi informasi bisnis dan klik tombol "Buat Headline dengan AI"
                             untuk membuat headline dan tagline yang menarik dan mudah diingat.
                         </p>
-                        <div class="text-xs text-gray-500 dark:text-gray-500 flex items-center justify-center">
+                        <div class="text-xs text-gray-500 flex items-center justify-center">
                             <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
                             <span>Tips: Headline yang baik menunjukkan nilai utama bisnis Anda</span>
                         </div>
@@ -563,14 +562,14 @@
             button.addEventListener('click', () => {
                 tabButtons.forEach(btn => {
                     btn.classList.remove('active');
-                    btn.classList.remove('text-blue-600', 'dark:text-blue-400', 'border-blue-500');
+                    btn.classList.remove('text-gray-800', 'border-gray-600');
                 });
                 tabContents.forEach(content => {
                     content.classList.remove('active');
                     content.classList.add('hidden');
                 });
                 button.classList.add('active');
-                button.classList.add('text-blue-600', 'dark:text-blue-400', 'border-blue-500');
+                button.classList.add('text-gray-800', 'border-gray-600');
                 const contentId = 'content-' + button.id.replace('tab-', '');
                 const content = document.getElementById(contentId);
                 content.classList.add('active');
@@ -747,7 +746,7 @@
                                     featuresList.className = 'list-disc pl-5 space-y-2';
                                     content.key_features.forEach(feature => {
                                         const listItem = document.createElement('li');
-                                        listItem.className = 'text-gray-800 dark:text-gray-200';
+                                        listItem.className = 'text-gray-800';
                                         listItem.textContent = feature;
                                         featuresList.appendChild(listItem);
                                     });
@@ -857,7 +856,7 @@
                                 const headlines = data.content.headlines;
                                 headlines.forEach((headline, index) => {
                                     const optionDiv = document.createElement('div');
-                                    optionDiv.className = 'relative p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl hover:shadow-md transition-all duration-200';
+                                    optionDiv.className = 'relative p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200';
                                     let styleTag = '';
                                     if (headline.style) {
                                         const styleColorClass = getStyleColorClass(headline.style);
@@ -866,13 +865,13 @@
                                     optionDiv.innerHTML = `
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
+                                        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 mr-3">
                                             <span>${index + 1}</span>
                                         </div>
-                                        <p class="text-gray-900 dark:text-white font-medium">${headline.text || headline}</p>
+                                        <p class="text-gray-900 font-medium">${headline.text || headline}</p>
                                         ${styleTag}
                                     </div>
-                                    <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                         <i class="fas fa-copy"></i>
                                     </button>
                                 </div>`;
@@ -883,16 +882,16 @@
                                 const headlines = content.split('\n').filter(line => line.trim().length > 0).filter(line => /^\d+[\.\)\-]|^\-|\*/.test(line.trim())).map(line => line.replace(/^\d+[\.\)\-]|\-|\*/, '').trim());
                                 headlines.forEach((headline, index) => {
                                     const optionDiv = document.createElement('div');
-                                    optionDiv.className = 'relative p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl hover:shadow-md transition-all duration-200';
+                                    optionDiv.className = 'relative p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200';
                                     optionDiv.innerHTML = `
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
+                                        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 mr-3">
                                             <span>${index + 1}</span>
                                         </div>
-                                        <p class="text-gray-900 dark:text-white font-medium">${headline}</p>
+                                        <p class="text-gray-900 font-medium">${headline}</p>
                                     </div>
-                                    <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <button onclick="copyHeadline(this)" class="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                                         <i class="fas fa-copy"></i>
                                     </button>
                                 </div>`;
@@ -923,10 +922,10 @@
 
         function getStyleColorClass(style) {
             style = style.toLowerCase();
-            if (style.includes('profesional')) return 'text-blue-500 dark:text-blue-400 bg-blue-500';
-            if (style.includes('catchy') || style.includes('menarik')) return 'text-purple-500 dark:text-purple-400 bg-purple-500';
-            if (style.includes('motivasi') || style.includes('inspiratif')) return 'text-yellow-500 dark:text-yellow-400 bg-yellow-500';
-            return 'text-gray-500 dark:text-gray-400 bg-gray-500';
+            if (style.includes('profesional')) return 'text-gray-600 bg-gray-600';
+            if (style.includes('catchy') || style.includes('menarik')) return 'text-gray-700 bg-gray-700';
+            if (style.includes('motivasi') || style.includes('inspiratif')) return 'text-gray-800 bg-gray-800';
+            return 'text-gray-500 bg-gray-500';
         }
     });
 
@@ -944,22 +943,22 @@
     }
 </script>
 @endpush
+
 @push('styles')
 <style>
     /* Tab Styles */
     .tab-button.active {
-        @apply text-blue-600 dark: text-blue-400 border-blue-500;
+        @apply text-gray-800 border-gray-600;
     }
 
     /* Copy button hover effect */
     .copy-btn:hover {
-        @apply text-blue-600 dark: text-blue-400;
+        @apply text-gray-800;
     }
 
     /* Headline options hover effect */
     .headline-option:hover {
         @apply shadow-md;
     }
-
 </style>
 @endpush

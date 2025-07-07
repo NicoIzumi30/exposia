@@ -9,16 +9,16 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between animate-fade-in mb-8">
         <div>
             <h1
-                class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text text-transparent">
+                class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
                 Galeri Foto
             </h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2 transition-colors duration-300">
+            <p class="text-gray-600 mt-2 transition-colors duration-300">
                 Upload dan kelola foto produk atau layanan bisnis Anda
             </p>
         </div>
         <div class="mt-4 sm:mt-0">
             <button onclick="openGalleryModal()"
-                class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center space-x-2">
+                class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-2">
                 <i class="fas fa-plus"></i>
                 <span>Upload Foto</span>
             </button>
@@ -33,10 +33,10 @@
                 <!-- Gallery Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="galleryContainer">
                     @foreach ($galleries as $gallery)
-                        <div class="gallery-item bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up"
+                        <div class="gallery-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 animate-slide-up"
                             data-gallery-id="{{ $gallery->id }}">
                             <!-- Image Container -->
-                            <div class="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden group">
+                            <div class="relative aspect-square bg-gray-100 overflow-hidden group">
                                 <img src="{{ $gallery->image_url }}" alt="Gallery Image"
                                     class="w-full h-full object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
                                     onclick="openLightbox('{{ $gallery->image_url }}', '{{ $gallery->display_name }} - {{ $gallery->formatted_file_size }}')">
@@ -55,11 +55,11 @@
 
                             <!-- Image Info -->
                             <div class="p-4">
-                                <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">
+                                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">
                                     {{ $gallery->display_name }}
                                 </h3>
 
-                                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                <div class="flex items-center justify-between text-sm text-gray-500">
                                     <span>{{ $gallery->created_at->format('d M Y') }}</span>
 
                                     <button
@@ -82,17 +82,17 @@
             @else
                 <!-- Empty State -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center animate-slide-up">
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center animate-slide-up">
                     <div
-                        class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                        class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-images text-3xl text-gray-400"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Belum Ada Foto</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Foto</h3>
+                    <p class="text-gray-600 mb-6 max-w-md mx-auto">
                         Upload foto-foto terbaik untuk menampilkan produk dan layanan bisnis Anda.
                     </p>
                     <button onclick="openGalleryModal()"
-                        class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                        class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         <i class="fas fa-plus mr-2"></i>
                         Upload Foto Pertama
                     </button>
@@ -104,33 +104,33 @@
         <div class="lg:col-span-1 space-y-6">
             <!-- Gallery Stats -->
             <div
-                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 animate-slide-up">
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-slide-up">
                 <div class="flex items-center mb-4">
                     <div
-                        class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-images text-white"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Galeri</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">Galeri</h3>
                     </div>
                 </div>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">Total Foto</span>
+                        <span class="text-gray-600">Total Foto</span>
                         <span
-                            class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $galleryStats['total'] }}</span>
+                            class="text-2xl font-bold text-gray-800">{{ $galleryStats['total'] }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">Sisa Slot</span>
+                        <span class="text-gray-600">Sisa Slot</span>
                         <span
-                            class="text-lg font-semibold text-green-600 dark:text-green-400">{{ $galleryStats['remaining'] }}</span>
+                            class="text-lg font-semibold text-green-600">{{ $galleryStats['remaining'] }}</span>
                     </div>
                     @if ($galleryStats['total'] > 0)
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full"
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gray-800 h-2 rounded-full"
                                 style="width: {{ ($galleryStats['total'] / 10) * 100 }}%"></div>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        <p class="text-xs text-gray-500 text-center">
                             {{ $galleryStats['total'] }} dari 10 foto
                         </p>
                     @endif
@@ -139,28 +139,28 @@
 
             <!-- Tips -->
             <div
-                class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-6 animate-slide-up">
+                class="bg-gray-50 rounded-xl border border-gray-200 p-6 animate-slide-up">
                 <div class="flex items-center mb-4">
-                    <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center mr-3">
+                    <div class="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-lightbulb text-white text-sm"></i>
                     </div>
-                    <h4 class="font-semibold text-amber-800 dark:text-amber-200">Tips</h4>
+                    <h4 class="font-semibold text-gray-800">Tips</h4>
                 </div>
-                <ul class="space-y-2 text-sm text-amber-700 dark:text-amber-300">
+                <ul class="space-y-2 text-sm text-gray-700">
                     <li class="flex items-start space-x-2">
-                        <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                        <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                         <span>Upload foto berkualitas tinggi dengan pencahayaan yang baik</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                        <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                        <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                         <span>Maksimal 8 foto untuk galeri bisnis</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                        <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                        <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                         <span>Pilih foto yang menampilkan produk/layanan terbaik</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                        <i class="fas fa-check-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+                        <i class="fas fa-check-circle text-gray-600 mt-0.5 flex-shrink-0"></i>
                         <span>Format yang didukung: JPG, PNG, WebP</span>
                     </li>
                 </ul>
@@ -168,7 +168,7 @@
 
             <!-- Back to Dashboard -->
             <a href="{{ route('user.dashboard') }}"
-                class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-center flex items-center justify-center space-x-2">
+                class="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-center flex items-center justify-center space-x-2">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali ke Dashboard</span>
             </a>
@@ -178,18 +178,18 @@
     <!-- Gallery Upload Modal -->
     <div id="galleryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75"
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
                 aria-hidden="true" onclick="closeGalleryModal()"></div>
 
             <div
-                class="inline-block w-full max-w-3xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
+                class="inline-block w-full max-w-3xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 class="text-lg font-semibold text-gray-900">
                         Upload Foto Galeri
                     </h3>
                     <button onclick="closeGalleryModal()"
-                        class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -200,30 +200,30 @@
 
                     <!-- Image Upload Area -->
                     <div class="mb-6">
-                        <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                            <i class="fas fa-images mr-2 text-purple-500"></i>
+                        <label class="flex items-center text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-images mr-2 text-gray-600"></i>
                             Pilih Foto <span class="text-red-500 ml-1">*</span>
                         </label>
 
                         <!-- Upload Dropzone -->
-                        <div class="image-upload-dropzone relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-300 cursor-pointer group"
+                        <div class="image-upload-dropzone relative border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-500 transition-all duration-300 cursor-pointer group"
                             id="imageDropzone">
                             <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*" multiple
                                 class="hidden">
 
                             <div class="upload-placeholder" id="imageUploadPlaceholder">
                                 <div
-                                    class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20 transition-colors duration-300">
+                                    class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
                                     <i
-                                        class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors duration-300"></i>
+                                        class="fas fa-cloud-upload-alt text-2xl text-gray-400 group-hover:text-gray-600 transition-colors duration-300"></i>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                                <p class="text-sm font-medium text-gray-900 mb-2">
                                     Upload foto galeri
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                <p class="text-xs text-gray-500">
                                     PNG, JPG, WebP • Max 5MB per foto • Max 8 foto total
                                 </p>
-                                <p class="text-xs text-purple-600 dark:text-purple-400 mt-2">
+                                <p class="text-xs text-gray-600 mt-2">
                                     Klik atau seret foto ke sini
                                 </p>
                             </div>
@@ -231,23 +231,23 @@
 
                         <!-- Image Previews Container -->
                         <div id="imagePreviewsContainer" class="hidden mt-6">
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Foto yang akan diupload:
+                            <h4 class="text-sm font-medium text-gray-700 mb-4">Foto yang akan diupload:
                             </h4>
                             <div id="imagePreviews" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
                         </div>
 
-                        <div class="error-message hidden mt-1 text-sm text-red-600 dark:text-red-400"></div>
+                        <div class="error-message hidden mt-1 text-sm text-red-600"></div>
                     </div>
 
                     <!-- Modal Actions -->
-                    <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
                         <button type="submit" id="submitBtn"
-                            class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center space-x-2">
+                            class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center space-x-2">
                             <i class="fas fa-upload"></i>
                             <span>Upload Foto</span>
                         </button>
                         <button type="button" onclick="closeGalleryModal()"
-                            class="flex-1 sm:flex-none bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                            class="flex-1 sm:flex-none bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Batal
                         </button>
                     </div>
@@ -441,19 +441,19 @@
 
             dropzone.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                dropzone.classList.add('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+                dropzone.classList.add('border-gray-500', 'bg-gray-50');
             });
 
             dropzone.addEventListener('dragleave', (e) => {
                 e.preventDefault();
                 if (!dropzone.contains(e.relatedTarget)) {
-                    dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+                    dropzone.classList.remove('border-gray-500', 'bg-gray-50');
                 }
             });
 
             dropzone.addEventListener('drop', (e) => {
                 e.preventDefault();
-                dropzone.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-900/20');
+                dropzone.classList.remove('border-gray-500', 'bg-gray-50');
                 const files = Array.from(e.dataTransfer.files);
                 if (files.length > 0) {
                     const validFiles = files.filter(file => file.type.startsWith('image/'));
@@ -514,13 +514,13 @@
                 reader.onload = (e) => {
                     const previewItem = document.createElement('div');
                     previewItem.className =
-                        'relative bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden';
+                        'relative bg-white rounded-lg border border-gray-200 overflow-hidden';
                     previewItem.innerHTML = `
                 <div class="aspect-square">
                     <img src="${e.target.result}" alt="${file.name}" class="w-full h-full object-cover">
                 </div>
                 <div class="p-3">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 truncate">${file.name}</p>
+                    <p class="text-xs text-gray-600 truncate">${file.name}</p>
                 </div>
                 <button type="button" onclick="removeFilePreview(${index})" class="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center">
                     <i class="fas fa-times text-xs"></i>
@@ -575,9 +575,9 @@
 
         function updateGalleryStats(stats) {
             if (stats) {
-                const totalElement = document.querySelector('.text-2xl.font-bold.text-purple-600');
+                const totalElement = document.querySelector('.text-2xl.font-bold.text-gray-800');
                 const remainingElement = document.querySelector('.text-lg.font-semibold.text-green-600');
-                const progressElement = document.querySelector('.w-full.bg-gray-200 .bg-gradient-to-r');
+                const progressElement = document.querySelector('.w-full.bg-gray-200 .bg-gray-800');
                 const progressText = document.querySelector('.text-xs.text-gray-500.text-center');
 
                 if (totalElement) totalElement.textContent = stats.total;
@@ -634,11 +634,11 @@
 
 @push('styles')
     <style>
-        #branchModal {
+        #galleryModal {
             backdrop-filter: blur(4px);
         }
 
-        #branchModal>div>div {
+        #galleryModal>div>div {
             animation: modalSlideIn 0.3s ease-out;
         }
 
@@ -654,11 +654,11 @@
             }
         }
 
-        .branch-card {
+        .gallery-item {
             transition: all 0.3s ease;
         }
 
-        .branch-card:hover {
+        .gallery-item:hover {
             transform: translateY(-2px);
         }
 
@@ -672,21 +672,41 @@
             transform: translateY(-1px);
         }
 
-        #branchModal .overflow-y-auto::-webkit-scrollbar {
+        #galleryModal .overflow-y-auto::-webkit-scrollbar {
             width: 6px;
         }
 
-        #branchModal .overflow-y-auto::-webkit-scrollbar-track {
+        #galleryModal .overflow-y-auto::-webkit-scrollbar-track {
             background: transparent;
         }
 
-        #branchModal .overflow-y-auto::-webkit-scrollbar-thumb {
+        #galleryModal .overflow-y-auto::-webkit-scrollbar-thumb {
             background: rgba(156, 163, 175, 0.5);
             border-radius: 3px;
         }
 
         .empty-state {
             animation: fadeInUp 0.6s ease-out;
+        }
+
+        .image-upload-dropzone {
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-dropzone:hover {
+            transform: translateY(-2px);
+        }
+
+        .image-upload-dropzone.drag-over {
+            border-color: rgb(107 114 128);
+            background-color: rgb(249 250 251);
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         @keyframes fadeInUp {
@@ -702,7 +722,7 @@
         }
 
         @media (max-width: 768px) {
-            #branchModal>div>div {
+            #galleryModal>div>div {
                 margin: 1rem;
                 max-height: calc(100vh - 2rem);
                 overflow-y: auto;

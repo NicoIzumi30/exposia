@@ -431,7 +431,7 @@
                 }
             }
         }
-
+        
         function scrollProductRight() {
             const scrollContainer = document.getElementById("productScroll");
             if (scrollContainer) {
