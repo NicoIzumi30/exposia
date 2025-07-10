@@ -19,7 +19,7 @@
                         <div data-aos="fade-up" data-aos-delay="{{ 100 + ($i % 3) * 100 }}"
                             class="col-start-{{ ($i % 3) + 1 }} row-start-{{ intdiv($i, 3) + 1 }} overflow-hidden rounded">
                             <button onclick="openModal({{ $i }})" class="hover-gallery block h-full w-full">
-                                <img src="{{ $data['images'][$i] }}" alt="Image"
+                                <img src="{{ $data['images'][$i]['url'] }}" alt="Image"
                                     class="hover-gallery-image h-full w-full object-cover" />
                             </button>
                         </div>
@@ -86,7 +86,7 @@
         const image = document.getElementById("modalImage");
         const counter = document.getElementById("imageCounter");
 
-        image.src = galleryImages[currentIndex];
+        image.src = galleryImages[currentIndex]['url'];
         counter.textContent = `${currentIndex + 1} / ${galleryImages.length}`;
     }
 

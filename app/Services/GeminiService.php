@@ -316,22 +316,22 @@ EOT;
         $targetMarket = $headlineInfo['target_market'] ?: '';
         $coreValues = $headlineInfo['core_values'] ?: '';
         $strengths = $headlineInfo['strengths'] ?: '';
-        
+
         // Bangun prompt berdasarkan data yang tersedia
         $businessContext = '';
-        
+
         if (!empty($shortDescription)) {
             $businessContext .= "Deskripsi singkat: $shortDescription\n";
         }
-        
+
         if (!empty($fullDescription)) {
             $businessContext .= "Deskripsi lengkap: $fullDescription\n";
         }
-        
+
         if (!empty($fullStory)) {
             $businessContext .= "Cerita bisnis: $fullStory\n";
         }
-        
+
         $prompt = <<<EOT
     Buat 5 headline/tagline menarik untuk bisnis "$businessName" ($businessType) dengan format berikut:
     
@@ -353,7 +353,7 @@ EOT;
     - Gunakan bahasa Indonesia yang efektif
     - Jangan tambahkan teks lain selain format yang diminta
     EOT;
-    
+
         return $this->generateContent($prompt);
     }
 
@@ -429,5 +429,279 @@ EOT;
         }
 
         return $headlines;
+    }
+    /**
+     * Generate chat response dengan business context
+     */
+    public function generateChatResponse($userMessage, $businessContext, $chatHistory = [])
+    {
+        $prompt = $this->buildChatPrompt($userMessage, $businessContext, $chatHistory);
+
+        try {
+            $response = $this->generateContent($prompt);
+
+            // Parse response untuk extract action jika ada
+            return $this->parseChatResponse($response, $businessContext);
+
+        } catch (\Exception $e) {
+            Log::error('Chat response generation error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Build comprehensive chat prompt
+     */
+    private function buildChatPrompt($userMessage, $businessContext, $chatHistory)
+    {
+        $businessInfo = $businessContext['business_info'];
+        $products = $businessContext['products'];
+        $branches = $businessContext['branches'];
+        $highlights = $businessContext['highlights'];
+
+        // Build context sections
+        $contextSections = [];
+
+        // Business basic info
+        $contextSections[] = "=== INFORMASI BISNIS ===";
+        $contextSections[] = "Nama: {$businessInfo['name']}";
+        if (!empty($businessInfo['description'])) {
+            $contextSections[] = "Deskripsi: {$businessInfo['description']}";
+        }
+        if (!empty($businessInfo['address'])) {
+            $contextSections[] = "Alamat: {$businessInfo['address']}";
+        }
+        if (!empty($businessInfo['operational_hours'])) {
+            $contextSections[] = "Jam Operasional: {$businessInfo['operational_hours']}";
+        }
+
+        // Products info
+        if (!empty($products)) {
+            $contextSections[] = "\n=== PRODUK UNGGULAN ===";
+            foreach ($products as $product) {
+                $contextSections[] = "• {$product['name']} - {$product['formatted_price']}";
+                if (!empty($product['description'])) {
+                    $contextSections[] = "  Deskripsi: " . substr($product['description'], 0, 100) . "...";
+                }
+            }
+        }
+
+        // Branches info
+        if (!empty($branches)) {
+            $contextSections[] = "\n=== LOKASI CABANG ===";
+            foreach ($branches as $branch) {
+                $contextSections[] = "• {$branch['name']}";
+                $contextSections[] = "  Alamat: {$branch['address']}";
+                if (!empty($branch['operational_hours'])) {
+                    $contextSections[] = "  Jam Buka: {$branch['operational_hours']}";
+                }
+            }
+        }
+
+        // Highlights/Keunggulan
+        if (!empty($highlights)) {
+            $contextSections[] = "\n=== KEUNGGULAN ===";
+            foreach ($highlights as $highlight) {
+                $contextSections[] = "• {$highlight['title']}: {$highlight['description']}";
+            }
+        }
+
+        $contextText = implode("\n", $contextSections);
+
+        // Build chat history context
+        $historyText = "";
+        if (!empty($chatHistory)) {
+            $historyText = "\n=== RIWAYAT PERCAKAPAN ===\n";
+            foreach (array_slice($chatHistory, -5) as $exchange) { // Last 5 exchanges
+                $historyText .= "Pengunjung: {$exchange['user']}\n";
+                $historyText .= "Customer Service: {$exchange['ai']}\n\n";
+            }
+        }
+
+        $prompt = <<<EOT
+Anda adalah AI Customer Service untuk {$businessInfo['name']}. Tugas Anda adalah membantu pengunjung website dengan informasi yang akurat dan ramah.
+
+{$contextText}
+{$historyText}
+
+ATURAN PENTING:
+1. Selalu ramah, profesional, dan membantu
+2. Jawab HANYA berdasarkan informasi yang tersedia di atas
+3. Jika tidak tahu jawaban, akui ketidaktahuan dan arahkan ke WhatsApp
+4. Gunakan bahasa Indonesia yang natural dan conversational
+5. Jika ditanya tentang harga, sebutkan harga yang tersedia
+6. Jika ditanya lokasi/alamat, berikan informasi lengkap
+7. Jika ditanya jam buka, berikan informasi jam operasional
+8. Untuk pertanyaan kompleks atau pemesanan, arahkan ke WhatsApp
+
+CONTOH RESPONS YANG BAIK:
+- "Produk kami tersedia mulai dari [harga]. Untuk info lebih detail, bisa hubungi WhatsApp kami!"
+- "Kami buka setiap [jam]. Alamat lengkap kami di [alamat]."
+- "Keunggulan kami adalah [highlight]. Ada yang ingin ditanyakan lebih lanjut?"
+
+HINDARI:
+- Memberikan informasi yang tidak ada dalam context
+- Menjanjikan sesuatu yang tidak pasti
+- Membahas kompetitor
+- Memberikan medical/legal advice
+
+Pertanyaan Pengunjung: "{$userMessage}"
+
+Berikan respons yang natural dan membantu (maksimal 200 kata):
+EOT;
+
+        return $prompt;
+    }
+
+    /**
+     * Parse chat response untuk extract actions
+     */
+    private function parseChatResponse($response, $businessContext)
+    {
+        // Clean response
+        $cleanResponse = trim($response);
+
+        // Detect if response should include WhatsApp escalation
+        $shouldEscalate = $this->shouldEscalateToWhatsApp($cleanResponse, $businessContext);
+
+        $result = [
+            'message' => $cleanResponse,
+            'type' => 'text'
+        ];
+
+        if ($shouldEscalate) {
+            $result['suggested_action'] = [
+                'type' => 'whatsapp',
+                'text' => 'Hubungi via WhatsApp',
+                'url' => null // Will be filled by controller
+            ];
+        }
+
+        // Detect if response mentions products
+        if ($this->mentionsProducts($cleanResponse, $businessContext['products'])) {
+            $result['context'] = 'products';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Determine if conversation should escalate to WhatsApp
+     */
+    private function shouldEscalateToWhatsApp($response, $businessContext)
+    {
+        $escalationKeywords = [
+            'whatsapp',
+            'wa',
+            'chat',
+            'hubungi',
+            'kontak',
+            'pesan',
+            'order',
+            'beli',
+            'booking',
+            'reservasi',
+            'kompleks',
+            'detail lebih lanjut',
+            'info lengkap'
+        ];
+
+        $lowercaseResponse = strtolower($response);
+
+        foreach ($escalationKeywords as $keyword) {
+            if (strpos($lowercaseResponse, $keyword) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if response mentions specific products
+     */
+    private function mentionsProducts($response, $products)
+    {
+        $lowercaseResponse = strtolower($response);
+
+        foreach ($products as $product) {
+            if (strpos($lowercaseResponse, strtolower($product['name'])) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Generate context-aware follow-up suggestions
+     */
+    public function generateFollowUpSuggestions($businessContext)
+    {
+        $suggestions = [];
+
+        // Always include basic suggestions
+        $suggestions[] = "Jam buka hari ini?";
+        $suggestions[] = "Alamat lengkap?";
+
+        // Add product-related suggestions if products exist
+        if (!empty($businessContext['products'])) {
+            $suggestions[] = "Produk apa saja yang tersedia?";
+            $suggestions[] = "Berapa harga produknya?";
+        }
+
+        // Add branch suggestions if multiple branches
+        if (count($businessContext['branches']) > 1) {
+            $suggestions[] = "Lokasi cabang mana saja?";
+        }
+
+        // Add highlight-based suggestions
+        if (!empty($businessContext['highlights'])) {
+            $suggestions[] = "Apa keunggulan " . $businessContext['business_info']['name'] . "?";
+        }
+
+        return array_slice($suggestions, 0, 4); // Max 4 suggestions
+    }
+
+    /**
+     * Generate intelligent auto-responses untuk common questions
+     */
+    public function getQuickResponse($userMessage, $businessContext)
+    {
+        $message = strtolower(trim($userMessage));
+        $businessInfo = $businessContext['business_info'];
+
+        // Jam buka / operational hours
+        if (preg_match('/\b(jam|buka|tutup|operasional)\b/', $message)) {
+            if (!empty($businessInfo['operational_hours'])) {
+                return "Jam operasional kami: {$businessInfo['operational_hours']}. Ada yang bisa saya bantu lagi?";
+            }
+        }
+
+        // Alamat / lokasi
+        if (preg_match('/\b(alamat|lokasi|dimana|tempat)\b/', $message)) {
+            if (!empty($businessInfo['address'])) {
+                return "Alamat kami di: {$businessInfo['address']}. Mudah dijangkau kok! Ada yang lain yang ingin ditanyakan?";
+            }
+        }
+
+        // Harga
+        if (preg_match('/\b(harga|berapa|biaya|tarif)\b/', $message)) {
+            $products = $businessContext['products'];
+            if (!empty($products)) {
+                $productList = [];
+                foreach (array_slice($products, 0, 3) as $product) {
+                    $productList[] = "• {$product['name']} - {$product['formatted_price']}";
+                }
+                return "Berikut beberapa produk dan harganya:\n\n" . implode("\n", $productList) . "\n\nUntuk info lebih lengkap, bisa hubungi WhatsApp kami ya!";
+            }
+        }
+
+        // Greeting responses
+        if (preg_match('/\b(halo|hai|hello|selamat|pagi|siang|sore|malam)\b/', $message)) {
+            return "Halo! Selamat datang di {$businessInfo['name']}! 😊 Ada yang bisa saya bantu hari ini?";
+        }
+
+        return null; // No quick response available
     }
 }

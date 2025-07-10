@@ -31,16 +31,30 @@ if (!function_exists('activity')) {
 
 if (!function_exists('log_activity')) {
     /**
-     * Simple activity logging
+     * Log activity for general purposes and chat interactions
      * 
      * @param string $action
      * @param mixed $model
-     * @param array $properties
-     * @return \App\Models\ActivityLog
+     * @param array $details
+     * @return \App\Models\ActivityLog|null
      */
-    function log_activity(string $action, $model = null, array $properties = [])
+    function log_activity(string $action, $model = null, array $details = [])
     {
-        return ActivityHelper::create($action, $model, $properties);
+        try {
+            return \App\Models\ActivityLog::create([
+                'user_id' => auth()->id(),
+                'action' => $action,
+                'model_type' => $model ? get_class($model) : null,
+                'model_id' => $model ? $model->id : null,
+                'old_values' => $details['old'] ?? null,
+                'new_values' => $details['new'] ?? null,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to log activity: ' . $e->getMessage());
+            return null;
+        }
     }
 }
 
@@ -63,59 +77,6 @@ if (!function_exists('log_activity_for')) {
 // =============================================================================
 // GENERAL UTILITY HELPERS
 // =============================================================================
-
-if (!function_exists('generate_business_url')) {
-    /**
-     * Generate unique business URL
-     * 
-     * @param string $businessName
-     * @return string
-     */
-    function generate_business_url(string $businessName): string
-    {
-        return GeneralHelper::generateBusinessUrl($businessName);
-    }
-}
-
-if (!function_exists('format_phone_wa')) {
-    /**
-     * Format phone number for WhatsApp
-     * 
-     * @param string $phone
-     * @return string
-     */
-    function format_phone_wa(string $phone): string
-    {
-        return GeneralHelper::formatPhoneForWhatsApp($phone);
-    }
-}
-
-if (!function_exists('whatsapp_link')) {
-    /**
-     * Get WhatsApp link
-     * 
-     * @param string $phone
-     * @param string $message
-     * @return string
-     */
-    function whatsapp_link(string $phone, string $message = ''): string
-    {
-        return GeneralHelper::getWhatsAppLink($phone, $message);
-    }
-}
-
-if (!function_exists('user_initials')) {
-    /**
-     * Get user initials
-     * 
-     * @param string $name
-     * @return string
-     */
-    function user_initials(string $name): string
-    {
-        return GeneralHelper::getUserInitials($name);
-    }
-}
 
 if (!function_exists('upload_file')) {
     /**
@@ -187,6 +148,23 @@ if (!function_exists('avatar_url')) {
     }
 }
 
+if (!function_exists('user_initials')) {
+    /**
+     * Get user initials
+     * 
+     * @param string $name
+     * @return string
+     */
+    function user_initials(string $name): string
+    {
+        return GeneralHelper::getUserInitials($name);
+    }
+}
+
+// =============================================================================
+// DATE & TIME HELPERS
+// =============================================================================
+
 if (!function_exists('format_date')) {
     /**
      * Format date for display
@@ -228,16 +206,68 @@ if (!function_exists('time_ago')) {
     }
 }
 
-if (!function_exists('business_completion')) {
+// =============================================================================
+// CURRENCY & FORMATTING HELPERS
+// =============================================================================
+
+if (!function_exists('format_currency')) {
     /**
-     * Calculate business completion percentage
+     * Format currency untuk Indonesia
      * 
-     * @param mixed $business
-     * @return int
+     * @param mixed $amount
+     * @return string
      */
-    function business_completion($business): int
+    function format_currency($amount): string
     {
-        return GeneralHelper::calculateBusinessCompletion($business);
+        if (is_null($amount) || $amount === '') {
+            return 'Rp 0';
+        }
+
+        return 'Rp ' . number_format((float) $amount, 0, ',', '.');
+    }
+}
+
+if (!function_exists('format_phone_wa')) {
+    /**
+     * Format phone number untuk WhatsApp
+     * 
+     * @param string $phone
+     * @return string
+     */
+    function format_phone_wa(string $phone): string
+    {
+        if (empty($phone)) {
+            return '';
+        }
+
+        // Remove all non-numeric characters
+        $cleaned = preg_replace('/[^0-9]/', '', $phone);
+        
+        // Convert to international format
+        if (substr($cleaned, 0, 1) === '0') {
+            $cleaned = '62' . substr($cleaned, 1);
+        } elseif (substr($cleaned, 0, 2) !== '62') {
+            $cleaned = '62' . $cleaned;
+        }
+
+        return $cleaned;
+    }
+}
+
+if (!function_exists('whatsapp_link')) {
+    /**
+     * Generate WhatsApp link
+     * 
+     * @param string $phone
+     * @param string $message
+     * @return string
+     */
+    function whatsapp_link(string $phone, string $message = ''): string
+    {
+        $formattedPhone = format_phone_wa($phone);
+        $encodedMessage = urlencode($message);
+        
+        return "https://wa.me/{$formattedPhone}" . ($message ? "?text={$encodedMessage}" : '');
     }
 }
 
@@ -305,8 +335,9 @@ if (!function_exists('user_business')) {
     }
 }
 
-
-// Updated helper functions to work with boolean publish_status
+// =============================================================================
+// BUSINESS SPECIFIC HELPERS
+// =============================================================================
 
 if (!function_exists('business_completion')) {
     /**
@@ -315,7 +346,7 @@ if (!function_exists('business_completion')) {
      * @param \App\Models\Business $business
      * @return int
      */
-    function business_completion($business)
+    function business_completion($business): int
     {
         if (!$business) {
             return 0;
@@ -349,7 +380,7 @@ if (!function_exists('generate_business_url')) {
      * @param int|null $excludeId
      * @return string
      */
-    function generate_business_url($businessName, $excludeId = null)
+    function generate_business_url(string $businessName, $excludeId = null): string
     {
         // Convert to slug
         $slug = \Illuminate\Support\Str::slug($businessName, '-');
@@ -378,7 +409,7 @@ if (!function_exists('business_url_exists')) {
      * @param int|null $excludeId
      * @return bool
      */
-    function business_url_exists($url, $excludeId = null)
+    function business_url_exists(string $url, $excludeId = null): bool
     {
         $query = \App\Models\Business::where('public_url', 'like', "%/{$url}");
         
@@ -398,7 +429,7 @@ if (!function_exists('format_business_address')) {
      * @param int $maxLength
      * @return string
      */
-    function format_business_address($address, $maxLength = 100)
+    function format_business_address(string $address, int $maxLength = 100): string
     {
         if (strlen($address) <= $maxLength) {
             return $address;
@@ -415,7 +446,7 @@ if (!function_exists('business_status_badge')) {
      * @param \App\Models\Business $business
      * @return string
      */
-    function business_status_badge($business)
+    function business_status_badge($business): string
     {
         if (!$business) {
             return '<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">Not Set</span>';
@@ -438,7 +469,7 @@ if (!function_exists('business_logo_url')) {
      * @param string $default
      * @return string
      */
-    function business_logo_url($business, $default = null)
+    function business_logo_url($business, $default = null): string
     {
         if (!$business || !$business->logo_url) {
             return $default ?: asset('images/default-business-logo.png');
@@ -454,27 +485,37 @@ if (!function_exists('business_logo_url')) {
     }
 }
 
-if (!function_exists('generate_qr_code_url')) {
+if (!function_exists('get_business_status_text')) {
     /**
-     * Generate QR code URL for business
+     * Get business status as text (for boolean)
      * 
-     * @param string $businessUrl
-     * @param int $size
+     * @param \App\Models\Business $business
      * @return string
      */
-    function generate_qr_code_url($businessUrl, $size = 200)
+    function get_business_status_text($business): string
     {
-        $baseUrl = "https://api.qrserver.com/v1/create-qr-code/";
-        $params = http_build_query([
-            'size' => $size . 'x' . $size,
-            'data' => $businessUrl,
-            'format' => 'png',
-            'bgcolor' => 'ffffff',
-            'color' => '000000',
-            'qzone' => 2
-        ]);
+        if (!$business) {
+            return 'Not Set';
+        }
         
-        return $baseUrl . '?' . $params;
+        return ($business->publish_status === true || $business->publish_status === 1) ? 'Published' : 'Draft';
+    }
+}
+
+if (!function_exists('get_business_status_color')) {
+    /**
+     * Get business status color class (for boolean)
+     * 
+     * @param \App\Models\Business $business
+     * @return string
+     */
+    function get_business_status_color($business): string
+    {
+        if (!$business) {
+            return 'gray';
+        }
+        
+        return ($business->publish_status === true || $business->publish_status === 1) ? 'green' : 'yellow';
     }
 }
 
@@ -485,7 +526,7 @@ if (!function_exists('business_operational_hours_array')) {
      * @param string $hours
      * @return array
      */
-    function business_operational_hours_array($hours)
+    function business_operational_hours_array(string $hours): array
     {
         // Simple parsing - can be enhanced based on your needs
         if (empty($hours)) {
@@ -502,6 +543,116 @@ if (!function_exists('business_operational_hours_array')) {
     }
 }
 
+if (!function_exists('format_business_hours')) {
+    /**
+     * Format business operational hours
+     * 
+     * @param string $hours
+     * @return string
+     */
+    function format_business_hours(string $hours): string
+    {
+        if (empty($hours)) {
+            return 'Jam operasional tidak tersedia';
+        }
+
+        // Simple formatting - can be enhanced
+        return $hours;
+    }
+}
+
+if (!function_exists('is_business_operational')) {
+    /**
+     * Check if business is currently operational
+     * 
+     * @param string $operationalHours
+     * @return bool|null
+     */
+    function is_business_operational(string $operationalHours): ?bool
+    {
+        if (empty($operationalHours)) {
+            return null; // Unknown
+        }
+
+        // Simple check - this can be enhanced with more complex logic
+        $currentHour = (int) date('H');
+        
+        // Extract hours from string like "08:00 - 17:00"
+        if (preg_match('/(\d{1,2}):?(\d{2})?\s*-\s*(\d{1,2}):?(\d{2})?/', $operationalHours, $matches)) {
+            $openHour = (int) $matches[1];
+            $closeHour = (int) $matches[3];
+            
+            return $currentHour >= $openHour && $currentHour < $closeHour;
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('get_business_context_summary')) {
+    /**
+     * Get concise business context for AI
+     * 
+     * @param \App\Models\Business $business
+     * @return string
+     */
+    function get_business_context_summary($business): string
+    {
+        $summary = [];
+        
+        if ($business->business_name) {
+            $summary[] = "Nama: {$business->business_name}";
+        }
+        
+        if ($business->short_description) {
+            $summary[] = "Deskripsi: {$business->short_description}";
+        }
+        
+        if ($business->main_address) {
+            $summary[] = "Alamat: " . substr($business->main_address, 0, 100);
+        }
+        
+        if ($business->main_operational_hours) {
+            $summary[] = "Jam: {$business->main_operational_hours}";
+        }
+        
+        $productCount = $business->products()->count();
+        if ($productCount > 0) {
+            $summary[] = "Produk: {$productCount} item tersedia";
+        }
+        
+        return implode(' | ', $summary);
+    }
+}
+
+// =============================================================================
+// QR CODE & URL HELPERS
+// =============================================================================
+
+if (!function_exists('generate_qr_code_url')) {
+    /**
+     * Generate QR code URL for business
+     * 
+     * @param string $businessUrl
+     * @param int $size
+     * @return string
+     */
+    function generate_qr_code_url(string $businessUrl, int $size = 200): string
+    {
+        $baseUrl = "https://api.qrserver.com/v1/create-qr-code/";
+        $params = http_build_query([
+            'size' => $size . 'x' . $size,
+            'data' => $businessUrl,
+            'format' => 'png',
+            'bgcolor' => 'ffffff',
+            'color' => '000000',
+            'qzone' => 2
+        ]);
+        
+        return $baseUrl . '?' . $params;
+    }
+}
+
 if (!function_exists('validate_google_maps_url')) {
     /**
      * Validate Google Maps URL
@@ -509,7 +660,7 @@ if (!function_exists('validate_google_maps_url')) {
      * @param string $url
      * @return bool
      */
-    function validate_google_maps_url($url)
+    function validate_google_maps_url(string $url): bool
     {
         if (empty($url)) {
             return true; // Empty is allowed
@@ -541,36 +692,114 @@ if (!function_exists('validate_google_maps_url')) {
     }
 }
 
-if (!function_exists('get_business_status_text')) {
+if (!function_exists('extract_business_slug_from_url')) {
     /**
-     * Get business status as text (for boolean)
+     * Extract business slug from public URL
      * 
-     * @param \App\Models\Business $business
-     * @return string
+     * @param string $url
+     * @return string|null
      */
-    function get_business_status_text($business)
+    function extract_business_slug_from_url(string $url): ?string
     {
-        if (!$business) {
-            return 'Not Set';
+        if (empty($url)) {
+            return null;
         }
+
+        // Handle both relative and absolute URLs
+        $path = parse_url($url, PHP_URL_PATH);
         
-        return ($business->publish_status === true || $business->publish_status === 1) ? 'Published' : 'Draft';
+        if (!$path) {
+            return null;
+        }
+
+        // Remove leading slash and get the last segment
+        $slug = basename($path);
+        
+        return $slug ?: null;
     }
 }
 
-if (!function_exists('get_business_status_color')) {
+// =============================================================================
+// CHAT & MESSAGING HELPERS
+// =============================================================================
+
+if (!function_exists('sanitize_chat_message')) {
     /**
-     * Get business status color class (for boolean)
+     * Sanitize chat message input
      * 
-     * @param \App\Models\Business $business
+     * @param string $message
      * @return string
      */
-    function get_business_status_color($business)
+    function sanitize_chat_message(string $message): string
     {
-        if (!$business) {
-            return 'gray';
+        // Remove HTML tags
+        $message = strip_tags($message);
+        
+        // Remove excessive whitespace
+        $message = preg_replace('/\s+/', ' ', $message);
+        
+        // Trim
+        $message = trim($message);
+        
+        // Limit length
+        $message = substr($message, 0, 1000);
+        
+        return $message;
+    }
+}
+
+if (!function_exists('generate_chat_session_id')) {
+    /**
+     * Generate unique chat session ID
+     * 
+     * @param int|null $businessId
+     * @return string
+     */
+    function generate_chat_session_id($businessId = null): string
+    {
+        $prefix = $businessId ? "chat_{$businessId}_" : "chat_";
+        return $prefix . uniqid() . '_' . time();
+    }
+}
+
+if (!function_exists('get_chat_rate_limit_key')) {
+    /**
+     * Generate rate limit key for chat
+     * 
+     * @param string $businessSlug
+     * @param string $ipAddress
+     * @return string
+     */
+    function get_chat_rate_limit_key(string $businessSlug, string $ipAddress): string
+    {
+        return "chat_rate_limit_{$businessSlug}_{$ipAddress}";
+    }
+}
+
+if (!function_exists('validate_chat_input')) {
+    /**
+     * Validate chat input
+     * 
+     * @param string $message
+     * @return array|null
+     */
+    function validate_chat_input(string $message): ?array
+    {
+        $errors = [];
+        
+        if (empty(trim($message))) {
+            $errors[] = 'Pesan tidak boleh kosong';
         }
         
-        return ($business->publish_status === true || $business->publish_status === 1) ? 'green' : 'yellow';
+        if (strlen($message) > 1000) {
+            $errors[] = 'Pesan terlalu panjang (maksimal 1000 karakter)';
+        }
+        
+        // Check for spam patterns
+        if (preg_match('/(.)\1{10,}/', $message)) {
+            $errors[] = 'Pesan tidak valid';
+        }
+        
+        return empty($errors) ? null : $errors;
     }
 }

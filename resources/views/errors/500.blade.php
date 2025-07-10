@@ -1,10 +1,10 @@
-<!-- resources/views/errors/404.blade.php -->
+<!-- resources/views/errors/500.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Website Tidak Ditemukan - {{ config('app.name', 'UMKM Builder') }}</title>
+    <title>Terjadi Kesalahan Server - {{ config('app.name', 'UMKM Builder') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +29,9 @@
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'fade-in': 'fadeIn 1s ease-out',
-                        'pulse-subtle': 'pulseSubtle 3s ease-in-out infinite'
+                        'pulse-subtle': 'pulseSubtle 3s ease-in-out infinite',
+                        'shake': 'shake 0.5s ease-in-out infinite',
+                        'glitch': 'glitch 2s linear infinite'
                     },
                     keyframes: {
                         float: {
@@ -55,6 +57,37 @@
                             '50%': {
                                 opacity: '0.4'
                             }
+                        },
+                        shake: {
+                            '0%, 100%': {
+                                transform: 'translateX(0)'
+                            },
+                            '25%': {
+                                transform: 'translateX(-2px)'
+                            },
+                            '75%': {
+                                transform: 'translateX(2px)'
+                            }
+                        },
+                        glitch: {
+                            '0%': {
+                                transform: 'translate(0)'
+                            },
+                            '20%': {
+                                transform: 'translate(-1px, 1px)'
+                            },
+                            '40%': {
+                                transform: 'translate(-1px, -1px)'
+                            },
+                            '60%': {
+                                transform: 'translate(1px, 1px)'
+                            },
+                            '80%': {
+                                transform: 'translate(1px, -1px)'
+                            },
+                            '100%': {
+                                transform: 'translate(0)'
+                            }
                         }
                     }
                 }
@@ -79,48 +112,41 @@
 
 <body class="h-full bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 font-sans animate-fade-in">
     <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-        <!-- Logo -->
+
 
         <!-- Main Content -->
         <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
-
-
+  
             <!-- Error Code -->
             <div class="mb-4">
-                <span class="text-6xl font-black text-black dark:text-white opacity-20">404</span>
+                <span class="text-6xl font-black text-black dark:text-white opacity-20">500</span>
             </div>
 
             <!-- Error Message -->
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Halaman Tidak Ditemukan</h1>
-            <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                {{ $message ?? 'Website yang Anda cari tidak tersedia atau belum dipublikasikan.' }}
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Server Error</h1>
+            <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                {{ $message ?? 'Maaf, terjadi kesalahan pada server. Tim kami sedang memperbaiki masalah ini.' }}
             </p>
 
-            <!-- Suggestions -->
-            @if(isset($suggestions) && is_array($suggestions))
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6 text-left">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Saran untuk Anda:</h3>
-                <ul class="text-gray-600 dark:text-gray-400 space-y-2 text-sm">
-                    @foreach($suggestions as $suggestion)
-                    <li class="flex items-start">
-                        <div class="w-2 h-2 rounded-full bg-black dark:bg-white mt-2 mr-3 flex-shrink-0"></div>
-                        {{ $suggestion }}
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/" class="inline-flex items-center justify-center px-6 py-3 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-black font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    <i class="fas fa-home mr-2"></i>
-                    Kembali ke Beranda
-                </a>
+                <button onclick="location.reload()" class="inline-flex items-center justify-center px-6 py-3 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-black font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    <i class="fas fa-redo mr-2"></i>
+                    Coba Lagi
+                </button>
                 <button onclick="goBack()" class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali
                 </button>
+            </div>
+
+            <!-- Error ID (for support) -->
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                <p class="text-xs text-gray-400 dark:text-gray-500">
+                    Error ID: #{{ substr(md5(time()), 0, 8) }} | {{ date('Y-m-d H:i:s') }}
+                </p>
             </div>
         </div>
 
@@ -134,6 +160,14 @@
             </p>
         </div>
 
+
+        <!-- Auto refresh indicator -->
+        <div id="refresh-indicator" class="fixed top-4 right-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 shadow-lg hidden">
+            <div class="flex items-center space-x-2">
+                <div class="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-black dark:border-gray-600 dark:border-t-white"></div>
+                <span class="text-sm text-gray-600 dark:text-gray-300">Auto refresh dalam <span id="countdown">30</span>s</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -164,10 +198,49 @@
             }
         });
 
-        // Add some interactive effects
+        // Auto refresh functionality
+        let autoRefreshCountdown = 30;
+        let autoRefreshTimer;
+        let countdownTimer;
+
+        function startAutoRefresh() {
+            const indicator = document.getElementById('refresh-indicator');
+            const countdownSpan = document.getElementById('countdown');
+            
+            indicator.classList.remove('hidden');
+            
+            countdownTimer = setInterval(() => {
+                autoRefreshCountdown--;
+                countdownSpan.textContent = autoRefreshCountdown;
+                
+                if (autoRefreshCountdown <= 0) {
+                    clearInterval(countdownTimer);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        function stopAutoRefresh() {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+            document.getElementById('refresh-indicator').classList.add('hidden');
+        }
+
+        // Start auto refresh after 5 seconds
+        setTimeout(() => {
+            startAutoRefresh();
+        }, 5000);
+
+        // Stop auto refresh if user interacts with page
+        ['click', 'keydown', 'mousemove', 'scroll'].forEach(event => {
+            document.addEventListener(event, stopAutoRefresh, { once: true });
+        });
+
+        // Add interactive effects
         document.addEventListener('DOMContentLoaded', function() {
             // Add click ripple effect to buttons
-            const buttons = document.querySelectorAll('button, a');
+            const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     const ripple = document.createElement('span');
