@@ -6,21 +6,21 @@
 
 @section('content-section')
 <!-- Galleries Grid Card -->
-<div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
     <!-- Grid Header -->
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="p-6 border-b border-gray-200">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                <h2 class="text-lg font-semibold text-gray-900">
                     Galeri Foto
                 </h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p class="text-sm text-gray-500 mt-1">
                     Menampilkan {{ $galleries->firstItem() ?? 0 }} - {{ $galleries->lastItem() ?? 0 }} dari {{ $galleries->total() }} foto
                 </p>
             </div>
             @if($activeBusiness)
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-                Bisnis: <span class="font-medium text-gray-700 dark:text-gray-300">{{ $activeBusiness->business_name }}</span>
+            <p class="text-sm text-gray-500">
+                Bisnis: <span class="font-medium text-gray-700">{{ $activeBusiness->business_name }}</span>
             </p>
             @endif
         </div>
@@ -32,11 +32,11 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 @foreach($galleries as $gallery)
                 <div class="group relative">
-                    <div class="aspect-square rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700">
+                    <div class="aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
                         @if($gallery->gallery_image)
                             <img src="{{ asset('storage/'.$gallery->gallery_image) }}" alt="Gallery image" class="w-full h-full object-cover">
                         @else
-                            <div class="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
+                            <div class="w-full h-full flex items-center justify-center text-gray-400">
                                 <i class="fas fa-image text-3xl"></i>
                             </div>
                         @endif
@@ -46,7 +46,7 @@
                             <div class="flex space-x-2">
                                 <!-- View Business Button -->
                                 <a href="{{ route('admin.websites.show', $gallery->business_id) }}" 
-                                   class="p-2 rounded-full bg-indigo-500 bg-opacity-80 text-white hover:bg-opacity-100 transition-all duration-200"
+                                   class="p-2 rounded-full bg-gray-800 bg-opacity-80 text-white hover:bg-opacity-100 transition-all duration-200"
                                    title="Lihat Bisnis">
                                     <i class="fas fa-store"></i>
                                 </a>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <div class="mt-2 text-xs text-gray-500 truncate">
                         {{ $gallery->business->business_name ?? 'N/A' }}
                     </div>
                 </div>
@@ -74,15 +74,15 @@
             </div>
         @else
             <div class="flex flex-col items-center justify-center py-10">
-                <i class="fas fa-images text-4xl mb-4 text-gray-300 dark:text-gray-600"></i>
-                <p class="text-lg text-gray-500 dark:text-gray-400">Tidak ada foto dalam galeri</p>
+                <i class="fas fa-images text-4xl mb-4 text-gray-300"></i>
+                <p class="text-lg text-gray-500">Tidak ada foto dalam galeri</p>
             </div>
         @endif
     </div>
 
     <!-- Pagination -->
     @if($galleries->hasPages())
-    <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
         {{ $galleries->links() }}
     </div>
     @endif
