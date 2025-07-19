@@ -1009,7 +1009,6 @@ class AIChatWidget {
 
     log(...args) {
         if (this.config.debug) {
-            console.log('[AIChatWidget Enhanced]', ...args);
         }
     }
 

@@ -437,7 +437,6 @@ function closeNotificationDropdown() {
 
 // Notification actions
 function markAllAsRead() {
-    console.log('Marking all notifications as read');
 
     const badge = document.getElementById('notification-badge');
     const countBadge = document.getElementById('notification-count');
@@ -466,7 +465,6 @@ function viewAllNotifications() {
     if (window.notificationManager) {
         window.notificationManager.show('Redirecting to notifications page...', 'info');
     }
-    console.log('Viewing all notifications');
 }
 
 // Logout function
@@ -557,5 +555,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    console.log('Admin Dashboard - General components initialized');
 });

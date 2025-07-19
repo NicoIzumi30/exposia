@@ -509,7 +509,6 @@ function closeQuickActionsDropdown() {
 
 // Notification actions
 function markAllAsRead() {
-    console.log('Marking all notifications as read');
 
     const badge = document.getElementById('notification-badge');
     const countBadge = document.getElementById('notification-count');
@@ -538,7 +537,6 @@ function viewAllNotifications() {
     if (window.notificationManager) {
         window.notificationManager.show('Redirecting to notifications page...', 'info');
     }
-    console.log('Viewing all notifications');
 }
 
 // Logout function
@@ -554,7 +552,7 @@ function logout() {
         // For Laravel, we would submit a logout form
         const logoutForm = document.createElement('form');
         logoutForm.method = 'POST';
-        logoutForm.action = '/logout'; // Laravel logout route
+        logoutForm.action = '/logout';
         
         const csrfToken = document.querySelector('meta[name="csrf-token"]');
         if (csrfToken) {
@@ -720,5 +718,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize form validation
     // initializeFormValidation();
 
-    console.log('User Dashboard - General components initialized');
 });

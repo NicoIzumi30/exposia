@@ -436,7 +436,6 @@ EOT;
     public function generateChatResponse($userMessage, $businessContext, $chatHistory = [])
     {
         $prompt = $this->buildChatPrompt($userMessage, $businessContext, $chatHistory);
-
         try {
             $response = $this->generateContent($prompt);
 
@@ -518,7 +517,7 @@ EOT;
             }
         }
 
-        $prompt = <<<EOT
+         $prompt = <<<EOT
 Anda adalah AI Customer Service untuk {$businessInfo['name']}. Tugas Anda adalah membantu pengunjung website dengan informasi yang akurat dan ramah.
 
 {$contextText}
@@ -533,6 +532,8 @@ ATURAN PENTING:
 6. Jika ditanya lokasi/alamat, berikan informasi lengkap
 7. Jika ditanya jam buka, berikan informasi jam operasional
 8. Untuk pertanyaan kompleks atau pemesanan, arahkan ke WhatsApp
+9. ✅ JANGAN gunakan formatting Markdown seperti **bold**, *italic*, atau `code`
+10. ✅ Gunakan teks biasa tanpa simbol formatting apapun
 
 CONTOH RESPONS YANG BAIK:
 - "Produk kami tersedia mulai dari [harga]. Untuk info lebih detail, bisa hubungi WhatsApp kami!"
@@ -544,10 +545,11 @@ HINDARI:
 - Menjanjikan sesuatu yang tidak pasti
 - Membahas kompetitor
 - Memberikan medical/legal advice
+- ✅ Menggunakan formatting Markdown (**, *, _, `, #, -, dll)
 
 Pertanyaan Pengunjung: "{$userMessage}"
 
-Berikan respons yang natural dan membantu (maksimal 200 kata):
+Berikan respons dalam teks biasa tanpa formatting apapun (maksimal 200 kata):
 EOT;
 
         return $prompt;

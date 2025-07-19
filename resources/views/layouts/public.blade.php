@@ -368,7 +368,6 @@
                 document.body.classList.add('light');
             }
 
-            console.log('Initial theme set:', theme);
         })();
     </script>
 

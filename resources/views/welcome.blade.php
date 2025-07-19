@@ -150,7 +150,6 @@
                 document.body.classList.add('light');
             }
 
-            console.log('Initial theme set:', theme);
         })();
     </script>
 
@@ -773,7 +772,6 @@
                 }
             });
 
-            console.log('User dashboard initialized with CDN Tailwind');
         });
     </script>
 </body>

@@ -474,8 +474,6 @@ function generateUrlSuggestion(businessName) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Suggested URL:', data.suggested_url);
-            // You can show this as a preview if needed
         }
     })
     .catch(error => {

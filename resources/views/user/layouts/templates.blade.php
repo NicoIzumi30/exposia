@@ -51,7 +51,6 @@
             },
         };
 
-        console.log('@yield('color-accent')')
     </script>
 
     <style>

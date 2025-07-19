@@ -20,65 +20,94 @@ class AiChatController extends Controller
     /**
      * Handle chat message untuk specific business
      */
-    public function chat(Request $request, $businessSlug)
-    {
-        $request->validate([
-            'message' => 'required|string|max:1000',
-            'session_id' => 'nullable|string|max:255'
-        ]);
+   public function chat(Request $request, $businessSlug)
+{
+    $request->validate([
+        'message' => 'required|string|max:1000',
+        'session_id' => 'nullable|string|max:255'
+    ]);
 
-        try {
-            // Find business berdasarkan slug
-            $business = $this->findBusinessBySlug($businessSlug);
-            
-            if (!$business) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Bisnis tidak ditemukan.'
-                ], 404);
-            }
+    Log::info('=== CHAT REQUEST START ===', [
+        'business_slug' => $businessSlug,
+        'message' => $request->message,
+        'session_id' => $request->session_id,
+        'step' => 'request_received'
+    ]);
 
-            // Generate session ID jika belum ada
-            $sessionId = $request->session_id ?: uniqid('chat_');
-
-            // Build business context untuk AI
-            $businessContext = $this->buildBusinessContext($business);
-
-            // Generate AI response
-            $aiResponse = $this->geminiService->generateChatResponse(
-                $request->message,
-                $businessContext,
-                $this->getChatHistory($sessionId)
-            );
-
-            // Save chat to history
-            $this->saveChatHistory($sessionId, $request->message, $aiResponse);
-
-            // Increment visitor if first message in session
-            $this->trackVisitorInteraction($business, $sessionId);
-
-            return response()->json([
-                'success' => true,
-                'response' => $aiResponse,
-                'session_id' => $sessionId,
-                'business_name' => $business->business_name,
-                'whatsapp_contact' => $this->getWhatsAppContact($business)
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('AI Chat error: ' . $e->getMessage(), [
-                'business_slug' => $businessSlug,
-                'message' => $request->message,
-                'trace' => $e->getTraceAsString()
-            ]);
-
+    try {
+        // Find business berdasarkan slug
+        $business = $this->findBusinessBySlug($businessSlug);
+        Log::info('Business found', ['step' => 'business_found', 'business_id' => $business?->id]);
+        
+        if (!$business) {
             return response()->json([
                 'success' => false,
-                'message' => $sessionId,
-                'fallback_action' => 'whatsapp'
-            ], 500);
+                'message' => 'Bisnis tidak ditemukan.'
+            ], 404);
         }
+
+        // Generate session ID jika belum ada
+        $sessionId = $request->session_id ?: uniqid('chat_');
+        Log::info('Session ID generated', ['step' => 'session_id', 'session_id' => $sessionId]);
+
+        // Build business context untuk AI
+        $businessContext = $this->buildBusinessContext($business);
+        Log::info('Business context built', ['step' => 'context_built', 'context_size' => strlen(json_encode($businessContext))]);
+
+        // Get chat history - INI YANG BERMASALAH DI CHAT KEDUA
+        $chatHistory = $this->getChatHistory($sessionId);
+        Log::info('Chat history retrieved', [
+            'step' => 'history_retrieved', 
+            'history_count' => count($chatHistory),
+            'history_size' => strlen(json_encode($chatHistory))
+        ]);
+
+        // Generate AI response - INI TEMPAT ERROR KEMUNGKINAN TERJADI
+        Log::info('Calling Gemini service', ['step' => 'before_gemini_call']);
+        
+        $aiResponse = $this->geminiService->generateChatResponse(
+            $request->message,
+            $businessContext,
+            $chatHistory
+        );
+        
+        Log::info('Gemini response received', ['step' => 'after_gemini_call']);
+
+        // Save chat to history
+        $this->saveChatHistory($sessionId, $request->message, $aiResponse);
+        Log::info('Chat history saved', ['step' => 'history_saved']);
+
+        // Increment visitor if first message in session
+        $this->trackVisitorInteraction($business, $sessionId);
+        
+        Log::info('=== CHAT REQUEST SUCCESS ===');
+
+        return response()->json([
+            'success' => true,
+            'response' => $aiResponse,
+            'session_id' => $sessionId,
+            'business_name' => $business->business_name,
+            'whatsapp_contact' => $this->getWhatsAppContact($business)
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('=== CHAT REQUEST ERROR ===', [
+            'business_slug' => $businessSlug,
+            'message' => $request->message,
+            'error_message' => $e->getMessage(),
+            'error_file' => $e->getFile(),
+            'error_line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan sistem. Silakan coba lagi atau hubungi via WhatsApp.',
+            'fallback_action' => 'whatsapp',
+            'session_id' => $request->session_id ?? uniqid('chat_')
+        ], 500);
     }
+}
 
     /**
      * Get business info untuk chat initialization
@@ -200,24 +229,43 @@ class AiChatController extends Controller
     /**
      * Save chat to history
      */
-    private function saveChatHistory($sessionId, $userMessage, $aiResponse)
-    {
+ private function saveChatHistory($sessionId, $userMessage, $aiResponse)
+{
+    try {
         $history = $this->getChatHistory($sessionId);
+        
+        // Pastikan aiResponse dalam format yang benar
+        $responseText = is_array($aiResponse) ? 
+            ($aiResponse['message'] ?? json_encode($aiResponse)) : 
+            (string) $aiResponse;
         
         $history[] = [
             'user' => $userMessage,
-            'ai' => $aiResponse,
+            'ai' => $responseText,
             'timestamp' => now()->toISOString()
         ];
 
-        // Keep only last 10 exchanges to manage context size
-        if (count($history) > 10) {
-            $history = array_slice($history, -10);
+        // Keep only last 5 exchanges untuk mengurangi context size
+        if (count($history) > 5) {
+            $history = array_slice($history, -5);
         }
 
-        // Cache for 2 hours
         Cache::put("chat_history_{$sessionId}", $history, 7200);
+        
+        Log::debug('Chat history saved successfully', [
+            'session_id' => $sessionId,
+            'history_count' => count($history)
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Error saving chat history', [
+            'session_id' => $sessionId,
+            'error' => $e->getMessage()
+        ]);
+        // Jangan throw error, biarkan chat tetap berjalan
     }
+}
+
 
     /**
      * Track visitor interaction

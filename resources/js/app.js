@@ -77,5 +77,3 @@ window.showToast = function(message, type = 'info', duration = 3000) {
         }, duration);
     }
 };
-
-console.log('Laravel app initialized with CDN Tailwind setup');

@@ -581,15 +581,21 @@
         }
 
         function logout() {
-            if (confirm('Apakah Anda yakin ingin keluar?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{{ route('logout') }}';
-                form.innerHTML = '@csrf';
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
+    window.showConfirmation({
+        title: 'Konfirmasi Logout',
+        text: 'Apakah Anda yakin ingin keluar?',
+        icon: 'question',
+        confirmButtonText: 'Ya, Keluar',
+        cancelButtonText: 'Batal'
+    }, function() {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("logout") }}';
+        form.innerHTML = '@csrf';
+        document.body.appendChild(form);
+        form.submit();
+    });
+}
 
         window.copyToClipboard = function(text, message = 'Teks berhasil disalin!') {
             if (navigator.clipboard && navigator.clipboard.writeText) {

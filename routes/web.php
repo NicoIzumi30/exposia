@@ -41,12 +41,6 @@ Route::prefix('api/chat')->group(function () {
         ->name('chat.clear.history');
 });
 
-// Rate limiting untuk chat API (optional tapi recommended)
-Route::middleware(['throttle:60,1'])->prefix('api/chat')->group(function () {
-    Route::post('{businessSlug}', [AiChatController::class, 'chat']);
-});
-
-// Alternative: jika ingin rate limiting per session
 Route::middleware(['throttle:30,1'])->prefix('api/chat')->group(function () {
     Route::get('{businessSlug}/info', [AiChatController::class, 'getBusinessInfo']);
     Route::post('{businessSlug}', [AiChatController::class, 'chat']);

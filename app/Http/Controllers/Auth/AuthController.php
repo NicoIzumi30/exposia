@@ -80,7 +80,7 @@ class AuthController extends Controller
             return $this->redirectBasedOnRole();
         }
 
-        return back()->with('error', 'Email or password is incorrect.')->withInput($request->only('email'));
+        return back()->with('error', 'Email atau password yang anda masukkan salah!')->withInput($request->only('email'));
     }
 
     /**
@@ -231,9 +231,8 @@ class AuthController extends Controller
         $businessName = $request->input('business_name');
         $suggestedUrl = generate_business_url($businessName);
         $originalUrl = \Illuminate\Support\Str::slug($businessName);
-
-        $isAvailable = !Business::where('public_url', $originalUrl)->exists();
-
+        $fullUrl = url($originalUrl);
+        $isAvailable = !Business::where('public_url', $fullUrl)->exists();
         return response()->json([
             'available' => $isAvailable,
             'original_url' => $originalUrl,
