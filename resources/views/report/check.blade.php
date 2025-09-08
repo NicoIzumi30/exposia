@@ -12,13 +12,10 @@
         <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl border border-gray-200 dark:border-gray-700 overflow-hidden backdrop-blur-sm bg-white/95 dark:bg-gray-800/95 animate-card-entrance">
             <!-- Header Section -->
             <div class="bg-gradient-to-r from-accent-400 to-accent-600 p-8 text-center">
-                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                    <span class="material-icons-outlined text-white text-3xl">search</span>
-                </div>
                 <h2 class="text-2xl font-bold text-white mb-2">
                     Cek Status Laporan
                 </h2>
-                <p class="text-accent-50 text-sm">
+                <p class="text-white text-sm">
                     Masukkan kode laporan untuk melihat status penanganan
                 </p>
             </div>

@@ -167,21 +167,6 @@
             }
         }
 
-        /* Floating shapes */
-        .floating-shapes {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .floating-shape {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(252, 171, 27, 0.1), rgba(245, 158, 11, 0.05));
-            animation: float 6s ease-in-out infinite;
-        }
     </style>
     
     @stack('styles')
@@ -189,12 +174,7 @@
 
 <body class="font-sans antialiased min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <!-- Floating Shapes Background -->
-    <div class="floating-shapes">
-        <div class="floating-shape w-20 h-20 top-[10%] left-[5%]" style="animation-delay: 0s;"></div>
-        <div class="floating-shape w-32 h-32 top-[50%] right-[5%]" style="animation-delay: 2s;"></div>
-        <div class="floating-shape w-16 h-16 bottom-[20%] left-[15%]" style="animation-delay: 4s;"></div>
-        <div class="floating-shape w-24 h-24 top-[30%] right-[20%]" style="animation-delay: 1s;"></div>
-    </div>
+  
 
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30 backdrop-blur-sm bg-white/95 dark:bg-gray-800/95">

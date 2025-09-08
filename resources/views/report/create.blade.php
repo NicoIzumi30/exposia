@@ -148,7 +148,7 @@
                     
                     <!-- Upload Area -->
                     <div id="upload-container" class="w-full">
-                        <label for="evidence_image" class="group w-full flex flex-col items-center px-6 py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 text-accent-500 dark:text-accent-400 rounded-2xl tracking-wide border-2 border-dashed border-accent-300 dark:border-accent-600 cursor-pointer hover:bg-accent-50 dark:hover:bg-accent-900/20 transition-all duration-300 transform hover:scale-105">
+                        <label for="evidence_image" class="group w-full flex flex-col items-center px-6 py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800  dark:text-white rounded-2xl tracking-wide border-2 border-dashed cursor-pointer hover:bg-accent-50 dark:hover:bg-accent-900/20 transition-all duration-300 transform hover:scale-105">
                             <span class="material-icons-outlined text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">cloud_upload</span>
                             <span class="text-lg font-semibold text-center">Klik atau seret gambar di sini</span>
                             <span class="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
@@ -224,28 +224,6 @@
             </form>
         </div>
         
-        <!-- Help Section -->
-        <div class="mt-12 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 animate-slide-up">
-            <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
-                        <span class="material-icons-outlined text-white">help</span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        Butuh Bantuan?
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Jika Anda memiliki pertanyaan tentang proses pelaporan atau membutuhkan bantuan, jangan ragu untuk menghubungi tim support kami.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold">
-                        <span class="material-icons-outlined mr-2 text-sm">contact_support</span>
-                        Hubungi Support
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

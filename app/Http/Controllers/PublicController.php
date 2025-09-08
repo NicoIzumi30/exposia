@@ -68,37 +68,32 @@ class PublicController extends Controller
      */
     private function findBusinessBySlug($slug)
     {
-        // Cache business data for better performance
-        $cacheKey = "business_public_{$slug}";
-        
-        return Cache::remember($cacheKey, 3600, function () use ($slug) {
-            return Business::where('public_url', 'like', "%/{$slug}")
-                ->where('publish_status', true)
-                ->with([
-                    'user',
-                    'businessTemplate.template',
-                    'businessSections' => function ($query) {
-                        $query->where('is_active', true);
-                    },
-                    'products' => function ($query) {
-                        $query->defaultOrder()->limit(20);
-                    },
-                    'galleries' => function ($query) {
-                        $query->latest()->limit(12);
-                    },
-                    'testimonials' => function ($query) {
-                        $query->latest()->limit(10);
-                    },
-                    'highlights' => function ($query) {
-                        $query->limit(6);
-                    },
-                    'contacts' => function ($query) {
-                        $query->where('is_active', true)->orderBy('order');
-                    },
-                    'branches'
-                ])
-                ->first();
-        });
+        return Business::where('public_url', 'like', "%/{$slug}")
+            ->where('publish_status', true)
+            ->with([
+                'user',
+                'businessTemplate.template',
+                'businessSections' => function ($query) {
+                    $query->where('is_active', true);
+                },
+                'products' => function ($query) {
+                    $query->defaultOrder()->limit(20);
+                },
+                'galleries' => function ($query) {
+                    $query->latest()->limit(12);
+                },
+                'testimonials' => function ($query) {
+                    $query->latest()->limit(10);
+                },
+                'highlights' => function ($query) {
+                    $query->limit(6);
+                },
+                'contacts' => function ($query) {
+                    $query->where('is_active', true)->orderBy('order');
+                },
+                'branches'
+            ])
+            ->first();
     }
 
     /**
